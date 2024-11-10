@@ -3,171 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egemen Özen - Data Science Portfolio</title>
+    <title>Egemen Özen - Data Scientist</title>
     <style>
-        /* General Styles */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background: #f0f4f8;
-            color: #333;
-            line-height: 1.6;
         }
         header {
-            background: url('https://via.placeholder.com/1920x500') no-repeat center center/cover;
-            color: white;
-            padding: 80px 20px;
+            background: url('background.webp') no-repeat center center;
+            background-size: cover;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
             text-align: center;
             position: relative;
         }
-        header::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
+        header h1 {
+            font-size: 2.5em;
+            margin: 0;
         }
-        header h1, header p {
-            position: relative;
-            z-index: 1;
+        header p {
+            margin: 5px 0 0;
         }
         nav {
-            display: flex;
-            justify-content: center;
-            padding: 15px;
-            background: #004aad;
+            background: #1b3c74;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         nav a {
-            margin: 0 15px;
-            color: white;
+            color: #fff;
             text-decoration: none;
-            font-size: 1rem;
+            margin: 0 15px;
+            padding: 5px 10px;
         }
         nav a:hover {
-            text-decoration: underline;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
         }
         main {
-            max-width: 1200px;
-            margin: 20px auto;
             padding: 20px;
         }
         section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
         h2 {
-            color: #004aad;
+            color: #1b3c74;
         }
-        /* Skills Section */
-        .skills {
+        .skills-container, .projects-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            justify-content: space-between;
+            gap: 15px;
         }
-        .skill-bar {
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 15px;
-        }
-        .skill-bar label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .skill-bar progress {
-            width: 100%;
-            height: 20px;
-            border-radius: 5px;
-            appearance: none;
-            background: #ccc;
-        }
-        .skill-bar progress::-webkit-progress-value {
-            background: #004aad;
-            border-radius: 5px;
-        }
-        .skill-bar progress::-moz-progress-bar {
-            background: #004aad;
-            border-radius: 5px;
-        }
-        /* Projects Section */
-        .projects {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .project {
-            flex: 1 1 calc(33% - 20px);
+        .skill, .project {
+            background: #f3f3f3;
             padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background: #e6f2ff;
-            transition: transform 0.2s;
-        }
-        .project:hover {
-            transform: scale(1.02);
-        }
-        .project a {
-            color: #004aad;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .project a:hover {
-            text-decoration: underline;
+            border-radius: 5px;
+            flex: 1;
+            min-width: 250px;
         }
         footer {
-            background: #004aad;
-            color: white;
+            background: #1b3c74;
+            color: #fff;
             text-align: center;
-            padding: 15px 0;
-        }
-        /* Contact Form */
-        .contact-form {
-            max-width: 600px;
-            margin: auto;
-        }
-        .contact-form input,
-        .contact-form textarea,
-        .contact-form button {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .contact-form button {
-            background: #004aad;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .contact-form button:hover {
-            background: #003580;
-        }
-        .contact-details {
-            text-align: center;
+            padding: 10px;
             margin-top: 20px;
-        }
-        .contact-details a {
-            color: #004aad;
-            text-decoration: none;
-        }
-        .contact-details a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Egemen Özen</h1>
-        <p>Data Scientist & Machine Learning Specialist</p>
+        <div>
+            <h1>Egemen Özen</h1>
+            <p>Data Scientist & Machine Learning Specialist</p>
+        </div>
     </header>
     <nav>
         <a href="#about-me">About Me</a>
@@ -178,69 +94,45 @@
     <main>
         <section id="about-me">
             <h2>About Me</h2>
-            <p>I am Egemen Özen, a dedicated Data Scientist specializing in data analysis, machine learning, AI-driven solutions, and deep learning. With a robust engineering background, I have honed my expertise to derive actionable insights from complex data, crafting impactful models that deliver tangible business value.</p>
-            <p>My professional journey encompasses diverse projects such as Walmart sales forecasting using LSTM networks, personalized recommendation systems, and complex data visualization tools. I am proficient in Python, SQL, and deep learning frameworks, and I possess a passion for problem-solving that bridges data analytics with strategic thinking.</p>
-            <p>My multilingual skills in German (B2), English (C1), and Turkish (Native) enable me to collaborate seamlessly within international teams and communicate effectively across disciplines. I thrive in environments that challenge me to apply data-driven methods to real-world problems, delivering innovative and scalable solutions.</p>
-        </section>
-        <section id="skills">
-            <h2>Technical & Soft Skills</h2>
-            <div class="skills">
-                <div class="skill-bar">
-                    <label>Python & Data Analysis</label>
-                    <progress value="85" max="100"></progress>
-                </div>
-                <div class="skill-bar">
-                    <label>Machine Learning</label>
-                    <progress value="80" max="100"></progress>
-                </div>
-                <div class="skill-bar">
-                    <label>Data Visualization</label>
-                    <progress value="75" max="100"></progress>
-                </div>
-                <div class="skill-bar">
-                    <label>Communication & Teamwork</label>
-                    <progress value="90" max="100"></progress>
-                </div>
-            </div>
+            <p>I am Egemen Özen, a dedicated Data Scientist specializing in data analysis, machine learning, and AI-driven solutions. With a strong engineering background, I derive actionable insights from data and create impactful models that drive business value.</p>
+            <p>My expertise includes Python, SQL, deep learning frameworks, data visualization, and proficiency in English, German (B2), and Turkish (Native).</p>
         </section>
         <section id="projects">
-            <h2>Featured Projects</h2>
-            <div class="projects">
+            <h2>Projects</h2>
+            <div class="projects-container">
                 <div class="project">
-                    <h3>Sales Forecasting with LSTM Networks</h3>
-                    <p>Applied LSTM models to predict sales trends based on historical sales data and external factors, enhancing Walmart's demand forecasting accuracy.</p>
-                    <a href="https://github.com/egemenozen1" target="_blank">View on GitHub</a>
+                    <h3>Walmart Sales Forecasting</h3>
+                    <p>Applied LSTM models to predict sales trends based on historical data and external influences.</p>
+                    <a href="https://github.com/egemenozen1/walmart-lstm-forecasting" target="_blank">View on GitHub</a>
                 </div>
                 <div class="project">
                     <h3>Personalized Content Recommendation</h3>
-                    <p>Built a recommendation system using SQL and AI to enhance engagement and address ethical AI considerations.</p>
-                    <a href="https://github.com/egemenozen1" target="_blank">View on GitHub</a>
+                    <p>Built a recommendation system using SQL and AI, enhancing user engagement.</p>
+                    <a href="https://github.com/egemenozen1/content-recommendation" target="_blank">View on GitHub</a>
                 </div>
-                <div class="project">
-                    <h3>Comparison of Antidepressants</h3>
-                    <p>Analyzed and compared antidepressants based on their binding mechanisms and molecular interactions.</p>
-                    <a href="https://drive.google.com/file/d/1a1AP9el3Wq8r1Rwws4q2i9ASLoaUHmcw/view?usp=sharing" target="_blank">View Project Details</a>
-                </div>
+            </div>
+        </section>
+        <section id="skills">
+            <h2>Skills</h2>
+            <div class="skills-container">
+                <div class="skill">Python & Data Analysis</div>
+                <div class="skill">Machine Learning</div>
+                <div class="skill">Data Visualization</div>
+                <div class="skill">SQL & Databases</div>
             </div>
         </section>
         <section id="contact">
-            <h2>Contact Me</h2>
-            <form class="contact-form">
-                <input type="text" name="name" placeholder="Your Name" required>
-                <input type="email" name="email" placeholder="Your Email" required>
-                <textarea name="message" placeholder="Your Message" required></textarea>
-                <button type="submit">Send Message</button>
-            </form>
-            <div class="contact-details">
-                <p>Email: <a href="mailto:egemen.ozen@gmail.com">egemen.ozen@gmail.com</a></p>
-                <p>LinkedIn: <a href="https://www.linkedin.com/in/egemen-%C3%B6zen/" target="_blank">View Profile</a></p>
-            </div>
+            <h2>Contact</h2>
+            <p>Email: <a href="mailto:egemen.ozen@example.com">egemen.ozen@example.com</a></p>
+            <p>GitHub: <a href="https://github.com/egemenozen1" target="_blank">egemenozen1</a></p>
+            <p>LinkedIn: <a href="https://www.linkedin.com/in/egemen-%C3%B6zen/" target="_blank">Egemen Özen</a></p>
         </section>
     </main>
     <footer>
-        &copy; 2024 Egemen Özen - Data Science Portfolio
+        &copy; 2024 Egemen Özen - Data Scienctist
     </footer>
 </body>
 </html>
+
 
 
