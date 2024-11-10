@@ -3,65 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egemen Özen - Data Scientist Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Egemen Özen - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" rel="stylesheet">
     <style>
         body {
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        header {
-            background: url('https://source.unsplash.com/1200x400/?technology,data') no-repeat center center/cover;
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 3rem;
-        }
-        header p {
-            font-size: 1.2rem;
-        }
-        main {
-            max-width: 1000px;
-            margin: 2rem auto;
+            max-width: 800px;
+            margin: 0 auto;
             padding: 1rem;
+            font-family: sans-serif;
+        }
+        header, footer {
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
         section {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
-        section h2 {
-            margin-bottom: 1rem;
-            color: #007acc;
-        }
-        .skills, .projects, .contact {
-            display: grid;
-            gap: 1rem;
-        }
-        .skills div, .project, .contact-form {
+        .project-card {
             padding: 1rem;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .project h3, .skills div h4 {
-            margin: 0 0 0.5rem;
+        .project-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .project a, .contact a {
-            color: #007acc;
+        a {
+            color: #1a73e8;
             text-decoration: none;
         }
-        .project a:hover {
+        a:hover {
             text-decoration: underline;
-        }
-        footer {
-            text-align: center;
-            padding: 1rem 0;
-            background: #333;
-            color: white;
         }
     </style>
 </head>
@@ -70,61 +44,48 @@
         <h1>Egemen Özen</h1>
         <p>Data Scientist & Machine Learning Specialist</p>
     </header>
+
     <main>
-        <section id="about-me">
+        <section id="about">
             <h2>About Me</h2>
-            <p>I am Egemen Özen, a dedicated Data Scientist with expertise in data analysis, machine learning, and AI-driven solutions. I have a strong engineering background and a passion for deriving actionable insights from data and creating impactful models that drive business value. I am proficient in Python, SQL, and data visualization tools, as well as German (C1), English (Advanced), and Turkish (Native).</p>
+            <p>Hi, I'm Egemen Özen, a Data Scientist with a strong foundation in data analytics and machine learning. Passionate about building solutions and deriving insights to drive impactful results.</p>
         </section>
+
         <section id="skills">
-            <h2>Technical & Soft Skills</h2>
-            <div class="skills">
-                <div>
-                    <h4>Python & Data Analysis</h4>
-                    <p>Experienced in data manipulation, visualization, and analysis using libraries like Pandas, NumPy, and Matplotlib.</p>
-                </div>
-                <div>
-                    <h4>Machine Learning</h4>
-                    <p>Proficient in building, evaluating, and deploying models using frameworks like TensorFlow and PyTorch.</p>
-                </div>
-                <div>
-                    <h4>Data Visualization</h4>
-                    <p>Creating insightful dashboards with tools like Tableau, Power BI, and Seaborn.</p>
-                </div>
-                <div>
-                    <h4>Communication & Teamwork</h4>
-                    <p>Excellent communicator and team player with a passion for knowledge sharing and collaboration.</p>
-                </div>
-            </div>
+            <h2>Skills</h2>
+            <ul>
+                <li>Python, SQL, R</li>
+                <li>Machine Learning (TensorFlow, PyTorch)</li>
+                <li>Data Visualization (Tableau, Seaborn, Matplotlib)</li>
+                <li>Team Collaboration & Communication</li>
+            </ul>
         </section>
+
         <section id="projects">
             <h2>Featured Projects</h2>
-            <div class="projects">
-                <div class="project">
-                    <h3>PyTorch Forecasting Project</h3>
-                    <p>Time-series forecasting project using Temporal Fusion Transformers for predictive analytics.</p>
-                    <a href="https://github.com/egemenozen1/pytorch-forecasting" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project">
-                    <h3>Personalized Content Recommendation</h3>
-                    <p>Built a recommendation system using SQL and AI for enhanced user engagement.</p>
-                    <a href="https://github.com/egemenozen1/personalized-content-recommendation" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project">
-                    <h3>Comparison of Antidepressants</h3>
-                    <p>Analyzed and compared antidepressants based on their binding mechanisms and molecular interactions.</p>
-                    <a href="https://drive.google.com/file/d/1a1AP9el3Wq8r1Rwws4q2i9ASLoaUHmcw/view?usp=sharing" target="_blank">View Project Details</a>
-                </div>
+            <div class="project-card">
+                <h3>PyTorch Forecasting with Temporal Fusion Transformer (TFT)</h3>
+                <p>Built a robust time-series forecasting model using PyTorch's TFT architecture.</p>
+                <a href="https://github.com/egemenozen1/pytorch-forecasting-tft" target="_blank">View on GitHub</a>
+            </div>
+            <div class="project-card">
+                <h3>Personalized Content Recommendation System</h3>
+                <p>Developed a system using SQL and AI to enhance user engagement with personalized content.</p>
+                <a href="https://github.com/egemenozen1/Personalized-Content-Recommendation-Systems-with-SQL-AI" target="_blank">View on GitHub</a>
             </div>
         </section>
+
         <section id="contact">
-            <h2>Contact Me</h2>
-            <p>Email: <a href="mailto:egemen.ozen@example.com">egemen.ozen@example.com</a></p>
+            <h2>Contact</h2>
+            <p>Email: <a href="mailto:egemen.oezen@gmail.com">egemen.oezen@gmail.com</a></p>
             <p>GitHub: <a href="https://github.com/egemenozen1" target="_blank">egemenozen1</a></p>
             <p>LinkedIn: <a href="https://www.linkedin.com/in/egemen-%C3%B6zen/" target="_blank">View Profile</a></p>
         </section>
     </main>
+
     <footer>
-        &copy; 2024 Egemen Özen - Data Science Portfolio
+        &copy; 2024 Egemen Özen - Portfolio
     </footer>
 </body>
 </html>
+
