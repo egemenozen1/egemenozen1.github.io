@@ -7,90 +7,61 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
             color: #333;
         }
         header {
-            background: url('https://example.com/background-image.jpg') no-repeat center center/cover;
-            color: #fff;
+            background: url('https://source.unsplash.com/1200x400/?technology,data') no-repeat center center/cover;
+            color: white;
+            padding: 4rem 0;
             text-align: center;
-            padding: 5rem 1rem;
         }
         header h1 {
-            font-size: 3rem;
             margin: 0;
+            font-size: 3rem;
         }
         header p {
-            font-size: 1.5rem;
-            margin-top: 0.5rem;
-        }
-        nav {
-            background: #444;
-            padding: 1rem;
-            text-align: center;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: 700;
-        }
-        nav a:hover {
-            color: #00bcd4;
+            font-size: 1.2rem;
         }
         main {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1rem;
         }
         section {
             margin-bottom: 2rem;
         }
         section h2 {
-            border-bottom: 2px solid #00bcd4;
-            display: inline-block;
             margin-bottom: 1rem;
+            color: #007acc;
         }
-        .skills, .projects {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+        .skills, .projects, .contact {
+            display: grid;
+            gap: 1rem;
         }
-        .card {
-            background: #f5f5f5;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .skills div, .project, .contact-form {
             padding: 1rem;
-            flex: 1 1 calc(33.333% - 1rem);
-            box-sizing: border-box;
-            transition: transform 0.2s;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .card:hover {
-            transform: scale(1.05);
+        .project h3, .skills div h4 {
+            margin: 0 0 0.5rem;
         }
-        .card h3 {
-            margin-top: 0;
-        }
-        .card a {
+        .project a, .contact a {
             color: #007acc;
             text-decoration: none;
         }
-        .card a:hover {
+        .project a:hover {
             text-decoration: underline;
         }
         footer {
-            background: #333;
-            color: #fff;
             text-align: center;
             padding: 1rem 0;
-            margin-top: 2rem;
-        }
-        footer a {
-            color: #00bcd4;
-            text-decoration: none;
+            background: #333;
+            color: white;
         }
     </style>
 </head>
@@ -99,64 +70,57 @@
         <h1>Egemen Özen</h1>
         <p>Data Scientist & Machine Learning Specialist</p>
     </header>
-    <nav>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-    </nav>
     <main>
-        <section id="about">
+        <section id="about-me">
             <h2>About Me</h2>
-            <p>Egemen Özen is a dedicated Data Scientist with expertise in data analysis, machine learning, and AI-driven solutions. With a strong engineering background, Egemen applies advanced skills to tackle complex data challenges, delivering impactful models and innovative AI solutions.</p>
-            <p>Language Proficiency: German (C1), English (Advanced), Turkish (Native)</p>
+            <p>I am Egemen Özen, a dedicated Data Scientist with expertise in data analysis, machine learning, and AI-driven solutions. I have a strong engineering background and a passion for deriving actionable insights from data and creating impactful models that drive business value. I am proficient in Python, SQL, and data visualization tools, as well as German (C1), English (Advanced), and Turkish (Native).</p>
         </section>
         <section id="skills">
             <h2>Technical & Soft Skills</h2>
             <div class="skills">
-                <div class="card">
-                    <h3>Python & Data Analysis</h3>
-                    <p>Expertise in data manipulation, visualization, and analysis using libraries like Pandas and NumPy.</p>
+                <div>
+                    <h4>Python & Data Analysis</h4>
+                    <p>Experienced in data manipulation, visualization, and analysis using libraries like Pandas, NumPy, and Matplotlib.</p>
                 </div>
-                <div class="card">
-                    <h3>Machine Learning</h3>
-                    <p>Model building, evaluation, and deployment using frameworks such as TensorFlow and PyTorch.</p>
+                <div>
+                    <h4>Machine Learning</h4>
+                    <p>Proficient in building, evaluating, and deploying models using frameworks like TensorFlow and PyTorch.</p>
                 </div>
-                <div class="card">
-                    <h3>SQL & Data Warehousing</h3>
-                    <p>Skilled in complex queries, database optimization, and data warehousing solutions.</p>
+                <div>
+                    <h4>Data Visualization</h4>
+                    <p>Creating insightful dashboards with tools like Tableau, Power BI, and Seaborn.</p>
                 </div>
-                <div class="card">
-                    <h3>Communication & Teamwork</h3>
-                    <p>Strong communicator with leadership experience and effective collaboration in diverse teams.</p>
+                <div>
+                    <h4>Communication & Teamwork</h4>
+                    <p>Excellent communicator and team player with a passion for knowledge sharing and collaboration.</p>
                 </div>
             </div>
         </section>
         <section id="projects">
             <h2>Featured Projects</h2>
             <div class="projects">
-                <div class="card">
-                    <h3>PyTorch Forecasting with TFT</h3>
-                    <p>Developed a robust time-series forecasting model using PyTorch's TFT architecture.</p>
+                <div class="project">
+                    <h3>PyTorch Forecasting Project</h3>
+                    <p>Time-series forecasting project using Temporal Fusion Transformers for predictive analytics.</p>
                     <a href="https://github.com/egemenozen1/pytorch-forecasting" target="_blank">View on GitHub</a>
                 </div>
-                <div class="card">
+                <div class="project">
                     <h3>Personalized Content Recommendation</h3>
-                    <p>Built a recommendation system using SQL and AI for enhanced engagement.</p>
-                    <a href="https://github.com/egemenozen1/personalized-recommendation" target="_blank">View on GitHub</a>
+                    <p>Built a recommendation system using SQL and AI for enhanced user engagement.</p>
+                    <a href="https://github.com/egemenozen1/personalized-content-recommendation" target="_blank">View on GitHub</a>
                 </div>
-                <div class="card">
-                    <h3>Comparison of the Effects of Antidepressants</h3>
-                    <p>Analyzed the binding mechanisms of antidepressants using molecular data.</p>
+                <div class="project">
+                    <h3>Comparison of Antidepressants</h3>
+                    <p>Analyzed and compared antidepressants based on their binding mechanisms and molecular interactions.</p>
                     <a href="https://drive.google.com/file/d/1a1AP9el3Wq8r1Rwws4q2i9ASLoaUHmcw/view?usp=sharing" target="_blank">View Project Details</a>
                 </div>
             </div>
         </section>
         <section id="contact">
-            <h2>Contact</h2>
-            <p>Email: <a href="mailto:egemen.ozen@gmail.com">egemen.ozen@gmail.com</a></p>
+            <h2>Contact Me</h2>
+            <p>Email: <a href="mailto:egemen.ozen@example.com">egemen.ozen@example.com</a></p>
             <p>GitHub: <a href="https://github.com/egemenozen1" target="_blank">egemenozen1</a></p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/egemen-%C3%B6zen/" target="_blank">Egemen Özen</a></p>
+            <p>LinkedIn: <a href="https://www.linkedin.com/in/egemen-%C3%B6zen/" target="_blank">View Profile</a></p>
         </section>
     </main>
     <footer>
