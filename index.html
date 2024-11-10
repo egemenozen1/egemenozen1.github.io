@@ -14,24 +14,21 @@
         header {
             background: url('background.webp') no-repeat center center;
             background-size: cover;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
+            color: white;
+            padding: 60px 20px;
             text-align: center;
-            position: relative;
         }
         header h1 {
-            font-size: 2.5em;
             margin: 0;
+            font-size: 3em;
         }
         header p {
-            margin: 5px 0 0;
+            margin-top: 10px;
+            font-size: 1.2em;
         }
         nav {
-            background: #1b3c74;
-            color: #fff;
+            background-color: #1b3c74;
+            color: white;
             padding: 10px;
             text-align: center;
             position: sticky;
@@ -39,9 +36,9 @@
             z-index: 1000;
         }
         nav a {
-            color: #fff;
-            text-decoration: none;
+            color: white;
             margin: 0 15px;
+            text-decoration: none;
             padding: 5px 10px;
         }
         nav a:hover {
@@ -50,89 +47,146 @@
         }
         main {
             padding: 20px;
+            max-width: 1200px;
+            margin: auto;
         }
         section {
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
         h2 {
             color: #1b3c74;
+            margin-bottom: 15px;
+        }
+        p {
+            line-height: 1.6;
         }
         .skills-container, .projects-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
         }
         .skill, .project {
             background: #f3f3f3;
             padding: 15px;
             border-radius: 5px;
             flex: 1;
-            min-width: 250px;
+            min-width: 280px;
+        }
+        .skill-bar {
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .skill-bar-inner {
+            height: 20px;
+            background: #1b3c74;
         }
         footer {
-            background: #1b3c74;
-            color: #fff;
+            background-color: #1b3c74;
+            color: white;
             text-align: center;
-            padding: 10px;
+            padding: 15px 0;
             margin-top: 20px;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .contact-form button {
+            background-color: #1b3c74;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .contact-form button:hover {
+            background-color: #3d5a97;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div>
-            <h1>Egemen Özen</h1>
-            <p>Data Scientist & Machine Learning Specialist</p>
-        </div>
-    </header>
     <nav>
         <a href="#about-me">About Me</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
     </nav>
+    <header>
+        <h1>Egemen Özen</h1>
+        <p>Data Scientist & Machine Learning Specialist</p>
+    </header>
     <main>
         <section id="about-me">
             <h2>About Me</h2>
             <p>I am Egemen Özen, a dedicated Data Scientist specializing in data analysis, machine learning, and AI-driven solutions. With a strong engineering background, I derive actionable insights from data and create impactful models that drive business value.</p>
-            <p>My expertise includes Python, SQL, deep learning frameworks, data visualization, and proficiency in English, German (B2), and Turkish (Native).</p>
+            <p>Throughout my career, I have honed skills in Python, SQL, deep learning frameworks, data visualization, and working in cross-functional teams. My projects reflect a blend of analytical rigor and creative problem-solving to tackle real-world data challenges.</p>
+            <p>Language Proficiency: English (Advanced), German (C1), Turkish (Native).</p>
+        </section>
+        <section id="skills">
+            <h2>Technical & Soft Skills</h2>
+            <div class="skills-container">
+                <div class="skill">
+                    <h3>Python & Data Analysis</h3>
+                    <div class="skill-bar">
+                        <div class="skill-bar-inner" style="width: 90%;"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <h3>Machine Learning</h3>
+                    <div class="skill-bar">
+                        <div class="skill-bar-inner" style="width: 85%;"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <h3>Data Visualization</h3>
+                    <div class="skill-bar">
+                        <div class="skill-bar-inner" style="width: 80%;"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <h3>SQL & Databases</h3>
+                    <div class="skill-bar">
+                        <div class="skill-bar-inner" style="width: 75%;"></div>
+                    </div>
+                </div>
+            </div>
         </section>
         <section id="projects">
-            <h2>Projects</h2>
+            <h2>Featured Projects</h2>
             <div class="projects-container">
                 <div class="project">
                     <h3>Walmart Sales Forecasting</h3>
-                    <p>Applied LSTM models to predict sales trends based on historical data and external influences.</p>
+                    <p>Applied LSTM models to predict sales trends based on historical data and external influences. This project emphasizes robust demand forecasting using time-series data.</p>
                     <a href="https://github.com/egemenozen1/walmart-lstm-forecasting" target="_blank">View on GitHub</a>
                 </div>
                 <div class="project">
                     <h3>Personalized Content Recommendation</h3>
-                    <p>Built a recommendation system using SQL and AI, enhancing user engagement.</p>
+                    <p>Developed a recommendation system using SQL and AI for enhanced user engagement and tailored experiences.</p>
                     <a href="https://github.com/egemenozen1/content-recommendation" target="_blank">View on GitHub</a>
                 </div>
             </div>
         </section>
-        <section id="skills">
-            <h2>Skills</h2>
-            <div class="skills-container">
-                <div class="skill">Python & Data Analysis</div>
-                <div class="skill">Machine Learning</div>
-                <div class="skill">Data Visualization</div>
-                <div class="skill">SQL & Databases</div>
-            </div>
-        </section>
         <section id="contact">
-            <h2>Contact</h2>
+            <h2>Contact Me</h2>
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" rows="5" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
             <p>Email: <a href="mailto:egemen.ozen@example.com">egemen.ozen@example.com</a></p>
-            <p>GitHub: <a href="https://github.com/egemenozen1" target="_blank">egemenozen1</a></p>
             <p>LinkedIn: <a href="https://www.linkedin.com/in/egemen-%C3%B6zen/" target="_blank">Egemen Özen</a></p>
         </section>
     </main>
     <footer>
-        &copy; 2024 Egemen Özen - Data Scienctist
+        &copy; 2024 Egemen Özen - Data Science Portfolio
     </footer>
 </body>
 </html>
-
 
 
