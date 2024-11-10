@@ -3,27 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egemen Özen - Data Science Portfolio</title>
+    <title>Egemen Özen - Data Scientist Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Open Sans', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f0f0f5;
             color: #333;
         }
         header {
-            background: #4a90e2;
+            background-image: url('https://via.placeholder.com/1200x400'); /* Görsel buraya değiştirilebilir */
+            background-size: cover;
+            background-position: center;
             color: #fff;
-            padding: 1rem;
+            padding: 2rem;
             text-align: center;
         }
         header h1 {
             margin: 0;
+            font-size: 2.5rem;
+        }
+        header p {
+            font-size: 1.2rem;
         }
         main {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
@@ -33,7 +40,8 @@
         h2 {
             color: #4a90e2;
         }
-        p {
+        .about-me p {
+            line-height: 1.6;
             margin-bottom: 1rem;
         }
         .project {
@@ -50,40 +58,88 @@
         .project a:hover {
             text-decoration: underline;
         }
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .skill-card {
+            background: #fff;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
         footer {
             text-align: center;
             padding: 1rem;
-            background: #4a90e2;
+            background: #333;
             color: #fff;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Egemen Özen - Data Scientist</h1>
-        <p>Exploring Data Science & Machine Learning Solutions</p>
+        <h1>Egemen Özen</h1>
+        <p>Data Scientist & Machine Learning Specialist</p>
     </header>
     <main>
-        <section id="about-me">
+        <section class="about-me">
             <h2>About Me</h2>
-            <p>I'm Egemen Özen, a Data Scientist based in Berlin with expertise in data analysis, machine learning, and AI-driven solutions. My passion lies in uncovering meaningful insights and driving data-driven decision-making processes. I specialize in time-series forecasting, personalized recommendations, and data visualization.</p>
+            <p>I am Egemen Özen, a dedicated Data Scientist with expertise in data analysis, machine learning, and AI-driven solutions. I have a strong engineering background, with a passion for deriving actionable insights from data and creating impactful models that drive business value.</p>
+            <p>My journey includes projects on personalized recommendations, time-series forecasting, and complex data visualizations. I strive to apply my skills in Python, SQL, data visualization tools, deep learning frameworks, and more to real-world challenges.</p>
+            <p>My language proficiency includes German (C1), English (Advanced), and Turkish (Native), which I leverage to work across diverse teams and environments.</p>
+        </section>
+        <section id="skills">
+            <h2>Technical & Soft Skills</h2>
+            <div class="skills">
+                <div class="skill-card">
+                    <h3>Python & Data Analysis</h3>
+                    <p>Experienced in data manipulation, visualization, and analysis using libraries like Pandas, NumPy, and Matplotlib.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Machine Learning</h3>
+                    <p>Proficiency in model building, evaluation, and deployment using frameworks like TensorFlow and PyTorch.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>SQL & Data Warehousing</h3>
+                    <p>Skilled in writing complex queries, database optimization, and data warehousing solutions.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Data Visualization</h3>
+                    <p>Creating insightful dashboards and visualizations with tools like Tableau, Power BI, and Seaborn.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Communication & Teamwork</h3>
+                    <p>Excellent communicator, team player, and mentor with a passion for knowledge sharing and effective collaboration.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Languages</h3>
+                    <p>English (Advanced), German (B2), Turkish (Native)</p>
+                </div>
+            </div>
         </section>
         <section id="projects">
             <h2>Featured Projects</h2>
             <div class="project">
                 <h3>PyTorch Forecasting with Temporal Fusion Transformer (TFT)</h3>
-                <p>Developed a robust time-series forecasting model using PyTorch's TFT architecture for predictive analytics in business contexts.</p>
+                <p>Developed a robust time-series forecasting model using PyTorch's TFT architecture for predictive analytics.</p>
                 <a href="https://github.com/egemenozen1/pytorch-forecasting-tft" target="_blank">View on GitHub</a>
             </div>
             <div class="project">
                 <h3>Personalized Content Recommendation System</h3>
-                <p>Built a personalized recommendation system using SQL and AI to enhance user engagement in streaming services, focusing on ethical AI use cases.</p>
+                <p>Built a recommendation system using SQL and AI, enhancing engagement and addressing ethical AI considerations.</p>
                 <a href="https://github.com/egemenozen1/Personalized-Content-Recommendation-Systems-with-SQL-AI" target="_blank">View on GitHub</a>
             </div>
             <div class="project">
                 <h3>Walmart Sales Forecasting with LSTM Networks</h3>
-                <p>Utilized LSTM neural networks for accurate sales forecasting based on historical data and external features, improving demand predictions.</p>
+                <p>Applied LSTM models to predict sales trends based on historical data and external influences.</p>
                 <a href="https://github.com/egemenozen1/Walmart-LSTM-Sales-Forecasting" target="_blank">View on GitHub</a>
+            </div>
+            <div class="project">
+                <h3>Comparison of the Effects of Antidepressants Based on Binding Mechanisms</h3>
+                <p>Analyzed and compared antidepressants based on their binding mechanisms and molecular interactions.</p>
+                <a href="https://drive.google.com/file/d/1a1AP9el3Wq8r1Rwws4q2i9ASLoaUHmcw/view?usp=sharing" target="_blank">View Project Details</a>
             </div>
         </section>
         <section id="contact">
@@ -98,4 +154,3 @@
     </footer>
 </body>
 </html>
-
