@@ -1,0 +1,8 @@
+import type { APIRoute } from 'astro';
+import { site } from '../config/site';
+
+// Static endpoint. Do not list unapproved legal or private routes.
+export const GET: APIRoute = () => new Response(
+  `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`,
+  { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
+);

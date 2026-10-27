@@ -1,0 +1,37 @@
+---
+interface Props { id: string; liveUrl?: string; }
+const { id, liveUrl } = Astro.props;
+---
+
+{id === 'futureme-ai' && <section class="project-interaction" aria-labelledby="interaction-title">
+  <div class="interaction-heading"><span class="section-label">Product walkthrough</span><h2 id="interaction-title">A small decision-support flow</h2><p>Explore the public demo using its fixed examples. No personal profile is requested.</p></div>
+  <a class="btn btn-primary interaction-demo" href={liveUrl} target="_blank" rel="noopener noreferrer">Open the live demo <span class="arrow" aria-hidden="true">↗</span></a>
+  <p class="interaction-note">The public version is limited to three fictional examples.</p>
+  <ol class="flow-list">
+    <li><details><summary><span class="flow-number">01</span><span>Choose a fictional example</span></summary><p>Select from a short career course, reduced working hours or a side project.</p></details></li>
+    <li><details><summary><span class="flow-number">02</span><span>Compare modeled possibilities</span></summary><p>The demo displays an assumption-based range over five years, not a personalized prediction.</p></details></li>
+    <li><details><summary><span class="flow-number">03</span><span>Consider a small experiment</span></summary><p>A suggested experiment gives the scenario a practical next step to think through.</p></details></li>
+  </ol>
+</section>}
+
+{id === 'pytorch-forecasting-tft' && <section class="project-interaction" aria-labelledby="interaction-title">
+  <div class="interaction-heading"><span class="section-label">Method walkthrough</span><h2 id="interaction-title">From time series to an evaluation step</h2><p>Interactive source-code flow. No synthetic forecast curve or unverified score is shown.</p></div>
+  <ol class="flow-list">
+    <li><details><summary><span class="flow-number">01</span><span>Prepare the series</span></summary><p>The analysis script parses date and time, creates a sequential time index and uses the UCI Air Quality field <code>CO_GT_</code>.</p></details></li>
+    <li><details><summary><span class="flow-number">02</span><span>Preserve chronology</span></summary><p>The code separates the final 20% as a test segment without shuffling the time order.</p></details></li>
+    <li><details><summary><span class="flow-number">03</span><span>Configure one-step TFT</span></summary><p>PyTorch Forecasting and PyTorch Lightning are used to configure a Temporal Fusion Transformer with a one-step prediction horizon.</p></details></li>
+    <li><details><summary><span class="flow-number">04</span><span>Review evaluation code</span></summary><p>The script calculates R². The pipeline and test-set construction need further review, so this page does not present a numerical result.</p></details></li>
+  </ol>
+  <a class="text-link" href="https://github.com/egemenozen1/pytorch-forecasting-tft" target="_blank" rel="noopener noreferrer">Inspect the source repository <span aria-hidden="true">↗</span></a>
+</section>}
+
+{id === 'recommendation-systems' && <section class="project-interaction" aria-labelledby="interaction-title">
+  <div class="interaction-heading"><span class="section-label">Research walkthrough</span><h2 id="interaction-title">How the thesis frames recommendation</h2><p>This is the documented research flow, not a deployed or interactive recommendation engine.</p></div>
+  <ol class="flow-list">
+    <li><details><summary><span class="flow-number">01</span><span>Review recommendation approaches</span></summary><p>The thesis surveys and compares algorithms described in its literature review.</p></details></li>
+    <li><details><summary><span class="flow-number">02</span><span>Consider SQL data management</span></summary><p>It discusses how data organization relates to recommendation approaches and smaller organizations.</p></details></li>
+    <li><details><summary><span class="flow-number">03</span><span>Compare application contexts</span></summary><p>Case studies connect the discussion to streaming services and smaller businesses; no running ranking pipeline is claimed.</p></details></li>
+    <li><details><summary><span class="flow-number">04</span><span>Include responsible-use questions</span></summary><p>The research also addresses issues such as bias, transparency and privacy.</p></details></li>
+  </ol>
+  <a class="text-link" href="https://github.com/egemenozen1/Personalized-Content-Recommendation-Systems-with-SQL-AI" target="_blank" rel="noopener noreferrer">Inspect the thesis repository <span aria-hidden="true">↗</span></a>
+</section>}
