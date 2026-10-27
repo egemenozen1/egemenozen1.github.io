@@ -17,15 +17,15 @@ Important decisions involve trade-offs that are difficult to compare clearly. Fu
 
 ## My contribution and approach
 
-I developed the product and worked across its Python backend, JavaScript interface and user experience. AI-assisted development was part of the workflow; implementation choices and claims on this page remain my responsibility. The known stack includes FastAPI and Docker, but the private source must be checked before describing endpoints, deployment architecture or model behavior in detail.
+I developed the product across its Python backend, JavaScript interface and user experience, with AI-assisted development as part of the workflow. The public experience focuses on comparing fixed scenarios and making the assumptions behind them clear.
 
 ## Validation and result
 
-The [public demo](https://futureme-ai-6rgq.onrender.com/) currently offers examples for a short career course, reduced working hours and a side project. Its interface shows a modeled range over a five-year horizon and suggests a small experiment to consider. The current deployment's test coverage could not be independently verified for this case study, so no reliability, usage or outcome metrics are claimed.
+The [public demo](https://futureme-ai-6rgq.onrender.com/) offers three fixed fictional examples: a short career course, reduced working hours and a side project. For each scenario, it shows an assumption-based range over a five-year horizon and suggests a small experiment to consider. No reliability, usage or outcome metrics are claimed.
 
 ## Limitations
 
-This is an evolving independent product. The public demo accepts built-in sample IDs, not personal questions or custom profiles. It should be evaluated as decision support, not as guaranteed predictive advice. The private repository and deployment configuration need review before publishing more precise technical details.
+This is an evolving independent product. The public demo accepts built-in sample IDs, not personal questions or custom profiles. Its scenarios are exploratory decision support, not guaranteed forecasts or individualized advice.
 
 ## What I learned
 
