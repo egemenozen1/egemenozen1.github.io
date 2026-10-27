@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-27",
+  "method": "Static HTML/CSS and source audit",
+  "browserAutomation": "Not completed for the new Astro site: the correctly started localhost:4323 server and its local network address timed out in Chrome; Playwright/Puppeteer are not installed in the existing workspace.",
+  "externalBrowserChecks": {
+    "existingPortfolio": "Opened successfully at https://egemenozen1.github.io/; it is still the old 2024 site on main/root.",
+    "futureMeDemo": "Opened successfully after the Render service woke up; it identifies itself as a synthetic-example demo."
+  },
+  "viewports": [360, 390, 768, 1024, 1440],
+  "staticChecks": {
+    "projectTitleAnchorsAreKeyboardReachable": true,
+    "focusWithinShowsEnglishCaseStudyPrompt": true,
+    "mobileShowsCaseStudyPromptWithoutHover": true,
+    "nativeDetailsProvideKeyboardOperableFlows": true,
+    "reducedMotionDisablesTransitionsAndHoverMovement": true,
+    "projectNavigationUsesOnlyFourOrderedEntries": true,
+    "fabricatedForecastChartPresent": false
+  }
+}

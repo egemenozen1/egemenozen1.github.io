@@ -1,0 +1,21 @@
+{
+  "name": "egemen-ozen-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check:source": "node scripts/source-check.mjs",
+    "check:release": "node scripts/release-check.mjs",
+    "check:preview": "node scripts/preview-check.mjs",
+    "check:dist": "node scripts/dist-check.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.4.0"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  }
+}

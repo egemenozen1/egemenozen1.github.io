@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {getCollection, render, type CollectionEntry} from 'astro:content';
+import ProjectInteraction from '../../components/ProjectInteraction.astro';
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).sort((a,b) => a.data.order-b.data.order);
+  return projects.map((entry,index) => ({params: {id: entry.id}, props: {entry, previous: projects[index-1], next: projects[index+1]}}));
+}
+interface Props {entry: CollectionEntry<'projects'>; previous?: CollectionEntry<'projects'>; next?: CollectionEntry<'projects'>;}
+const {entry, previous, next} = Astro.props;
+const {Content} = await render(entry);
+---
+<BaseLayout title={`${entry.data.title} — Egemen Özen`} description={entry.data.summary}>
+  <section class="case-hero"><div class="container"><a class="case-back case-home-link" href="/#work">← Selected work</a><div class="section-label">Case study / {entry.data.category}</div><h1>{entry.data.title}</h1><p class="case-subtitle">{entry.data.summary}</p><p class="case-scope">Scope: {entry.data.scope}</p><div class="case-meta">{entry.data.technologies.map((t)=><span class="tech">{t}</span>)}</div><div class="actions">{entry.data.sourceUrl && <a class="btn btn-outline" target="_blank" rel="noopener noreferrer" href={entry.data.sourceUrl}>View source ↗</a>}{entry.data.liveUrl && <a class="btn btn-primary" target="_blank" rel="noopener noreferrer" href={entry.data.liveUrl}>Visit application ↗</a>}</div></div></section>
+  <section class="section case-overview" aria-label="Case study summary"><div class="container case-facts">
+    <div><h2>Problem</h2><p>{entry.data.problem}</p></div>
+    <div><h2>Approach</h2><p>{entry.data.approach}</p></div>
+    <div><h2>Tools</h2><div class="case-meta">{entry.data.technologies.map((t)=><span class="tech">{t}</span>)}</div></div>
+    <div><h2>Verified output</h2><p>{entry.data.verifiedOutput}</p></div>
+  </div></section>
+  <section class="section case-detail"><div class="container"><ProjectInteraction id={entry.id} liveUrl={entry.data.liveUrl}/><article class="case-prose"><Content/><nav class="case-navigation" aria-label="Project navigation">
+    {previous ? <a class="case-nav-item" href={`/projects/${previous.id}/`}><span>Previous project</span><strong>← {previous.data.title}</strong></a> : <span></span>}
+    {next ? <a class="case-nav-item case-nav-next" href={`/projects/${next.id}/`}><span>Next project</span><strong>{next.data.title} →</strong></a> : <a class="case-nav-item case-nav-next" href="/#work"><span>End of selected projects</span><strong>Back to all projects →</strong></a>}
+  </nav></article></div></section>
+</BaseLayout>

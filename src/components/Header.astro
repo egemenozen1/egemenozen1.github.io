@@ -1,0 +1,27 @@
+<a href="#main" class="skip">Skip to content</a>
+<header class="site-header">
+  <nav class="nav container" aria-label="Primary navigation">
+    <a class="brand" href="/" aria-label="Egemen Özen, home">Egemen Özen<span>.</span></a>
+    <div class="nav-links">
+      <a href="/#work">Work</a>
+      <a href="/#expertise">Expertise</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </div>
+    <details class="mobile-nav">
+      <summary>Menu <span class="menu-icon" aria-hidden="true"></span></summary>
+      <div class="mobile-nav-links">
+        <a href="/#work">Work</a>
+        <a href="/#expertise">Expertise</a>
+        <a href="/#about">About</a>
+        <a href="/#contact">Contact</a>
+      </div>
+    </details>
+  </nav>
+</header>
+<script>
+  const mobileNav = document.querySelector<HTMLDetailsElement>('.mobile-nav');
+  mobileNav?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => { mobileNav.open = false; });
+  });
+</script>

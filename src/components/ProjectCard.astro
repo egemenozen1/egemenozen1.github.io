@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { project: CollectionEntry<'projects'>; index: number; }
+const { project, index } = Astro.props;
+const { title, category, summary, technologies, sourceUrl, liveUrl } = project.data;
+---
+<article class="project">
+  <div>
+    <span class="project-index">{String(index).padStart(2, '0')} / SELECTED WORK</span>
+    <h3><a class="project-title-link" href={`/projects/${project.id}/`} aria-label={`${title} — View case study`}>{title}</a></h3>
+    <p>{summary}</p>
+    <div class="tagline">{category}</div>
+    <span class="project-open-label" aria-hidden="true">View case study <span>↗</span></span>
+  </div>
+  <div class="project-meta">
+    <span class="project-meta-title">Focus & tools</span>
+    <div class="tech-list">{technologies.map((t) => <span class="tech">{t}</span>)}</div>
+    <div class="link-row">
+      {sourceUrl && <a class="text-link" href={sourceUrl} rel="noopener noreferrer" target="_blank">Source <span aria-hidden="true">↗</span></a>}
+      {liveUrl && <a class="text-link" href={liveUrl} rel="noopener noreferrer" target="_blank">Live app <span aria-hidden="true">↗</span></a>}
+    </div>
+  </div>
+</article>

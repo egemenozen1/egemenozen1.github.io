@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../config/site';
+const projects = (await getCollection('projects')).sort((a,b) => a.data.order-b.data.order);
+---
+<BaseLayout>
+  <Hero />
+  <section class="section" id="work" aria-labelledby="work-title">
+    <div class="container">
+      <div class="section-label">01 / Selected work</div>
+      <h2 class="section-heading" id="work-title">A selection of work, built around real problems.</h2>
+      <p class="section-desc">Software, applied machine learning and research. Each project is presented with its context, approach and evidence.</p>
+      <div class="projects">{projects.map((p,i) => <ProjectCard project={p} index={i+1}/>)}</div>
+    </div>
+  </section>
+  <section class="section" id="expertise" aria-labelledby="expertise-title">
+    <div class="container">
+      <div class="section-label">02 / Expertise</div>
+      <h2 class="section-heading" id="expertise-title">Where analysis meets execution.</h2>
+      <div class="expertise-grid">
+        <div class="expertise"><div class="expertise-no">01 / ANALYTICS</div><h3>Data & Analytics</h3><p>Python, SQL, data exploration, statistical reasoning and visualization. From noisy inputs to useful insights.</p></div>
+        <div class="expertise"><div class="expertise-no">02 / INTELLIGENCE</div><h3>Applied AI</h3><p>Machine learning fundamentals, experimentation, model comparison and evaluation grounded in evidence.</p></div>
+        <div class="expertise"><div class="expertise-no">03 / EXECUTION</div><h3>Product Building</h3><p>Prototyping, API-driven applications, testing and iterative product improvement with attention to usability.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="container about-grid">
+      <div><div class="section-label">03 / Background</div><h2 class="section-heading" id="about-title">Scientific roots. Product-minded execution.</h2><p class="section-desc">I studied Genetics & Bioengineering at Istanbul Bilgi University before completing an MSc in Data Analytics at BSBI Berlin. That blend of scientific and computational thinking shapes how I approach problems: question assumptions, work with evidence and make ideas tangible.</p><p class="section-desc">I am focused on opportunities at the intersection of data analytics, applied AI and technical product development.</p></div>
+      <div class="facts"><div class="fact"><span>Based in</span><strong>Berlin, Germany</strong></div><div class="fact"><span>Education</span><strong>MSc Data Analytics — BSBI Berlin<br />BSc Genetics & Bioengineering — Istanbul Bilgi University</strong></div><div class="fact"><span>Areas</span><strong>Data / AI / Software products</strong></div></div>
+    </div>
+  </section>
+  <section class="section" id="contact" aria-labelledby="contact-title"><div class="container contact-area"><div><div class="section-label">04 / Contact</div><h2 class="contact-heading" id="contact-title">Let's make something useful.</h2><p class="section-desc">Open to meaningful conversations about data analytics, AI and product development.</p></div><div class="contact-links"><a href={`mailto:${site.email}`}>Email <span aria-hidden="true">↗</span></a><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a></div></div></section>
+</BaseLayout>
