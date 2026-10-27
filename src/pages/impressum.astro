@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../config/site';
+import { providerAddress } from '../config/legal';
+---
+<BaseLayout title="Impressum — Egemen Özen" description="Provider information for Egemen Özen's portfolio.">
+  <section class="case-hero" aria-labelledby="impressum-title">
+    <div class="container">
+      <a class="text-link case-home-link" href="/">← Home</a>
+      <div class="section-label">Legal notice</div>
+      <h1 id="impressum-title">Impressum</h1>
+      <div class="case-body">
+        <section class="case-detail" aria-labelledby="provider-title">
+          <h2 id="provider-title">Provider</h2>
+          <address>{site.name}<br />{providerAddress.map((line) => <>{line}<br /></>)}</address>
+        </section>
+        <section class="case-detail" aria-labelledby="contact-title">
+          <h2 id="contact-title">Contact</h2>
+          <p>Email: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

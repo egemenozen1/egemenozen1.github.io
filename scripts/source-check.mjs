@@ -8,6 +8,8 @@ const required = [
   'src/content/projects/recommendation-systems.md',
   'src/content/projects/antidepressant-binding-mechanisms.md', 'public/favicon.svg',
   'src/pages/404.astro', 'src/pages/robots.txt.ts', 'src/pages/sitemap.xml.ts',
+  'src/pages/impressum.astro', 'src/pages/privacy.astro',
+  'src/config/legal.ts',
   'scripts/site-html-check.mjs', 'scripts/preview-check.mjs', 'scripts/dist-check.mjs'
 ];
 let failures = 0;
@@ -37,6 +39,17 @@ for(const file of mdFiles){
   }
 }
 const source = fs.readFileSync('src/pages/index.astro','utf8');
+const impressum = fs.readFileSync('src/pages/impressum.astro','utf8');
+const legalAddress = fs.readFileSync('src/config/legal.ts','utf8');
+const footer = fs.readFileSync('src/components/Footer.astro','utf8');
+if(!impressum.includes('providerAddress') || !/straße\s+\d+/i.test(legalAddress) || !/\d{5}\s+Berlin/i.test(legalAddress) || /(?:Apt\.?|Apartment|Suite|Room|Door)\s*\d/i.test(legalAddress) || /straße|\d{5}\s+Berlin/i.test(source)){
+  console.error('The owner-provided postal address must appear only on the Impressum page');
+  failures++;
+}
+if(!footer.includes('/impressum/') || !footer.includes('/privacy/')){
+  console.error('Footer must expose the Impressum and privacy pages');
+  failures++;
+}
 if(/10\+ projects|90% skills|example\.com/i.test(source)){console.error('Unverified claim or placeholder detected');failures++;}
 if(/walmart/i.test(source)){console.error('Removed project is still referenced by the homepage');failures++;}
 if(!source.includes('MSc Data Analytics — BSBI Berlin') || !source.includes('BSc Genetics & Bioengineering — Istanbul Bilgi University') || /<span>Studies<\/span>/.test(source)){
