@@ -58,6 +58,11 @@ if(!source.includes('MSc Data Analytics — BSBI Berlin') || !source.includes('B
 }
 const card=fs.readFileSync('src/components/ProjectCard.astro','utf8');
 const styles=fs.readFileSync('src/styles/global.css','utf8');
+const layout=fs.readFileSync('src/layouts/BaseLayout.astro','utf8');
+if(!layout.includes('<main id="main" tabindex="-1">')){
+  console.error('The skip link target must accept programmatic keyboard focus');
+  failures++;
+}
 if(!card.includes('project-title-link') || !card.includes('project-open-label') || !styles.includes('.project:focus-within')){
   console.error('Project cards must expose a keyboard-focusable case-study link and focus state');
   failures++;

@@ -25,5 +25,5 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     {!noindex && <meta property="og:url" content={canonical} />}
     <title>{title}</title>
   </head>
-  <body><Header/><main id="main"><slot /></main><Footer/></body>
+  <body><Header/><main id="main" tabindex="-1"><slot /></main><Footer/></body>
 </html>
