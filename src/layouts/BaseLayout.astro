@@ -14,15 +14,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0a0e16" />
     <meta name="description" content={description} />
+    <meta name="author" content={site.name} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="dark" />
     {!noindex && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {!noindex && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <title>{title}</title>
   </head>
   <body><Header/><main id="main" tabindex="-1"><slot /></main><Footer/></body>

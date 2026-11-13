@@ -2,7 +2,7 @@ import fs from 'node:fs';
 const required = [
   'astro.config.mjs','src/config/site.ts','src/content.config.ts','src/pages/index.astro',
   'src/pages/projects/[id].astro','src/components/Hero.astro','src/layouts/BaseLayout.astro',
-  'src/components/ProjectCard.astro','src/components/ProjectInteraction.astro',
+  'src/components/ProjectCard.astro','src/components/ProjectVisual.astro','src/components/ProjectInteraction.astro',
   'src/styles/global.css','src/content/projects/futureme-ai.md',
   'src/content/projects/pytorch-forecasting-tft.md',
   'src/content/projects/recommendation-systems.md',

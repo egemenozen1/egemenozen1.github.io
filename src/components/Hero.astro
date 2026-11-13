@@ -2,14 +2,30 @@
 import { site } from '../config/site';
 ---
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-orbit" aria-hidden="true"><span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span><span class="ring r4"></span><span class="orbit-line"></span><span class="orbit-point"></span></div>
-  <div class="container hero-inner">
-    <div class="hero-main">
-      <span class="eyebrow">Data + AI + Product Builder</span>
-      <h1 id="hero-title"><span class="hero-title-line">Building intelligent</span> <em>digital products.</em></h1>
-      <p class="hero-description">I'm Egemen Özen, a Berlin-based data analytics professional working across Python, applied AI, and product development.</p>
-      <div class="actions"><a class="btn btn-primary" href="#work">Explore My Work <span class="arrow" aria-hidden="true">↗</span></a><a class="btn btn-outline" href={site.github} target="_blank" rel="noopener noreferrer">View GitHub <span class="arrow" aria-hidden="true">↗</span></a></div>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Portfolio / Berlin, Germany</span>
+      <h1 id="hero-title">Egemen <em>Özen.</em></h1>
+      <p class="hero-role">Data + AI + <span>Product Builder</span></p>
+      <p class="hero-description">I work across analytics, applied machine learning and product development. My projects show how I frame a problem, build an approach and communicate what the evidence supports.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#work">Explore my work <span class="arrow" aria-hidden="true">↗</span></a>
+        <a class="btn btn-outline" href={`mailto:${site.email}`}>Get in touch <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+      <div class="hero-proof" aria-label="Portfolio highlights">
+        <a href="#work"><strong>04</strong><span>Selected projects</span></a>
+        <a href="#expertise"><strong>03</strong><span>Practice areas</span></a>
+        <a href={site.github} target="_blank" rel="noopener noreferrer"><strong>↗</strong><span>Public code</span></a>
+      </div>
     </div>
-    <div class="hero-foot"><span>Berlin, Germany</span><a href="#work">Scroll to explore <span aria-hidden="true">↓</span></a></div>
+    <div class="hero-panel" aria-hidden="true">
+      <div class="hero-panel-top"><span>FIELD NOTES / 001</span><span>DATA × AI × PRODUCT</span></div>
+      <div class="hero-panel-mark">E<span>Ö</span><i></i></div>
+      <div class="hero-panel-content">
+        <p>From question<br />to useful work.</p>
+        <div class="hero-panel-flow"><span>01 / Understand</span><span>02 / Evaluate</span><span>03 / Build</span></div>
+      </div>
+      <div class="hero-panel-bottom"><span>Independent work</span><span>Berlin / DE</span></div>
+    </div>
   </div>
 </section>

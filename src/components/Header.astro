@@ -1,3 +1,6 @@
+---
+import { site } from '../config/site';
+---
 <a href="#main" class="skip">Skip to content</a>
 <header class="site-header">
   <nav class="nav container" aria-label="Primary navigation">
@@ -7,6 +10,7 @@
       <a href="/#expertise">Expertise</a>
       <a href="/#about">About</a>
       <a href="/#contact">Contact</a>
+      <a class="nav-external" href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
     </div>
     <details class="mobile-nav">
       <summary>Menu <span class="menu-icon" aria-hidden="true"></span></summary>
@@ -15,6 +19,7 @@
         <a href="/#expertise">Expertise</a>
         <a href="/#about">About</a>
         <a href="/#contact">Contact</a>
+        <a href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       </div>
     </details>
   </nav>

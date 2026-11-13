@@ -1,5 +1,13 @@
 # Tarayıcı ve kalite kontrol raporu — 27 Ekim 2026
 
+## 13 Kasım 2026 — yayın adayı
+
+- Hero, Egemen Özen adını ve `Data + AI + Product Builder` kimliğini ilk ekranda gösteren iki sütunlu tasarımla yenilendi. Dört proje için yalnızca doğrulanmış iş akışlarından oluşan görsel paneller ve problem/yaklaşım/doğrulanmış çıktı alanları eklendi.
+- Gerçek Astro üretim çıktısı Edge headless ile incelendi: ana sayfa ve FutureMe vaka sayfası 360, 390, 768, 1280 ve 1440 CSS px genişlikte 10/10 yatay taşma kontrolünden geçti. 390 ve 1440 px ekran görüntüleri görsel olarak incelendi.
+- `npm.cmd run check:source`: 25 dosya, 4 proje, 0 hata. `npm.cmd run check:preview`: 8 sayfa, 0 hata. `npm.cmd run check:release`: geçti. `npm.cmd run build`: 8 sayfa. `npm.cmd run check:dist`: 8 sayfa, 0 hata.
+- Üretim HTML denetimi açıklama, canonical ve sosyal meta etiketlerini gerektiriyor. Eski statik önizleme, üretim SEO denetiminin kapsamı dışında tutuluyor.
+- Yayın öncesi kısıt: Lighthouse/Core Web Vitals ve kapsamlı WCAG değerlendirmesi yapılmadı; FutureMe özel kaynak kodu bu kontrolde incelenmedi. Sayısal performans iddiası eklenmedi.
+
 ## Sonuçlar
 - `npm run check:source`: 21 kritik kaynak yolu ve 4 proje girdisi denetlendi; 0 hata.
 - `npm run build`: başarılı; ana sayfa, dört vaka sayfası, 404, robots.txt ve sitemap.xml üretildi.

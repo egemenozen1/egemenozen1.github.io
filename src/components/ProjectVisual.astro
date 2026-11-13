@@ -1,0 +1,28 @@
+---
+interface Props { id: string; }
+const { id } = Astro.props;
+---
+
+<div class={`project-visual project-visual--${id}`} aria-hidden="true">
+  <div class="visual-top"><span>PROJECT FIELD NOTE</span><span>↗</span></div>
+  {id === 'futureme-ai' && <div class="visual-flow">
+    <div><span>01 / INPUT</span><strong>Fictional scenario</strong></div>
+    <div><span>02 / COMPARE</span><strong>Assumption-based range</strong></div>
+    <div><span>03 / NEXT STEP</span><strong>Small experiment</strong></div>
+  </div>}
+  {id === 'pytorch-forecasting-tft' && <div class="visual-sequence">
+    <div><span>DATA</span><strong>CO_GT_</strong></div><i></i>
+    <div><span>METHOD</span><strong>One-step TFT</strong></div><i></i>
+    <div><span>REVIEW</span><strong>Evaluation code</strong></div>
+  </div>}
+  {id === 'recommendation-systems' && <div class="visual-research">
+    <span>Literature</span><span>SQL data</span><span>Ethics</span>
+    <strong>Recommendation research</strong>
+  </div>}
+  {id === 'antidepressant-binding-mechanisms' && <div class="visual-docking">
+    <div><span>STRUCTURE</span><strong>5I6X</strong></div>
+    <div class="visual-docking-core">AutoDock<br />Vina</div>
+    <div><span>STRUCTURE</span><strong>7VOE</strong></div>
+  </div>}
+  <div class="visual-bottom"><span>{id === 'futureme-ai' ? 'PRODUCT / ENGINEERING' : id === 'pytorch-forecasting-tft' ? 'TIME SERIES / ML' : id === 'recommendation-systems' ? 'RESEARCH / SQL' : 'SENIOR DESIGN / DOCKING'}</span><span>EGEMEN ÖZEN</span></div>
+</div>

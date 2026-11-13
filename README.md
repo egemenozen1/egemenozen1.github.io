@@ -16,6 +16,8 @@ npm run preview
 
 The project was built locally with Node 24.22.1 and Astro 7.4.2. Open `http://localhost:4321/` after `npm run dev`. `preview/index.html` is a static visual reference; use the Astro server or `dist/` for production-route review.
 
+On Windows PowerShell, use `npm.cmd run dev -- --host 127.0.0.1`. With a local server running, `node scripts/responsive-check.mjs http://127.0.0.1:4321` checks the homepage and FutureMe case study at 360, 390, 768, 1280 and 1440 CSS px in Edge and saves temporary screenshots.
+
 ## Source of truth
 - `src/components/*` — reusable UI
 - `src/layouts/BaseLayout.astro` — document layout, metadata
@@ -26,13 +28,14 @@ The project was built locally with Node 24.22.1 and Astro 7.4.2. Open `http://lo
 
 ## Deployment
 
-The deploy workflow runs on pushes to `main` and manual dispatch. It checks `check:release` before building or deploying, so publication remains blocked until real legal pages and an explicitly reviewed approval file are supplied. The existing Pages source is currently `main` at `/`; switch Pages to **GitHub Actions** only when the reviewed release is ready. A remote backup branch, `backup/pre-astro-portfolio-2026-10-27`, preserves the old site's exact source commit `3eca72aa716905e0eaef2f9972be5fc9a810d687`.
+The deploy workflow runs on pushes to `main` and manual dispatch. It checks `check:release` before building or deploying. The owner-reviewed Impressum, privacy page and release approval are in this repository; keep the gate enabled. A remote backup branch, `backup/pre-astro-portfolio-2026-10-27`, preserves the old site's exact source commit `3eca72aa716905e0eaef2f9972be5fc9a810d687`.
 
 ## Checks already executed
-- Real Astro build: homepage, four case studies, 404, robots.txt and sitemap.xml.
-- Generated HTML/anchor audit: **6 pages, zero failures** (`npm run check:dist`).
-- Source inventory: `npm run check:source` (zero failures).
-- **Not yet tested:** Lighthouse, Core Web Vitals, private FutureMe source or legal approval. See `docs/QA_REPORT_TR.md`.
+- Real Astro build: homepage, four case studies, legal pages, 404, robots.txt and sitemap.xml.
+- Generated HTML/anchor audit: **8 pages, zero failures** (`npm run check:dist`).
+- Source, preview and release checks: zero failures on the November 2026 redesign branch.
+- Local Edge viewport audit: homepage and FutureMe case study at five widths, zero horizontal-overflow failures. See `docs/QA_REPORT_TR.md`.
+- **Not yet tested:** Lighthouse, Core Web Vitals or private FutureMe source.
 
 ## Static visual prototype
 Open `preview/index.html` directly in a browser. It has no external assets or services and is not the Astro build output.
