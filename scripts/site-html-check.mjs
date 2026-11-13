@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(process.argv[2] ?? 'preview');
+const production = path.basename(root) === 'dist';
 if (!fs.existsSync(root)) {
   console.error(`Missing directory: ${root}`);
   process.exit(1);
@@ -34,6 +35,10 @@ for(const file of pages){
   const rel=path.relative(root,file);
   if(!/<html\s+lang="en"/i.test(html))fail(`${rel}: missing HTML language`);
   if(!/<meta\s+name="viewport"/i.test(html))fail(`${rel}: missing responsive viewport`);
+  if(production && !/<meta\s+name="description"\s+content="[^"]+"/i.test(html))fail(`${rel}: missing search description`);
+  if(production && !/<meta\s+property="og:title"\s+content="[^"]+"/i.test(html))fail(`${rel}: missing social title`);
+  if(production && !/<meta\s+name="twitter:card"\s+content="summary"/i.test(html))fail(`${rel}: missing social card metadata`);
+  if(production && rel!=='404.html' && !/<link\s+rel="canonical"\s+href="https:\/\/egemenozen1\.github\.io\//i.test(html))fail(`${rel}: missing canonical URL`);
   const nH1=(html.match(/<h1(?:\s|>)/gi)||[]).length;
   if(nH1!==1)fail(`${rel}: expected exactly one H1, found ${nH1}`);
   const ids=new Set([...html.matchAll(/\bid\s*=\s*["']([^"']+)["']/g)].map(x=>x[1]));
