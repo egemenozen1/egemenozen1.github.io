@@ -1134,3 +1134,14 @@ body { background:#09111b; }
   .visual-docking > div:not(.visual-docking-core) { width:76px; height:76px; }
   .visual-docking-core { width:75px; height:75px; font-size:10px; }
 }
+
+/* Keep the name and monogram readable at every screen width. */
+.site-header { background:#0a0e16; border-bottom:1px solid rgba(185,216,231,.10); }
+.nav { min-height:72px; }
+.brand { font-size:17px; font-weight:650; letter-spacing:-.025em; }
+.nav-links { gap:clamp(20px,2.5vw,34px); }
+.nav-links a { font-size:14px; font-weight:500; }
+.hero h1 { font-size:clamp(52px,6vw,88px); line-height:1.2; letter-spacing:-.045em; }
+.hero-panel-mark { font-size:clamp(105px,11vw,158px); line-height:1.15; letter-spacing:0; white-space:nowrap; }
+.hero-panel-mark span { margin-left:.08em; }
+@media(max-width:760px) { .nav { min-height:64px; } .hero h1 { font-size:clamp(45px,9vw,70px); line-height:1.22; } .hero-panel-mark { font-size:clamp(90px,16vw,132px); line-height:1.15; } }
