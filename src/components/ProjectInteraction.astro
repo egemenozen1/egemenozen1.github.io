@@ -17,10 +17,10 @@ const { id, liveUrl } = Astro.props;
 {id === 'pytorch-forecasting-tft' && <section class="project-interaction" aria-labelledby="interaction-title">
   <div class="interaction-heading"><span class="section-label">Method walkthrough</span><h2 id="interaction-title">From time series to an evaluation step</h2><p>Interactive source-code flow. No synthetic forecast curve or unverified score is shown.</p></div>
   <ol class="flow-list">
-    <li><details><summary><span class="flow-number">01</span><span>Prepare the series</span></summary><p>The analysis script parses date and time, creates a sequential time index and uses the UCI Air Quality field <code>CO_GT_</code>.</p></details></li>
-    <li><details><summary><span class="flow-number">02</span><span>Preserve chronology</span></summary><p>The code separates the final 20% as a test segment without shuffling the time order.</p></details></li>
-    <li><details><summary><span class="flow-number">03</span><span>Configure one-step TFT</span></summary><p>PyTorch Forecasting and PyTorch Lightning are used to configure a Temporal Fusion Transformer with a one-step prediction horizon.</p></details></li>
-    <li><details><summary><span class="flow-number">04</span><span>Review evaluation code</span></summary><p>The script calculates R². The pipeline and test-set construction need further review, so this page does not present a numerical result.</p></details></li>
+    <li><details><summary><span class="flow-number">01</span><span>Prepare the series</span></summary><p>The pipeline parses date and time, creates a sequential time index and uses the UCI Air Quality field <code>CO_GT_</code>.</p></details></li>
+    <li><details><summary><span class="flow-number">02</span><span>Preserve chronology</span></summary><p>The pipeline separates training, validation and test periods chronologically.</p></details></li>
+    <li><details><summary><span class="flow-number">03</span><span>Configure 24-hour TFT</span></summary><p>PyTorch Forecasting and PyTorch Lightning are used to configure a Temporal Fusion Transformer with a 24-hour prediction horizon.</p></details></li>
+    <li><details><summary><span class="flow-number">04</span><span>Review evaluation code</span></summary><p>The committed outputs report MAE, RMSE, R² and interval coverage. Rolling forecast windows overlap.</p></details></li>
   </ol>
   <a class="text-link" href="https://github.com/egemenozen1/pytorch-forecasting-tft" target="_blank" rel="noopener noreferrer">Inspect the source repository <span aria-hidden="true">↗</span></a>
 </section>}

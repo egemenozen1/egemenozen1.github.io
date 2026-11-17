@@ -1,37 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../config/site';
+import '../styles/home.css';
 const projects = (await getCollection('projects')).sort((a,b) => a.data.order-b.data.order);
 ---
 <BaseLayout>
-  <Hero />
-  <section class="section" id="work" aria-labelledby="work-title">
-    <div class="container">
-      <div class="section-label">01 / Selected work</div>
-      <h2 class="section-heading" id="work-title">Work you can inspect.</h2>
-      <p class="section-desc">Four projects across product building, forecasting and research. Each one shows the question, the method and what the available evidence actually supports.</p>
-      <div class="projects">{projects.map((p,i) => <ProjectCard project={p} index={i+1}/>)}</div>
-    </div>
-  </section>
-  <section class="section" id="expertise" aria-labelledby="expertise-title">
-    <div class="container">
-      <div class="section-label">02 / Expertise</div>
-      <h2 class="section-heading" id="expertise-title">Where analysis meets execution.</h2>
-      <div class="expertise-grid">
-        <div class="expertise"><div class="expertise-no">01 / ANALYTICS</div><h3>Data & Analytics</h3><p>Python, SQL, data exploration, statistical reasoning and visualization. From noisy inputs to useful insights.</p><a class="expertise-link" href="/projects/recommendation-systems/">Explore SQL research <span aria-hidden="true">↗</span></a></div>
-        <div class="expertise"><div class="expertise-no">02 / INTELLIGENCE</div><h3>Applied AI</h3><p>Machine learning fundamentals, experimentation, model comparison and evaluation grounded in evidence.</p><a class="expertise-link" href="/projects/pytorch-forecasting-tft/">Explore forecasting work <span aria-hidden="true">↗</span></a></div>
-        <div class="expertise"><div class="expertise-no">03 / EXECUTION</div><h3>Product Building</h3><p>Prototyping, API-driven applications, testing and iterative product improvement with attention to usability.</p><a class="expertise-link" href="/projects/futureme-ai/">Explore product work <span aria-hidden="true">↗</span></a></div>
-      </div>
-    </div>
-  </section>
-  <section class="section" id="about" aria-labelledby="about-title">
-    <div class="container about-grid">
-      <div><div class="section-label">03 / Background</div><h2 class="section-heading" id="about-title">Scientific roots. Product-minded execution.</h2><p class="section-desc">My studies in Genetics & Bioengineering at Istanbul Bilgi University and Data Analytics at BSBI Berlin shape how I approach problems: question assumptions, work with evidence and make ideas tangible.</p><p class="section-desc">I am focused on opportunities at the intersection of data analytics, applied AI and technical product development.</p></div>
-      <div class="facts"><div class="fact"><span>Based in</span><strong>Berlin, Germany</strong></div><div class="fact"><span>Education</span><strong>MSc Data Analytics — BSBI Berlin<br />BSc Genetics & Bioengineering — Istanbul Bilgi University</strong></div><div class="fact"><span>Areas</span><strong>Data / AI / Software products</strong></div></div>
-    </div>
-  </section>
-  <section class="section" id="contact" aria-labelledby="contact-title"><div class="container contact-area"><div><div class="section-label">04 / Contact</div><h2 class="contact-heading" id="contact-title">Let's make something useful.</h2><p class="section-desc">For roles and collaborations in analytics, applied AI or product development, email me directly or explore the source behind my work.</p></div><div class="contact-links"><a href={`mailto:${site.email}`}><span><small>Email</small>{site.email}</span><span aria-hidden="true">↗</span></a><a href={site.github} target="_blank" rel="noopener noreferrer"><span><small>Code & projects</small>GitHub profile</span><span aria-hidden="true">↗</span></a></div></div></section>
+<section class="intro container" aria-labelledby="intro-title">
+  <div class="intro-main"><p class="intro-location">Berlin, Germany <span aria-hidden="true">/</span> Data & product</p>
+  <h1 id="intro-title">Egemen Özen<span>.</span></h1>
+  <p class="intro-statement">I build tools and analyses that make complex information easier to work with.</p>
+  <p class="intro-details">Data analytics, Python and product development — from a locally run portfolio workspace to decision-support and time-series research.</p>
+  <div class="intro-links"><a href="#selected">Explore selected work <span aria-hidden="true">↘</span></a><a href={`mailto:${site.email}`}>Get in touch <span aria-hidden="true">↗</span></a></div></div>
+  <aside class="intro-note"><span class="note-heading">What you’ll find here</span><p>Product development, decision support and forecasting.</p><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub profile ↗</a></aside>
+</section>
+<section class="selected container" id="selected" aria-labelledby="selected-title">
+  <div class="section-head"><div><p class="section-kicker">Selected work</p><h2 id="selected-title">Projects at a glance.</h2></div><a href="#work">All projects <span aria-hidden="true">↓</span></a></div>
+  <div class="selected-grid">
+    <article class="feature feature-market"><div class="feature-top"><span>01 / Product development</span><span>Local application</span></div><div class="feature-body"><h3>MarketPulse</h3><p class="feature-summary">A local workspace for understanding positions, costs and the quality of available prices.</p><p><strong>My contribution</strong> Product structure, calculations and a React / FastAPI implementation.</p></div><div class="feature-proof market-proof"><span>Product scope</span><p>Holdings, transactions and prices in one local workspace.</p><small>Runs locally · Source and demo are not publicly available</small></div><a class="feature-link" href="/marketpulse/">Read the project note <span aria-hidden="true">↗</span></a></article>
+    <article class="feature feature-future"><div class="feature-top"><span>02 / Decision support</span><span>Public demo</span></div><div class="feature-body"><h3>FutureMe AI</h3><p class="feature-summary">Explore possible trade-offs before committing to a decision.</p><p><strong>My contribution</strong> Python backend, JavaScript interface and product experience, with AI-assisted development.</p></div><div class="feature-proof future-proof"><span>Public demo</span><p>Three fictional scenarios. No personal profile required.</p><small>Assumption-based exploration, not individualized advice</small></div><div class="feature-actions"><a class="feature-link" href="/projects/futureme-ai/">Read case study ↗</a><a href="https://futureme-ai-6rgq.onrender.com/" target="_blank" rel="noopener noreferrer">Open demo ↗</a></div></article>
+    <article class="feature feature-analysis"><div class="feature-top"><span>03 / Applied machine learning</span><span>Research</span></div><div class="feature-body"><h3>Air quality forecasting</h3><p class="feature-summary">How does a 24-hour forecast compare with actual CO measurements?</p><p><strong>My contribution</strong> A time-series experiment using PyTorch Forecasting and the UCI Air Quality data.</p></div><figure class="analysis-figure"><img src="/images/tft-forecast.png" width="2059" height="864" alt="Actual carbon monoxide measurements, the TFT median forecast and its uncertainty interval over a week of the test period."/><figcaption>Committed 24-hour forecast versus observed CO. <a href="/images/tft-forecast.png">View full-size figure</a> · <a href="https://github.com/egemenozen1/pytorch-forecasting-tft/blob/26ee6676494eea76b2219c4c9adfe66481ecdc16/artifacts/current/forecast_vs_actual.png" target="_blank" rel="noopener noreferrer">Source figure ↗</a></figcaption></figure><a class="feature-link" href="/projects/pytorch-forecasting-tft/">Read case study <span aria-hidden="true">↗</span></a></article>
+  </div>
+</section>
+<section class="archive container" id="work" aria-labelledby="work-title"><div class="section-head"><div><p class="section-kicker">Further work</p><h2 id="work-title">The full project archive.</h2></div><p>Problem, approach and the limits of the available evidence.</p></div><div class="projects">{projects.map((p,i) => <ProjectCard project={p} index={i+1}/>)}</div></section>
+<section class="profile" id="about"><div class="container profile-grid"><div><p class="section-kicker">Background</p><h2>Scientific thinking.<br/>Practical work.</h2><p>My studies in Genetics & Bioengineering and Data Analytics inform the way I investigate questions, evaluate evidence and build software.</p><a href={site.github} target="_blank" rel="noopener noreferrer">Explore my GitHub ↗</a></div><div class="profile-facts"><div><span>Education</span><p>MSc Data Analytics — BSBI Berlin<br/>BSc Genetics & Bioengineering — Istanbul Bilgi University</p></div><div id="expertise"><span>Working with</span><p>Python · SQL · analytics · applied machine learning · product development</p></div><div><span>Based in</span><p>Berlin, Germany</p></div></div></div></section>
+<section class="contact-section container" id="contact"><div><p class="section-kicker">Contact</p><h2>Have a question or an opportunity?</h2><p>I’m interested in conversations about analytics, applied AI and product development.</p></div><a href={`mailto:${site.email}`}>Email Egemen <span aria-hidden="true">↗</span></a></section>
 </BaseLayout>
