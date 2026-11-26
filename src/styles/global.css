@@ -202,7 +202,7 @@ em { font-style: normal; color: var(--acc); }
 .talk { font-size: clamp(4rem, 18vw, 18rem); line-height: 0.8; letter-spacing: -0.04em; font-weight: 800; margin: 20px 0 0 -0.04em; }
 .talk .ch { display: inline-block; font-variation-settings: 'wght' var(--w, 800), 'wdth' var(--wd, 100); transition: font-variation-settings 0.4s var(--ease); }
 .contact-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; margin-top: clamp(32px, 5vw, 64px); }
-.contact-row p { font-size: clamp(1.1rem, 1.5vw, 1.35rem); font-weight: 500; max-width: 26em; }
+.contact-row > p { font-size: clamp(1.1rem, 1.5vw, 1.35rem); font-weight: 500; max-width: 26em; }
 .contact-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .contact .btn { background: var(--fg); color: var(--bg); }
 .contact .btn-ghost { background: transparent; color: var(--fg); border-color: var(--fg); }
@@ -261,3 +261,6 @@ em { font-style: normal; color: var(--acc); }
 .horizon .l-per { stroke: var(--acc); }
 .horizon .cursor-dot-per { fill: var(--acc); }
 .pcard .dim { position: absolute; inset: 0; border-radius: inherit; background: #000; opacity: 0; pointer-events: none; z-index: 2; }
+.reach { display: grid; gap: 12px; justify-items: start; }
+.reach .mail { font-size: clamp(1.4rem, 2.6vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; user-select: all; }
+.reach .mail a { text-decoration: none; border-bottom: 3px solid var(--acc); }

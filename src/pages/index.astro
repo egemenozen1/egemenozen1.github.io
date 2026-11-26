@@ -157,7 +157,7 @@ const rules = [
           <li>Product end to end — a live public demo and a full local product, UI to database</li>
           <li>Berlin-based · German &amp; English C1 · Turkish native</li>
         </ul>
-        <a class="btn" href={`mailto:${site.email}?subject=Role%20at%20your%20team`}>Talk about a role →</a>
+        <a class="btn" href="#contact">Talk about a role →</a>
       </article>
       <article class="door biz" data-reveal style="--d:100ms">
         <p class="eyebrow">For businesses · EGO AI Studio</p>
@@ -168,7 +168,7 @@ const rules = [
           <li>Data &amp; reporting automation with checks before numbers reach your team</li>
           <li>Agent workflows with an approval gate on anything that leaves the building</li>
         </ul>
-        <a class="btn btn-ghost" href={`mailto:${site.email}?subject=Automation%20project`}>Describe your process →</a>
+        <a class="btn btn-ghost" href="#contact">Describe your process →</a>
       </article>
     </div>
     <dl class="facts-strip" data-reveal>
@@ -184,10 +184,12 @@ const rules = [
     <h2 class="talk" id="contact-title" data-kinetic aria-label="Let’s talk."><span aria-hidden="true">{[...'Let’s talk.'].map((c) => c === ' ' ? ' ' : <span class="ch">{c}</span>)}</span></h2>
     <div class="contact-row">
       <p>For Applied AI, automation or data roles — or a process in your business that should run itself. I reply in English, German or Turkish.</p>
-      <div>
+      <div class="reach">
+        <p class="eyebrow">Email</p>
+        <p class="mail"><a href={`mailto:${site.email}`} data-mail>{site.email}</a></p>
         <div class="contact-actions">
-          <a class="btn" href={`mailto:${site.email}`}>{site.email}</a>
-          <button class="btn btn-ghost" type="button" data-copy={site.email}>Copy</button>
+          <button class="btn" type="button" data-copy={site.email}>Copy email</button>
+          <a class="btn btn-ghost" href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
           <a class="btn btn-ghost" href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
         </div>
         <p class="copy-state" role="status" data-copy-state></p>
@@ -242,6 +244,10 @@ const rules = [
     });
   }
 
-  const copy = document.querySelector<HTMLButtonElement>('[data-copy]'), state = document.querySelector('[data-copy-state]');
-  copy?.addEventListener('click', async () => { try { await navigator.clipboard.writeText(copy.dataset.copy || ''); state!.textContent = 'Address copied.'; } catch { state!.textContent = 'Copy failed — use the email button.'; } });
+  // Copy email: clipboard first; if that is blocked, select the address so Ctrl+C works.
+  const copy = document.querySelector<HTMLButtonElement>('[data-copy]'), state = document.querySelector('[data-copy-state]'), mail = document.querySelector<HTMLElement>('[data-mail]');
+  copy?.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(copy.dataset.copy || ''); copy.textContent = 'Copied ✓'; state!.textContent = 'Email copied — paste it into any mail app.'; setTimeout(() => (copy.textContent = 'Copy email'), 2400); }
+    catch { if (mail) { const r = document.createRange(); r.selectNodeContents(mail); const sel = getSelection(); sel?.removeAllRanges(); sel?.addRange(r); } state!.textContent = 'Address selected — press Ctrl+C (⌘C) to copy.'; }
+  });
 </script>
