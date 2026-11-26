@@ -5,6 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import EvidenceLedger from '../../components/EvidenceLedger.astro';
 import MissionReplay from '../../components/MissionReplay.astro';
 import HorizonExplorer from '../../components/HorizonExplorer.astro';
+import { forecast } from '../../data/forecast';
 import markets from '../../assets/work/marketpulse-markets.png';
 
 export async function getStaticPaths() {
@@ -14,6 +15,10 @@ export async function getStaticPaths() {
 const { project, next } = Astro.props;
 const { Content } = await render(project);
 const d = project.data;
+const isForecast = project.id === 'pytorch-forecasting-tft';
+const evidence = isForecast
+  ? [...d.evidence, { state: 'limit' as const, text: `${forecast.persistenceResult}. Single-site experiment; training was not re-run for this portfolio.` }]
+  : d.evidence;
 const long = d.title.length > 34;
 ---
 <BaseLayout title={`${d.title} — Egemen Özen`} description={d.summary}>
@@ -37,7 +42,7 @@ const long = d.title.length > 34;
 
     <div class="wrap">
       {project.id === 'ego-ai-studio' && <div class="case-stage"><MissionReplay /></div>}
-      {project.id === 'pytorch-forecasting-tft' && <div class="case-stage card"><HorizonExplorer /></div>}
+      {isForecast && <div class="case-stage card"><HorizonExplorer /></div>}
       {d.cover && (
         <figure class="case-cover">
           <div class="frame"><Image src={d.cover} alt={d.coverAlt ?? ''} widths={[720, 1080, 1440, 2000]} sizes="(max-width: 1480px) 100vw, 1360px" quality={80} loading="eager" /></div>
@@ -48,7 +53,7 @@ const long = d.title.length > 34;
 
     <div class="wrap case-layout">
       <aside class="case-aside" aria-label="Project evidence and stack">
-        <EvidenceLedger items={d.evidence} />
+        <EvidenceLedger items={evidence} />
         <div>
           <p class="eyebrow" style="margin-bottom:10px">Stack</p>
           <ul class="chips" role="list">{d.technologies.map((t) => <li>{t}</li>)}</ul>

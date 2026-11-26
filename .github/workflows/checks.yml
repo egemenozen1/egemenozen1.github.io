@@ -15,5 +15,12 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run check:source
+      - run: npm test
       - run: npm run build
       - run: npm run check:dist
+      - name: Browser regression checks
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 &
+          trap 'kill "$!" 2>/dev/null || true' EXIT
+          curl --fail --silent --retry-connrefused --retry 15 --output /dev/null http://127.0.0.1:4321/
+          npm run check:browser

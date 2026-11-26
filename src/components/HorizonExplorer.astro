@@ -1,14 +1,9 @@
 ---
 // Interactive per-horizon comparison built from the committed outputs of
 // egemenozen1/pytorch-forecasting-tft at commit 26ee667 (local copies in src/data).
-import csv from '../data/metrics_by_horizon.csv?raw';
-import baseline from '../data/baseline.json';
+import { forecast } from '../data/forecast';
 
-const rows = csv.trim().split(/\r?\n/).slice(1).map((line) => line.split(','));
-const data = rows.map((r) => {
-  const h = Number(r[0]);
-  return { h, tft: Number(r[1]), per: baseline.find((b) => b.horizon === h)!.mae, cov: Number(r[7]) };
-});
+const { data, persistenceResult } = forecast;
 const X0 = 44, X1 = 588, Y0 = 206, Y1 = 18, MIN = 0.4, MAX = 1.5;
 const x = (h: number) => X0 + ((h - 1) / 23) * (X1 - X0);
 const y = (v: number) => Y0 - ((v - MIN) / (MAX - MIN)) * (Y0 - Y1);
@@ -27,7 +22,7 @@ const s = data[start - 1];
   </div>
   <svg viewBox="0 0 600 240" role="img" aria-labelledby="hz-title hz-desc">
     <title id="hz-title">Mean absolute error by forecast horizon, TFT versus persistence</title>
-    <desc id="hz-desc">TFT error rises from 0.88 at one hour to about 1.15 at 24 hours. Persistence error rises to about 1.43 around 17 hours and falls back to 0.78 at 24 hours. Persistence is better at horizons 1 to 3 and 22 to 24.</desc>
+    <desc id="hz-desc">{`TFT error rises from 0.88 at one hour to about 1.15 at 24 hours. Persistence error rises to about 1.43 around 17 hours and falls back to 0.78 at 24 hours. ${persistenceResult}.`}</desc>
     <g class="grid">{ticks.map((t) => <line x1={X0} x2={X1} y1={y(t)} y2={y(t)} />)}</g>
     {wins.map((d) => <rect class="win" x={x(d.h) - step / 2} width={step} y={Y1} height={Y0 - Y1} />)}
     <path class="l-per" d={path('per')} />

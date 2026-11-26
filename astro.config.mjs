@@ -5,4 +5,11 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
+  markdown: { syntaxHighlight: false },
+  security: {
+    csp: {
+      directives: ["default-src 'self'", "img-src 'self' data:", "object-src 'none'", "base-uri 'none'", "form-action 'none'"],
+      styleDirective: { resources: [{ resource: "'self'", kind: 'element' }, { resource: "'unsafe-inline'", kind: 'attribute' }] },
+    },
+  },
 });

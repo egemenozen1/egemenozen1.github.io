@@ -3,6 +3,7 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const discipline = z.enum(['AI Engineering', 'AI Automation', 'Data Analytics', 'Product Development']);
+const publicUrl = z.url({ protocol: /^https$/ });
 
 // Evidence states shown in the ledger. Every claim on a project page carries one.
 const evidence = z.object({
@@ -25,8 +26,8 @@ const projects = defineCollection({
     disciplines: z.array(discipline).min(1),
     technologies: z.array(z.string()),
     evidence: z.array(evidence).min(2),
-    sourceUrl: z.string().url().optional(),
-    liveUrl: z.string().url().optional(),
+    sourceUrl: publicUrl.optional(),
+    liveUrl: publicUrl.optional(),
     cover: image().optional(),
     coverAlt: z.string().optional(),
     coverCaption: z.string().optional(),

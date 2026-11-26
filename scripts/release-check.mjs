@@ -1,9 +1,30 @@
+import assert from 'node:assert/strict';
 import fs from 'node:fs';
-const requiredLegal = ['src/pages/impressum.astro','src/pages/privacy.astro'];
-const missing = requiredLegal.filter(x=>!fs.existsSync(x));
-if(missing.length){ console.error('BLOCKED: legal review not complete. Missing:',missing.join(', ')); process.exit(1); }
-if(!fs.existsSync('release-approval.json')){console.error('BLOCKED: explicit release-approval.json is missing.');process.exit(1);}
-let ok=false;
-try { const a=JSON.parse(fs.readFileSync('release-approval.json','utf8'));ok=a.contentReviewed===true&&a.legalReviewed===true&&a.liveLinksVerified===true; } catch {}
-if(!ok){console.error('BLOCKED: content, legal and URL checks need explicit approval.');process.exit(1);}
-console.log('Release approval checks passed.');
+import { pathToFileURL } from 'node:url';
+
+export function verifyRelease(approval, commit, reviewedCommit) {
+  assert(approval?.contentReviewed === true && approval.legalReviewed === true && approval.liveLinksVerified === true,
+    'Recorded content, legal and link review is required.');
+  if (commit !== undefined || reviewedCommit !== undefined) {
+    assert(typeof commit === 'string' && /^[a-f0-9]{40}$/i.test(commit),
+      'A full build commit SHA is required.');
+    assert(typeof reviewedCommit === 'string' && /^[a-f0-9]{40}$/i.test(reviewedCommit) &&
+      reviewedCommit.toLowerCase() === commit.toLowerCase(),
+      'Explicit approval must name the exact main commit being published.');
+  }
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try {
+    for (const file of ['src/pages/impressum.astro', 'src/pages/privacy.astro']) {
+      assert(fs.existsSync(file), `Missing release page: ${file}`);
+    }
+    const approval = JSON.parse(fs.readFileSync('release-approval.json', 'utf8'));
+    const { RELEASE_COMMIT, REVIEWED_COMMIT } = process.env;
+    verifyRelease(approval, RELEASE_COMMIT, REVIEWED_COMMIT);
+    console.log(RELEASE_COMMIT ? 'Release approval matches the build commit.' : 'Recorded review checks passed.');
+  } catch (error) {
+    console.error(`BLOCKED: ${error.message}`);
+    process.exitCode = 1;
+  }
+}
