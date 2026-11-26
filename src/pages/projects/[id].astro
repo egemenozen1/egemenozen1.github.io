@@ -6,7 +6,8 @@ import EvidenceLedger from '../../components/EvidenceLedger.astro';
 import MissionReplay from '../../components/MissionReplay.astro';
 import HorizonExplorer from '../../components/HorizonExplorer.astro';
 import { forecast } from '../../data/forecast';
-import markets from '../../assets/work/marketpulse-markets.png';
+import mpWhy from '../../assets/work/ictavo-why.png';
+import mpInsights from '../../assets/work/ictavo-insights.png';
 
 export async function getStaticPaths() {
   const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -61,11 +62,17 @@ const long = d.title.length > 34;
       </aside>
       <div class="prose">
         <Content />
-        {project.id === 'marketpulse' && (
-          <figure class="case-cover">
-            <div class="frame"><Image src={markets} alt="MarketPulse Market overview with crypto market breadth, a filtered crypto table and an ECB rates, inflation and FX panel, using fictional fixture data." widths={[720, 1080, 1440]} sizes="(max-width: 1080px) 100vw, 60vw" quality={78} loading="lazy" /></div>
-            <figcaption>Markets workspace: crypto breadth beside official euro-area indicators. Fictional fixture data.</figcaption>
-          </figure>
+        {project.id === 'ictavo' && (
+          <>
+            <figure class="case-cover">
+              <div class="frame"><Image src={mpWhy} alt="The Why? screen: “Why did Chainlink rise?” with its 7-day change against Bitcoin and the typical asset, and the first suspected cause stamped Doesn't fit." widths={[720, 1080, 1440]} sizes="(max-width: 1080px) 100vw, 60vw" quality={78} loading="lazy" /></div>
+              <figcaption>Why?: explanations tested one by one. Sample portfolio.</figcaption>
+            </figure>
+            <figure class="case-cover">
+              <div class="frame"><Image src={mpInsights} alt="What the week hid: cards with the holdings change against the market, the worst and best hours, and assets that moved against the crowd." widths={[720, 1080, 1440]} sizes="(max-width: 1080px) 100vw, 60vw" quality={78} loading="lazy" /></div>
+              <figcaption>What the week hid: measured facts, each linking to the evidence.</figcaption>
+            </figure>
+          </>
         )}
       </div>
     </div>

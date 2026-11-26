@@ -9,7 +9,7 @@ const required = [
   'astro.config.mjs', 'src/config/site.ts', 'src/config/legal.ts', 'src/content.config.ts',
   'src/layouts/BaseLayout.astro', 'src/components/Header.astro', 'src/components/Footer.astro',
   'src/components/StoryCanvas.astro', 'src/components/EvidenceLedger.astro', 'src/components/MissionReplay.astro',
-  'src/components/ProvenanceInspector.astro', 'src/components/FutureMeStage.astro', 'src/components/HorizonExplorer.astro',
+  'src/components/FutureMeStage.astro', 'src/components/HorizonExplorer.astro',
   'src/pages/index.astro', 'src/pages/projects/[id].astro', 'src/pages/404.astro', 'src/pages/impressum.astro',
   'src/pages/privacy.astro', 'src/pages/robots.txt.ts', 'src/pages/sitemap.xml.ts', 'src/styles/global.css',
   'src/data/metrics_by_horizon.csv', 'src/data/baseline.json', 'src/data/provenance.json',
@@ -18,7 +18,7 @@ const required = [
 for (const file of required) if (!fs.existsSync(file)) fail(`missing ${file}`);
 
 // Approved project set and order: three flagships, then the lab.
-const expected = ['ego-ai-studio', 'marketpulse', 'futureme-ai', 'pytorch-forecasting-tft', 'recommendation-systems', 'antidepressant-binding-mechanisms'];
+const expected = ['ego-ai-studio', 'ictavo', 'futureme-ai', 'pytorch-forecasting-tft', 'recommendation-systems', 'antidepressant-binding-mechanisms'];
 const md = fs.readdirSync('src/content/projects').filter((f) => f.endsWith('.md'));
 const order = (f) => Number(read(`src/content/projects/${f}`).match(/^order:\s*(\d+)/m)?.[1] ?? 0);
 const actual = md.sort((a, b) => order(a) - order(b)).map((f) => f.replace(/\.md$/, ''));

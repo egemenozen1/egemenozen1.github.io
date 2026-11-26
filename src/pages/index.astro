@@ -6,7 +6,7 @@ import StoryCanvas from '../components/StoryCanvas.astro';
 import HorizonExplorer from '../components/HorizonExplorer.astro';
 import { site } from '../config/site';
 import { forecast } from '../data/forecast';
-import mpShot from '../assets/work/marketpulse-portfolio.png';
+import mpShot from '../assets/work/ictavo-week.png';
 import fmShot from '../assets/work/futureme-home.png';
 
 const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -28,7 +28,7 @@ const steps = [
 
 const cards = [
   { p: get('ego-ai-studio'), bg: '#111113', fg: '#f2f2f0', media: 'ego' },
-  { p: get('marketpulse'), bg: '#0b1630', fg: '#eaf0fa', media: 'mp' },
+  { p: get('ictavo'), bg: '#0b1630', fg: '#eaf0fa', media: 'mp' },
   { p: get('futureme-ai'), bg: '#1e4d3a', fg: '#f3efe6', media: 'fm' },
 ];
 
@@ -36,7 +36,7 @@ const tools = ['Python', 'Claude API', 'FastAPI', 'n8n', 'SQL', 'React', 'TypeSc
 const rules = [
   ['Function before effect.', 'Who uses it, and why — before any animation.', 'Like this page: static, no trackers, no cookies.'],
   ['Beat a baseline first.', 'A model earns its complexity against something simple.', 'TFT vs persistence, losses included.'],
-  ['Every number keeps its receipt.', 'Source, time and sample flag — or the value stays empty.', 'MarketPulse: missing stays missing.'],
+  ['Every number keeps its receipt.', 'Source, time and sample flag — or the value stays empty.', 'Ictavo: missing stays missing.'],
   ['People own the irreversible.', 'Agents research, draft, build and test. Humans send, publish, buy and push.', 'EGO AI Studio’s owner gate.'],
 ];
 ---
@@ -105,7 +105,7 @@ const rules = [
                 </div>
               </div>
             )}
-            {media === 'mp' && <div class="media"><Image src={mpShot} widths={[640, 1000]} sizes="(max-width: 1000px) 92vw, 50vw" quality={76} loading="lazy" alt="MarketPulse portfolio workspace, fictional fixture data." /></div>}
+            {media === 'mp' && <div class="media fit" style="--fit:#ffbea2"><Image src={mpShot} widths={[640, 1000]} sizes="(max-width: 1000px) 92vw, 50vw" quality={76} loading="lazy" alt="Ictavo: “A heavy week. 59 of 73 fell.” with an hourly market line. Sample portfolio." /></div>}
             {media === 'fm' && <div class="media"><Image src={fmShot} widths={[640, 1000]} sizes="(max-width: 1000px) 92vw, 50vw" quality={76} loading="lazy" alt="FutureMe public demo homepage." /></div>}
           </article>
         );

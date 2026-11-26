@@ -1,7 +1,7 @@
 export const site = {
   name: 'Egemen Özen',
   title: 'Egemen Özen — AI Engineering, Automation & Data Analytics',
-  description: 'Berlin-based AI engineer and data analyst. Agent systems, automation and data products that show their evidence: EGO AI Studio, MarketPulse and FutureMe AI.',
+  description: 'Berlin-based AI engineer and data analyst. Agent systems, automation and data products that show their evidence: EGO AI Studio, Ictavo and FutureMe AI.',
   github: 'https://github.com/egemenozen1',
   linkedin: 'https://www.linkedin.com/in/egemen-ozen', // From the owner's CV.
   email: 'egemen.oezen@gmail.com', // Confirmed by the owner for public portfolio contact.

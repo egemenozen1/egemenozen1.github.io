@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+interface Props { name: string; target: string }
+const { name, target } = Astro.props;
+---
+<BaseLayout title={`${name} — Egemen Özen`} description={`The ${name} case study has moved.`} canonicalPath={target} redirectTo={target}>
+  <section class="wrap page-simple" aria-labelledby="moved-title">
+    <p class="eyebrow">Moved</p>
+    <h1 class="case-title" id="moved-title">{name} has a new page.</h1>
+    <p class="case-thesis"><a href={target}>Continue to the {name} case study →</a></p>
+  </section>
+</BaseLayout>
