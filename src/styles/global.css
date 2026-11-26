@@ -167,8 +167,13 @@ html:has(.mobile-menu[open]) { overflow: hidden; }
 .lab-card.big:hover { background: none; color: inherit; }
 .lab-card.big .in { padding: clamp(20px, 2.4vw, 32px); display: grid; gap: 12px; }
 .lab-card.big .horizon { background: transparent; border-bottom: 2px solid var(--fg); }
-.marquee { overflow: hidden; border-block: 2px solid var(--fg); padding-block: 18px; margin-top: clamp(60px, 8vw, 110px); }
-.marquee-track { display: flex; gap: 0; width: max-content; will-change: transform; }
+.marquee { position: relative; border-block: 2px solid var(--fg); padding-block: 18px; margin-top: clamp(60px, 8vw, 110px); }
+.marquee-window { overflow: hidden; }
+.marquee-toggle { position: absolute; bottom: calc(100% + 8px); inset-inline-end: clamp(16px, 5vw, 72px); border: 1px solid var(--fg); border-radius: 999px; padding: 4px 12px; min-height: 28px; background: var(--bg); color: var(--fg); font: 0.75rem var(--mono); cursor: pointer; }
+.marquee-track { display: flex; flex-wrap: wrap; }
+.marquee-track[data-marquee-active] { flex-wrap: nowrap; width: max-content; will-change: transform; }
+.marquee-track:not([data-marquee-active]) [data-marquee-clone] { display: none; }
+.marquee-track:not([data-marquee-active]) span { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 .marquee-track span { font-size: clamp(2rem, 5vw, 4.2rem); font-weight: 800; letter-spacing: -0.04em; white-space: nowrap; padding-right: 0.6em; }
 .marquee-track span:nth-child(3n + 2) { color: var(--acc); }
 .marquee-track span::after { content: '✦'; font-size: 0.5em; vertical-align: middle; margin-left: 0.6em; color: var(--fg); }

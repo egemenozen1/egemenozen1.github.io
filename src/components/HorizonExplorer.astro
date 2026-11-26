@@ -36,7 +36,8 @@ const s = data[start - 1];
     <circle class="cursor-dot-per" data-o="dper" r="4" cx={x(start)} cy={y(s.per)} />
     <circle class="cursor-dot-tft" data-o="dtft" r="4.5" cx={x(start)} cy={y(s.tft)} />
   </svg>
-  <div class="horizon-control">
+  <p class="horizon-legend" data-horizon-static>Values and chart marker are for {start} hours ahead. The lines show errors across all 24 horizons.</p>
+  <div class="horizon-control" hidden>
     <label for="hz-range">Horizon</label>
     <input id="hz-range" type="range" min="1" max="24" step="1" value={start} aria-valuetext={`${start} hours ahead`} />
     <output for="hz-range" data-o="h">{start}h ahead</output>
@@ -75,5 +76,8 @@ const s = data[start - 1];
       const h = Math.min(24, Math.max(1, Math.round(1 + ((vx - X0) / (X1 - X0)) * 23)));
       if (String(h) !== input.value) { input.value = String(h); update(); }
     });
+    update();
+    root.querySelector<HTMLElement>('.horizon-control')!.hidden = false;
+    root.querySelector<HTMLElement>('[data-horizon-static]')!.hidden = true;
   });
 </script>

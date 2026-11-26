@@ -52,7 +52,7 @@
 .gate-lock { font-family: var(--mono); font-size: 0.7rem; color: var(--moon-2); }
 .mission-log { font-family: var(--mono); font-size: 0.74rem; line-height: 1.7; padding: 14px; min-height: 13.6em; border-top: 1px solid var(--nline); background: var(--night); color: var(--moon-2); list-style: none; }
 .mission-log li { display: grid; grid-template-columns: 5.6em 1fr; gap: 10px; }
-.mission-log li span:first-child { color: rgba(237, 234, 225, 0.38); }
+.mission-log li span:first-child { color: var(--moon-2); }
 .mission-log li span:last-child { white-space: pre-wrap; }
 .mission-log li.ok span:last-child { color: var(--ok-n); }
 .mission-log li.warn span:last-child { color: var(--warn-n); }
@@ -192,9 +192,14 @@
   .contract { grid-template-columns: 1fr; } .contract > div + div { border-left: 0; border-top: 1px solid var(--nline); }
   .ledger li { grid-template-columns: 1fr; gap: 4px; }
   .horizon-read { grid-template-columns: 1fr 1fr; } .horizon-read .cov { grid-column: 1 / -1; }
+  .mission { grid-template-columns: minmax(0, 1fr); }
   .mission-top { grid-template-columns: 1fr; } .node-owner, .node-director { justify-self: stretch; }
   .mission-wire { height: 18px; width: 1px; min-width: 0; justify-self: center; }
   .hotspot { width: 22px; height: 22px; margin: -11px 0 0 -11px; font-size: 0.62rem; box-shadow: 0 0 0 3px rgba(255, 79, 18, 0.25); }
-  .mission-log { font-size: 0.68rem; } .mission-log li { grid-template-columns: 4.6em 1fr; gap: 6px; }
+  .mission-log { font-size: 0.68rem; } .mission-log li { grid-template-columns: 4.6em minmax(0, 1fr); gap: 6px; }
+  .mission-log li span:last-child { overflow-wrap: anywhere; }
   .case-facts { grid-template-columns: 1fr; } .case-facts div + div { padding-left: 0; border-left: 0; }
+}
+@media (max-width: 359px) {
+  .case-title.recommendation-title { font-size: clamp(2.2rem, calc(16vw - 1rem), 2.6rem); overflow-wrap: anywhere; }
 }
