@@ -51,7 +51,8 @@ const laneTop = (i: number) => 24 + i * (62 / (lanes.length - 1));
 
     const resize = () => {
       const r = root.getBoundingClientRect();
-      W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, W > 1000 ? 1.25 : 1.5);
+      W = r.width; H = r.height; // Cap the backing store at ~1.3 MP so large/high-DPI monitors don't multiply the per-frame cost.
+      dpr = Math.max(0.75, Math.min(devicePixelRatio || 1, W > 1000 ? 1.25 : 1.5, Math.sqrt(1.3e6 / Math.max(1, W * H))));
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       laneY = Array.from({ length: LANES }, (_, i) => H * (0.24 + i * (0.62 / (LANES - 1))));
@@ -140,10 +141,13 @@ const laneTop = (i: number) => 24 + i * (62 / (lanes.length - 1));
       ctx.globalAlpha = 1;
     };
 
-    let tick = 0;
+    let tick = 0, lastScroll = -1e9;
+    addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });
     const loop = (now: number) => {
       if (!running) return;
       const dt = Math.min(2.5, last ? (now - last) / 16.67 : 1); last = now;
+      // While the page is scrolling, render the field at half rate: scrolling gets the frame budget.
+      if (now - lastScroll < 180 && (tick & 1)) { tick++; requestAnimationFrame(loop); return; }
       step(dt); draw();
       if (++tick % 24 === 0) for (const k of ['seen', 'pass', 'held'] as const) out[k] && (out[k].textContent = counts[k].toLocaleString('en-US'));
       requestAnimationFrame(loop);
