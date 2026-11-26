@@ -1,0 +1,7 @@
+{
+  "repository": "egemenozen1/pytorch-forecasting-tft",
+  "commit": "26ee6676494eea76b2219c4c9adfe66481ecdc16",
+  "predictionSha256": "52753bea6c8e6ec29cd63a32f2fe98eb4d4603a5db47b2ac1fa8665e63c6bc58",
+  "metricsSha256": "7dc8858f50762143ec0b08112bb6b0f45d07a4287c6a3e9a059f3b6be58d7694",
+  "horizonsSha256": "5507a6c0c584564b67bd086c80d0246164ff573817e09228ffe523f9fe52a867"
+}

@@ -1,25 +1,75 @@
 ---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import {getCollection, render, type CollectionEntry} from 'astro:content';
-import ProjectInteraction from '../../components/ProjectInteraction.astro';
+import EvidenceLedger from '../../components/EvidenceLedger.astro';
+import MissionReplay from '../../components/MissionReplay.astro';
+import HorizonExplorer from '../../components/HorizonExplorer.astro';
+import markets from '../../assets/work/marketpulse-markets.png';
+
 export async function getStaticPaths() {
-  const projects = (await getCollection('projects')).sort((a,b) => a.data.order-b.data.order);
-  return projects.map((entry,index) => ({params: {id: entry.id}, props: {entry, previous: projects[index-1], next: projects[index+1]}}));
+  const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+  return projects.map((project, i) => ({ params: { id: project.id }, props: { project, next: projects[(i + 1) % projects.length] } }));
 }
-interface Props {entry: CollectionEntry<'projects'>; previous?: CollectionEntry<'projects'>; next?: CollectionEntry<'projects'>;}
-const {entry, previous, next} = Astro.props;
-const {Content} = await render(entry);
+const { project, next } = Astro.props;
+const { Content } = await render(project);
+const d = project.data;
+const long = d.title.length > 34;
 ---
-<BaseLayout title={`${entry.data.title} — Egemen Özen`} description={entry.data.summary}>
-  <section class="case-hero"><div class="container"><a class="case-back case-home-link" href="/#work">← Selected work</a><div class="section-label">Case study / {entry.data.category}</div><h1>{entry.data.title}</h1><p class="case-subtitle">{entry.data.summary}</p><p class="case-scope">Scope: {entry.data.scope}</p><div class="case-meta">{entry.data.technologies.map((t)=><span class="tech">{t}</span>)}</div><div class="actions">{entry.data.sourceUrl && <a class="btn btn-outline" target="_blank" rel="noopener noreferrer" href={entry.data.sourceUrl}>View source ↗</a>}{entry.data.liveUrl && <a class="btn btn-primary" target="_blank" rel="noopener noreferrer" href={entry.data.liveUrl}>Visit application ↗</a>}</div></div></section>
-  <section class="section case-overview" aria-label="Case study summary"><div class="container case-facts">
-    <div><h2>Problem</h2><p>{entry.data.problem}</p></div>
-    <div><h2>Approach</h2><p>{entry.data.approach}</p></div>
-    <div><h2>Tools</h2><div class="case-meta">{entry.data.technologies.map((t)=><span class="tech">{t}</span>)}</div></div>
-    <div><h2>Verified output</h2><p>{entry.data.verifiedOutput}</p></div>
-  </div></section>
-  <section class="section case-detail"><div class="container"><ProjectInteraction id={entry.id} liveUrl={entry.data.liveUrl}/><article class="case-prose"><Content/><nav class="case-navigation" aria-label="Project navigation">
-    {previous ? <a class="case-nav-item" href={`/projects/${previous.id}/`}><span>Previous project</span><strong>← {previous.data.title}</strong></a> : <span></span>}
-    {next ? <a class="case-nav-item case-nav-next" href={`/projects/${next.id}/`}><span>Next project</span><strong>{next.data.title} →</strong></a> : <a class="case-nav-item case-nav-next" href="/#work"><span>End of selected projects</span><strong>Back to all projects →</strong></a>}
-  </nav></article></div></section>
+<BaseLayout title={`${d.title} — Egemen Özen`} description={d.summary}>
+  <article>
+    <header class="wrap case-hero">
+      <a class="crumb eyebrow" href={d.flagship ? '/#work' : '/#lab'}>← {d.flagship ? 'Selected systems' : 'From the lab'}</a>
+      <p class="eyebrow">{d.category} · {d.year}</p>
+      <h1 class={`case-title${long ? ' long' : ''}`}>{d.title}</h1>
+      <p class="case-thesis">{d.thesis}</p>
+      <dl class="case-facts">
+        <div><dt>Role</dt><dd>{d.role}</dd></div>
+        <div><dt>Status</dt><dd>{d.status}</dd></div>
+        <div><dt>Disciplines</dt><dd>{d.disciplines.join(' · ')}</dd></div>
+        <div><dt>Links</dt><dd>
+          {d.liveUrl && <a class="link-arrow" href={d.liveUrl} target="_blank" rel="noopener noreferrer">Live demo <span class="ar" aria-hidden="true">↗</span></a>}
+          {d.sourceUrl && <a class="link-arrow" href={d.sourceUrl} target="_blank" rel="noopener noreferrer">Source <span class="ar" aria-hidden="true">↗</span></a>}
+          {!d.liveUrl && !d.sourceUrl && <span>No public link — see the ledger</span>}
+        </dd></div>
+      </dl>
+    </header>
+
+    <div class="wrap">
+      {project.id === 'ego-ai-studio' && <div class="case-stage"><MissionReplay /></div>}
+      {project.id === 'pytorch-forecasting-tft' && <div class="case-stage card"><HorizonExplorer /></div>}
+      {d.cover && (
+        <figure class="case-cover">
+          <div class="frame"><Image src={d.cover} alt={d.coverAlt ?? ''} widths={[720, 1080, 1440, 2000]} sizes="(max-width: 1480px) 100vw, 1360px" quality={80} loading="eager" /></div>
+          {d.coverCaption && <figcaption>{d.coverCaption}</figcaption>}
+        </figure>
+      )}
+    </div>
+
+    <div class="wrap case-layout">
+      <aside class="case-aside" aria-label="Project evidence and stack">
+        <EvidenceLedger items={d.evidence} />
+        <div>
+          <p class="eyebrow" style="margin-bottom:10px">Stack</p>
+          <ul class="chips" role="list">{d.technologies.map((t) => <li>{t}</li>)}</ul>
+        </div>
+      </aside>
+      <div class="prose">
+        <Content />
+        {project.id === 'marketpulse' && (
+          <figure class="case-cover">
+            <div class="frame"><Image src={markets} alt="MarketPulse Market overview with crypto market breadth, a filtered crypto table and an ECB rates, inflation and FX panel, using fictional fixture data." widths={[720, 1080, 1440]} sizes="(max-width: 1080px) 100vw, 60vw" quality={78} loading="lazy" /></div>
+            <figcaption>Markets workspace: crypto breadth beside official euro-area indicators. Fictional fixture data.</figcaption>
+          </figure>
+        )}
+      </div>
+    </div>
+
+    <nav class="wrap next-case" aria-label="Next project">
+      <a href={`/projects/${next.id}/`}>
+        <span class="eyebrow">Next · {next.data.category}</span>
+        <span class="t">{next.data.title} →</span>
+      </a>
+    </nav>
+  </article>
 </BaseLayout>

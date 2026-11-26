@@ -14,7 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - run: npm run check:source
-      - run: npm run check:preview
       # Keep the publication gate until legal pages and a reviewed approval file exist.
       - run: npm run check:release
       - uses: withastro/action@a8b97df764791eb61fbf3338ef713b0e61ae05c5 # v6

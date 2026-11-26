@@ -1,10 +1,63 @@
 ---
-import { site } from '../config/site';
+import { nav, site } from '../config/site';
 ---
 <a href="#main" class="skip">Skip to content</a>
-<header class="site-header"><nav class="nav container" aria-label="Primary navigation">
-<a class="brand" href="/" aria-label="Egemen Özen, home">Egemen Özen<span>.</span></a>
-<div class="nav-links"><a href="/#selected">Selected work</a><a href="/#about">About</a><a href="/#contact">Contact</a><a class="nav-external" href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
-<details class="mobile-nav"><summary>Menu <span class="menu-icon" aria-hidden="true"></span></summary><div class="mobile-nav-links"><a href="/#selected">Selected work</a><a href="/#about">About</a><a href="/#contact">Contact</a><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></details>
-</nav></header>
-<script>document.querySelector<HTMLDetailsElement>('.mobile-nav')?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{const nav=document.querySelector<HTMLDetailsElement>('.mobile-nav');if(nav)nav.open=false;}));</script>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Egemen Özen, home"><span class="brand-mark" aria-hidden="true">eö</span><span class="brand-name">Egemen Özen</span></a>
+    <nav class="nav-links" aria-label="Primary navigation">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a class="nav-cta" href="/#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu" data-open="false" role="dialog" aria-modal="true" aria-label="Site menu" hidden>
+  <button class="close" type="button">Close</button>
+  <nav aria-label="Mobile navigation">
+    {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    <a href="/#contact">Contact</a>
+  </nav>
+  <p class="eyebrow"><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a> · Berlin, Germany</p>
+</div>
+<script>
+  const header = document.querySelector<HTMLElement>('.site-header');
+  let lastY = scrollY, queued = false;
+  const sync = () => {
+    queued = false;
+    if (!header) return;
+    const y = scrollY;
+    header.dataset.scrolled = String(y > 8);
+    header.dataset.hidden = String(y > lastY + 2 && y > 640);
+    if (y < lastY - 2 || y <= 640) header.dataset.hidden = 'false';
+    lastY = y;
+    const probe = document.elementsFromPoint(innerWidth / 2, header.offsetHeight + 2).find((el) => !header.contains(el));
+    header.dataset.tone = probe?.closest('.night') ? 'night' : 'paper';
+  };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(sync); } }, { passive: true });
+  sync();
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const close = menu?.querySelector<HTMLButtonElement>('.close');
+  const setOpen = (open: boolean) => {
+    if (!btn || !menu) return;
+    btn.setAttribute('aria-expanded', String(open));
+    if (open) { menu.hidden = false; requestAnimationFrame(() => { menu.dataset.open = 'true'; close?.focus(); }); }
+    else { menu.dataset.open = 'false'; setTimeout(() => { menu.hidden = true; }, 260); btn.focus(); }
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  btn?.addEventListener('click', () => setOpen(true));
+  close?.addEventListener('click', () => setOpen(false));
+  menu?.querySelectorAll('nav a').forEach((a) => a.addEventListener('click', () => {
+    if (!btn || !menu) return;
+    btn.setAttribute('aria-expanded', 'false'); menu.dataset.open = 'false'; menu.hidden = true; document.body.style.overflow = '';
+  }));
+  menu?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+    if (e.key !== 'Tab') return;
+    const f = [...menu.querySelectorAll<HTMLElement>('a, button')];
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+</script>

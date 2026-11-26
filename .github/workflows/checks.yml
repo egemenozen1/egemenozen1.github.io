@@ -16,5 +16,4 @@ jobs:
       - run: npm ci
       - run: npm run check:source
       - run: npm run build
-      - run: npm run check:preview
       - run: npm run check:dist

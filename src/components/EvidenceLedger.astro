@@ -1,0 +1,16 @@
+---
+interface Item { state: 'verified' | 'live' | 'by-design' | 'private' | 'limit'; text: string }
+interface Props { items: Item[]; title?: string }
+const { items, title = 'Evidence ledger' } = Astro.props;
+const label: Record<Item['state'], string> = {
+  verified: 'Verified', live: 'Live', 'by-design': 'By design', private: 'Private', limit: 'Limit',
+};
+---
+<div class="ledger">
+  <p class="ledger-head"><span>{title}</span><span>{items.length} entries</span></p>
+  <ul>
+    {items.map((i) => (
+      <li><span class={`state state-${i.state}`}>{label[i.state]}</span><span>{i.text}</span></li>
+    ))}
+  </ul>
+</div>

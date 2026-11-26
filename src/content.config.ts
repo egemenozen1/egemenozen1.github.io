@@ -2,21 +2,34 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
+const discipline = z.enum(['AI Engineering', 'AI Automation', 'Data Analytics', 'Product Development']);
+
+// Evidence states shown in the ledger. Every claim on a project page carries one.
+const evidence = z.object({
+  state: z.enum(['verified', 'live', 'by-design', 'private', 'limit']),
+  text: z.string(),
+});
+
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     category: z.string(),
+    thesis: z.string(),
     summary: z.string(),
-    problem: z.string(),
-    approach: z.string(),
-    verifiedOutput: z.string(),
+    year: z.string(),
+    role: z.string(),
+    status: z.string(),
     order: z.number().int(),
-    featured: z.boolean(),
+    flagship: z.boolean(),
+    disciplines: z.array(discipline).min(1),
     technologies: z.array(z.string()),
+    evidence: z.array(evidence).min(2),
     sourceUrl: z.string().url().optional(),
     liveUrl: z.string().url().optional(),
-    scope: z.string(),
+    cover: image().optional(),
+    coverAlt: z.string().optional(),
+    coverCaption: z.string().optional(),
   }),
 });
 export const collections = { projects };

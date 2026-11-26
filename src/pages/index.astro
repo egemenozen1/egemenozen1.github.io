@@ -1,29 +1,274 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SignalField from '../components/SignalField.astro';
+import EvidenceLedger from '../components/EvidenceLedger.astro';
+import MissionReplay from '../components/MissionReplay.astro';
+import ProvenanceInspector from '../components/ProvenanceInspector.astro';
+import FutureMeStage from '../components/FutureMeStage.astro';
+import HorizonExplorer from '../components/HorizonExplorer.astro';
 import { site } from '../config/site';
-import '../styles/home.css';
-const projects = (await getCollection('projects')).sort((a,b) => a.data.order-b.data.order);
+
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const flagships = all.filter((p) => p.data.flagship);
+const tft = all.find((p) => p.id === 'pytorch-forecasting-tft')!;
+const smaller = all.filter((p) => !p.data.flagship && p.id !== 'pytorch-forecasting-tft');
+
+const headline = ['I', 'build', 'AI', 'systems', '<br>', 'that', '<em>show</em>', 'their', '<span class="mark">evidence.</span>'];
+
+const quad = [
+  { t: 'AI Engineering', d: 'LLM APIs · agents · evaluation' },
+  { t: 'AI Automation', d: 'workflows · n8n · human gates' },
+  { t: 'Data Analytics', d: 'Python · SQL · forecasting' },
+  { t: 'Product Development', d: 'FastAPI · React · shipped demos' },
+];
+
+const services = [
+  { t: 'Document & invoice automation', d: 'Invoices and documents that arrive by email are read, checked and written to your accounting tool or a spreadsheet — with a review list for anything uncertain instead of a silent guess.', s: 'n8n · LLM extraction · review queue' },
+  { t: 'Website assistants that can say “I don’t know”', d: 'An assistant that answers from your own content, admits when it does not know, and captures the enquiry rather than inventing an answer.', s: 'Retrieval over your content · lead capture' },
+  { t: 'Data & reporting automation', d: 'Recurring reports and dashboards built from your data, with checks that catch a wrong number before your team sees it.', s: 'Python · SQL · scheduled pipelines' },
+  { t: 'Agent workflows for small teams', d: 'Narrow, tested agents for research, drafting and triage — with an approval gate on anything that leaves the building.', s: 'Agent roles · approval gates · audit trail' },
+];
+
+const principles = [
+  { t: 'Function before effect.', d: 'Every screen starts with who uses it and why. Animation, 3D and polish come after — and only where they make the product clearer.', p: 'This site: static pages, one canvas, no cookies, trackers or framework runtime.' },
+  { t: 'Beat a baseline first.', d: 'A model has to outperform the simplest honest alternative. Where it does not, that goes in the write-up too.', p: 'TFT vs persistence: −7.8% MAE overall — <span>but persistence wins at 1–3 h and 22–24 h.</span>' },
+  { t: 'Every number keeps its receipt.', d: 'Source, timestamp and a sample flag travel with the value. If the receipt is missing, the value stays empty.', p: 'MarketPulse: missing prices stay missing; <span>stale after three days.</span>' },
+  { t: 'People own the irreversible.', d: 'Agents can research, draft, build and test. Sending, publishing, spending and pushing stay with a human.', p: 'EGO AI Studio: every hand-off through the Director, <span>every irreversible step behind an owner gate.</span>' },
+];
+
+const timeline = [
+  { y: '2017 — 2023', t: 'BSc Genetics & Bioengineering — Istanbul Bilgi University', d: 'Bioinformatics, statistics and genetic data analysis in R. Senior design: a molecular docking study.' },
+  { y: '2023 — 2024', t: 'MSc Data Analytics — BSBI Berlin', d: 'Berlin School of Business and Innovation. Machine learning, deep learning, NLP and data engineering; thesis on recommendation systems with SQL & AI.' },
+  { y: '2026', t: 'From experiments to shipped products', d: 'Forecasting evaluation with a TFT, FutureMe AI as a live public demo, MarketPulse as a local-first data product.' },
+  { y: 'Now', t: 'EGO AI Studio', d: 'An independent AI automation practice, run by a human-governed agent office I designed and built.', now: true },
+];
+
+const toolkit = [
+  { t: 'AI Engineering', i: ['Claude & Gemini APIs', 'Claude Code subagents', 'Agent roles, gates & evaluation', 'PyTorch Forecasting'] },
+  { t: 'AI Automation', i: ['n8n workflows', 'Node.js tooling', 'Notion & Obsidian integration', 'Human-approval design'] },
+  { t: 'Data Analytics', i: ['Python · pandas', 'SQL · SQLite', 'R', 'Time-series evaluation'] },
+  { t: 'Product Development', i: ['FastAPI', 'React · TypeScript', 'Docker · Render', 'GitHub Actions · QA'] },
+];
 ---
 <BaseLayout>
-<section class="intro container" aria-labelledby="intro-title">
-  <div class="intro-main"><p class="intro-location">Berlin, Germany <span aria-hidden="true">/</span> Data & product</p>
-  <h1 id="intro-title">Egemen Özen<span>.</span></h1>
-  <p class="intro-statement">I build tools and analyses that make complex information easier to work with.</p>
-  <p class="intro-details">Data analytics, Python and product development — from a locally run portfolio workspace to decision-support and time-series research.</p>
-  <div class="intro-links"><a href="#selected">Explore selected work <span aria-hidden="true">↘</span></a><a href={`mailto:${site.email}`}>Get in touch <span aria-hidden="true">↗</span></a></div></div>
-  <aside class="intro-note"><span class="note-heading">What you’ll find here</span><p>Product development, decision support and forecasting.</p><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub profile ↗</a></aside>
-</section>
-<section class="selected container" id="selected" aria-labelledby="selected-title">
-  <div class="section-head"><div><p class="section-kicker">Selected work</p><h2 id="selected-title">Projects at a glance.</h2></div><a href="#work">All projects <span aria-hidden="true">↓</span></a></div>
-  <div class="selected-grid">
-    <article class="feature feature-market"><div class="feature-top"><span>01 / Product development</span><span>Local application</span></div><div class="feature-body"><h3>MarketPulse</h3><p class="feature-summary">A local workspace for understanding positions, costs and the quality of available prices.</p><p><strong>My contribution</strong> Product structure, calculations and a React / FastAPI implementation.</p></div><div class="feature-proof market-proof"><span>Product scope</span><p>Holdings, transactions and prices in one local workspace.</p><small>Runs locally · Source and demo are not publicly available</small></div><a class="feature-link" href="/marketpulse/">Read the project note <span aria-hidden="true">↗</span></a></article>
-    <article class="feature feature-future"><div class="feature-top"><span>02 / Decision support</span><span>Public demo</span></div><div class="feature-body"><h3>FutureMe AI</h3><p class="feature-summary">Explore possible trade-offs before committing to a decision.</p><p><strong>My contribution</strong> Python backend, JavaScript interface and product experience, with AI-assisted development.</p></div><div class="feature-proof future-proof"><span>Public demo</span><p>Three fictional scenarios. No personal profile required.</p><small>Assumption-based exploration, not individualized advice</small></div><div class="feature-actions"><a class="feature-link" href="/projects/futureme-ai/">Read case study ↗</a><a href="https://futureme-ai-6rgq.onrender.com/" target="_blank" rel="noopener noreferrer">Open demo ↗</a></div></article>
-    <article class="feature feature-analysis"><div class="feature-top"><span>03 / Applied machine learning</span><span>Research</span></div><div class="feature-body"><h3>Air quality forecasting</h3><p class="feature-summary">How does a 24-hour forecast compare with actual CO measurements?</p><p><strong>My contribution</strong> A time-series experiment using PyTorch Forecasting and the UCI Air Quality data.</p></div><figure class="analysis-figure"><img src="/images/tft-forecast.png" width="2059" height="864" alt="Actual carbon monoxide measurements, the TFT median forecast and its uncertainty interval over a week of the test period."/><figcaption>Committed 24-hour forecast versus observed CO. <a href="/images/tft-forecast.png">View full-size figure</a> · <a href="https://github.com/egemenozen1/pytorch-forecasting-tft/blob/26ee6676494eea76b2219c4c9adfe66481ecdc16/artifacts/current/forecast_vs_actual.png" target="_blank" rel="noopener noreferrer">Source figure ↗</a></figcaption></figure><a class="feature-link" href="/projects/pytorch-forecasting-tft/">Read case study <span aria-hidden="true">↗</span></a></article>
-  </div>
-</section>
-<section class="archive container" id="work" aria-labelledby="work-title"><div class="section-head"><div><p class="section-kicker">Further work</p><h2 id="work-title">The full project archive.</h2></div><p>Problem, approach and the limits of the available evidence.</p></div><div class="projects">{projects.map((p,i) => <ProjectCard project={p} index={i+1}/>)}</div></section>
-<section class="profile" id="about"><div class="container profile-grid"><div><p class="section-kicker">Background</p><h2>Scientific thinking.<br/>Practical work.</h2><p>My studies in Genetics & Bioengineering and Data Analytics inform the way I investigate questions, evaluate evidence and build software.</p><a href={site.github} target="_blank" rel="noopener noreferrer">Explore my GitHub ↗</a></div><div class="profile-facts"><div><span>Education</span><p>MSc Data Analytics — BSBI Berlin<br/>BSc Genetics & Bioengineering — Istanbul Bilgi University</p></div><div id="expertise"><span>Working with</span><p>Python · SQL · analytics · applied machine learning · product development</p></div><div><span>Based in</span><p>Berlin, Germany</p></div></div></div></section>
-<section class="contact-section container" id="contact"><div><p class="section-kicker">Contact</p><h2>Have a question or an opportunity?</h2><p>I’m interested in conversations about analytics, applied AI and product development.</p></div><a href={`mailto:${site.email}`}>Email Egemen <span aria-hidden="true">↗</span></a></section>
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-meta">
+      <p class="eyebrow">Portfolio — edition 2026</p>
+      <p class="eyebrow loc">Berlin · 52.52° N 13.40° E · <time data-clock>CET</time></p>
+      <p class="eyebrow status"><span class="pulse" aria-hidden="true"></span>Open to Applied AI roles &amp; EU client projects</p>
+    </div>
+    <div class="wrap">
+      <p class="hero-name">Egemen Özen <span>AI Engineer &amp; Data Analyst</span></p>
+      <h1 class="display" id="hero-title">{headline.map((w, i) => w === '<br>' ? <span class="br" /> : <><span class="w" style={`--i:${i}`} set:html={w} />{' '}</>)}</h1>
+    </div>
+    <SignalField />
+    <div class="wrap hero-foot">
+      <div>
+        <p class="lede">I design and build agent workflows, automations and data products end to end — and make every claim they produce traceable to a source, a test or a stated limit.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#work">See the work <span aria-hidden="true">↓</span></a>
+          <a class="btn btn-ghost" href="#contact">Start a conversation</a>
+        </div>
+      </div>
+      <div class="quad-wrap">
+        <ul class="quad" role="list" aria-label="Where I work: four disciplines">
+          {quad.map((q) => <li><strong>{q.t}</strong><span>{q.d}</span></li>)}
+        </ul>
+        <span class="quad-center" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SELECTED SYSTEMS ============ -->
+  <section class="section night" id="work" aria-labelledby="work-title">
+    <div class="wrap">
+      <header class="sec-head">
+        <div data-reveal>
+          <p class="eyebrow">01 — Selected systems</p>
+          <h2 class="section-title" id="work-title">Three systems.<br /><em>Three kinds of proof.</em></h2>
+        </div>
+        <p class="lede" data-reveal style="--d:120ms">An agent office that records every hand-off, a market workspace where every number keeps its receipt, and a decision tool that refuses to pick a winner. Each comes with its evidence ledger: what is verified, what is by design, and where the limits are.</p>
+      </header>
+
+      {flagships.map((p, i) => (
+        <article class="flagship" aria-labelledby={`fs-${p.id}`}>
+          <div class="fs-head" data-reveal>
+            <div class="fs-index"><span class="fs-num">{String(i + 1).padStart(2, '0')} / {p.data.category}</span><span class="eyebrow">{p.data.year}</span></div>
+            <h3 class="fs-title" id={`fs-${p.id}`}><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
+            <p class="fs-thesis">{p.data.thesis}</p>
+          </div>
+          <div class="fs-body" data-reveal>
+            <dl class="fs-meta">
+              <dt>Role</dt><dd>{p.data.role}</dd>
+              <dt>Status</dt><dd>{p.data.status}</dd>
+              <dt>Stack</dt><dd>{p.data.technologies.join(' · ')}</dd>
+            </dl>
+            <EvidenceLedger items={p.data.evidence} />
+            <div class="fs-links">
+              <a class="link-arrow" href={`/projects/${p.id}/`}>Read the case study <span class="ar" aria-hidden="true">→</span></a>
+              {p.data.liveUrl && <a class="link-arrow" href={p.data.liveUrl} target="_blank" rel="noopener noreferrer">Open the live demo <span class="ar" aria-hidden="true">↗</span></a>}
+            </div>
+          </div>
+          <div class="fs-stage" data-reveal style="--d:140ms">
+            {p.id === 'ego-ai-studio' && <MissionReplay />}
+            {p.id === 'marketpulse' && <ProvenanceInspector />}
+            {p.id === 'futureme-ai' && <FutureMeStage />}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ LAB ============ -->
+  <section class="section" id="lab" aria-labelledby="lab-title">
+    <div class="wrap">
+      <header class="sec-head">
+        <div data-reveal>
+          <p class="eyebrow">02 — From the lab</p>
+          <h2 class="section-title" id="lab-title">Experiments, <em>including the parts that failed.</em></h2>
+        </div>
+        <p class="lede" data-reveal style="--d:120ms">Forecasting evaluation, recommender research, and the computational biology where the habit of asking for a control group started.</p>
+      </header>
+      <div class="lab-grid">
+        <article class="card" data-reveal aria-labelledby="lab-tft">
+          <HorizonExplorer />
+          <div class="card-body">
+            <div class="card-kicker"><span class="eyebrow">{tft.data.category}</span><span class="eyebrow">{tft.data.year}</span></div>
+            <h3 id="lab-tft">{tft.data.thesis}</h3>
+            <p>Drag across the chart. A PyTorch Forecasting TFT cuts average error by 7.8% against same-origin persistence — yet its nominal 80% interval covers only 43.3% of observations, and the naive baseline wins at the shortest and the daily horizons.</p>
+            <div class="card-foot">
+              <a class="link-arrow" href={`/projects/${tft.id}/`}>Read the experiment <span class="ar" aria-hidden="true">→</span></a>
+              <a class="link-arrow" href={tft.data.sourceUrl} target="_blank" rel="noopener noreferrer">Source <span class="ar" aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+        <div class="lab-side">
+          {smaller.map((p, i) => (
+            <article class="card card-link" data-reveal style={`--d:${(i + 1) * 110}ms`}>
+              <div class="card-body">
+                <div class="card-kicker"><span class="eyebrow">{p.data.category}</span><span class="eyebrow">{p.data.year}</span></div>
+                <h3><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
+                <p>{p.data.thesis}</p>
+                <div class="card-foot"><span>{p.data.status}</span><span aria-hidden="true">→</span></div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+      <div class="lab-more" data-reveal>
+        <p class="eyebrow">Earlier notebooks, scrapers and API exercises live on GitHub.</p>
+        <a class="link-arrow" href={site.github} target="_blank" rel="noopener noreferrer">github.com/egemenozen1 <span class="ar" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STUDIO ============ -->
+  <section class="section" id="studio" aria-labelledby="studio-title" style="background:var(--paper-2)">
+    <div class="wrap">
+      <header class="sec-head">
+        <div data-reveal>
+          <p class="eyebrow">03 — EGO AI Studio for clients</p>
+          <h2 class="section-title" id="studio-title">Automation that <em>shows its work.</em></h2>
+        </div>
+        <p class="lede" data-reveal style="--d:120ms">I take on focused AI automation projects for businesses across the EU — scoped narrowly, documented properly and built so that your team can run them without me.</p>
+      </header>
+      <ol class="services" role="list">
+        {services.map((s, i) => (
+          <li class="service" data-reveal>
+            <span class="n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.t}</h3>
+            <p>{s.d}<small>{s.s}</small></p>
+          </li>
+        ))}
+      </ol>
+      <div class="studio-terms">
+        <div data-reveal><h4>Done means you can run it</h4><p>A delivery is finished when you get the same result with your own file a week later — without me.</p></div>
+        <div data-reveal style="--d:100ms"><h4>Across the EU, in three languages</h4><p>English, German and Turkish. Remote-first from Berlin.</p></div>
+        <div data-reveal style="--d:200ms"><h4>Private by default</h4><p>Self-hostable tools where it matters, minimal data leaving your systems, and a human approval on anything irreversible.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APPROACH ============ -->
+  <section class="section night" id="approach" aria-labelledby="approach-title">
+    <div class="wrap">
+      <header class="sec-head">
+        <div data-reveal>
+          <p class="eyebrow">04 — Approach</p>
+          <h2 class="section-title" id="approach-title">Four rules I <em>don’t negotiate.</em></h2>
+        </div>
+        <p class="lede" data-reveal style="--d:120ms">They are easy to write down. The proof is that each one already shows up in shipped work.</p>
+      </header>
+      <ol class="principles" role="list">
+        {principles.map((p, i) => (
+          <li class="principle" data-reveal style={`--d:${(i % 2) * 120}ms`}>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+            <p class="proof" set:html={`→ ${p.p}`} />
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="wrap">
+      <div class="about-grid">
+        <div class="about-story" data-reveal>
+          <p class="eyebrow">05 — About</p>
+          <h2 class="big" id="about-title">Genetics taught me to ask for the <em>control group.</em> I still do — now for models, agents and dashboards.</h2>
+          <p>I studied Genetics &amp; Bioengineering in Istanbul and Data Analytics in Berlin. Today I build AI systems end to end — data model, backend, interface and the agent workflows around them — and run EGO AI Studio, my independent practice for AI automation.</p>
+          <p>I am looking for roles where AI has to be dependable — Applied AI, AI automation and AI solutions engineering, with data analytics close by — and for client work where a process should run itself without losing its paper trail.</p>
+          <div class="langs" aria-label="Languages"><span>Turkish <b>native</b></span><span>English <b>C1</b></span><span>German <b>C1</b></span></div>
+        </div>
+        <div data-reveal style="--d:140ms">
+          <p class="eyebrow" style="margin-bottom:24px">Education &amp; path</p>
+          <ol class="timeline" role="list">
+            {timeline.map((t) => <li class={t.now ? 'now' : ''}><span class="yr">{t.y}</span><h3>{t.t}</h3><p>{t.d}</p></li>)}
+          </ol>
+        </div>
+      </div>
+      <div class="toolkit" data-reveal>
+        {toolkit.map((g) => <div><h3>{g.t}</h3><ul role="list">{g.i.map((i) => <li>{i}</li>)}</ul></div>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="night contact" id="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal>06 — Contact</p>
+      <h2 class="contact-title" id="contact-title" data-reveal>Let’s build something that <em>can show its work.</em></h2>
+      <div class="contact-row">
+        <p class="lede" data-reveal>For Applied AI, automation or data roles — or a process in your business that should run itself. I reply in English, German or Turkish.</p>
+        <div data-reveal style="--d:120ms">
+          <div class="contact-actions">
+            <a class="btn" href={`mailto:${site.email}`}>{site.email}</a>
+            <button class="btn btn-ghost" type="button" data-copy={site.email}>Copy address</button>
+            <a class="btn btn-ghost" href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          </div>
+          <p class="copy-state" role="status" data-copy-state></p>
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<script>
+  const clock = document.querySelector<HTMLTimeElement>('[data-clock]');
+  if (clock) {
+    const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' });
+    const tick = () => { clock.textContent = `${fmt.format(new Date())} local`; };
+    tick(); setInterval(tick, 30_000);
+  }
+  const copy = document.querySelector<HTMLButtonElement>('[data-copy]');
+  const state = document.querySelector<HTMLElement>('[data-copy-state]');
+  copy?.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(copy.dataset.copy || ''); if (state) state.textContent = 'Address copied to clipboard.'; }
+    catch { if (state) state.textContent = 'Copy failed — the address is on the button to the left.'; }
+  });
+</script>

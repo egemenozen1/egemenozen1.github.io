@@ -1,0 +1,84 @@
+---
+// Interactive per-horizon comparison built from the committed outputs of
+// egemenozen1/pytorch-forecasting-tft at commit 26ee667 (local copies in src/data).
+import csv from '../data/metrics_by_horizon.csv?raw';
+import baseline from '../data/baseline.json';
+
+const rows = csv.trim().split(/\r?\n/).slice(1).map((line) => line.split(','));
+const data = rows.map((r) => {
+  const h = Number(r[0]);
+  return { h, tft: Number(r[1]), per: baseline.find((b) => b.horizon === h)!.mae, cov: Number(r[7]) };
+});
+const X0 = 44, X1 = 588, Y0 = 206, Y1 = 18, MIN = 0.4, MAX = 1.5;
+const x = (h: number) => X0 + ((h - 1) / 23) * (X1 - X0);
+const y = (v: number) => Y0 - ((v - MIN) / (MAX - MIN)) * (Y0 - Y1);
+const path = (k: 'tft' | 'per') => data.map((d, i) => `${i ? 'L' : 'M'}${x(d.h).toFixed(1)},${y(d[k]).toFixed(1)}`).join(' ');
+const step = (X1 - X0) / 23;
+const wins = data.filter((d) => d.per < d.tft);
+const ticks = [0.5, 0.75, 1, 1.25, 1.5];
+const start = 12;
+const s = data[start - 1];
+---
+<div class="horizon" data-horizon={JSON.stringify(data)}>
+  <div class="horizon-read">
+    <div class="tft"><small>TFT MAE</small><b data-o="tft">{s.tft.toFixed(3)}</b></div>
+    <div class="per"><small>Persistence MAE</small><b data-o="per">{s.per.toFixed(3)}</b></div>
+    <div class="cov"><small>80% interval covers</small><b data-o="cov">{(s.cov * 100).toFixed(1)}%</b><div class="cov-bar" aria-hidden="true"><span data-o="bar" style={`width:${s.cov * 100}%`}></span><i title="nominal 80%"></i></div></div>
+  </div>
+  <svg viewBox="0 0 600 240" role="img" aria-labelledby="hz-title hz-desc">
+    <title id="hz-title">Mean absolute error by forecast horizon, TFT versus persistence</title>
+    <desc id="hz-desc">TFT error rises from 0.88 at one hour to about 1.15 at 24 hours. Persistence error rises to about 1.43 around 17 hours and falls back to 0.78 at 24 hours. Persistence is better at horizons 1 to 3 and 22 to 24.</desc>
+    <g class="grid">{ticks.map((t) => <line x1={X0} x2={X1} y1={y(t)} y2={y(t)} />)}</g>
+    {wins.map((d) => <rect class="win" x={x(d.h) - step / 2} width={step} y={Y1} height={Y0 - Y1} />)}
+    <path class="l-per" d={path('per')} />
+    <path class="l-tft" d={path('tft')} />
+    <g class="axis">
+      {ticks.map((t) => <text x={X0 - 8} y={y(t) + 3} text-anchor="end">{t.toFixed(2)}</text>)}
+      {[1, 6, 12, 18, 24].map((h) => <text x={x(h)} y={Y0 + 18} text-anchor="middle">{h}h</text>)}
+      <text x={X1} y={Y0 + 34} text-anchor="end">forecast horizon · MAE in mg/m³</text>
+    </g>
+    <line class="cursor-line" data-o="line" x1={x(start)} x2={x(start)} y1={Y1} y2={Y0} />
+    <circle class="cursor-dot-per" data-o="dper" r="4" cx={x(start)} cy={y(s.per)} />
+    <circle class="cursor-dot-tft" data-o="dtft" r="4.5" cx={x(start)} cy={y(s.tft)} />
+  </svg>
+  <div class="horizon-control">
+    <label for="hz-range">Horizon</label>
+    <input id="hz-range" type="range" min="1" max="24" step="1" value={start} aria-valuetext={`${start} hours ahead`} />
+    <output for="hz-range" data-o="h">{start}h ahead</output>
+  </div>
+  <p class="horizon-legend"><span><i></i>TFT median</span><span><i class="per"></i>Persistence baseline</span><span><i class="win"></i>Persistence wins</span><span data-o="verdict">TFT {((1 - s.tft / s.per) * 100).toFixed(1)}% lower error</span></p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-horizon]').forEach((root) => {
+    const data: { h: number; tft: number; per: number; cov: number }[] = JSON.parse(root.dataset.horizon || '[]');
+    const X0 = 44, X1 = 588, Y0 = 206, Y1 = 18, MIN = 0.4, MAX = 1.5;
+    const x = (h: number) => X0 + ((h - 1) / 23) * (X1 - X0);
+    const y = (v: number) => Y0 - ((v - MIN) / (MAX - MIN)) * (Y0 - Y1);
+    const o = (k: string) => root.querySelector<HTMLElement & SVGElement>(`[data-o="${k}"]`)!;
+    const input = root.querySelector<HTMLInputElement>('input')!;
+    const update = () => {
+      const d = data[Number(input.value) - 1];
+      o('tft').textContent = d.tft.toFixed(3);
+      o('per').textContent = d.per.toFixed(3);
+      o('cov').textContent = `${(d.cov * 100).toFixed(1)}%`;
+      (o('bar') as HTMLElement).style.width = `${d.cov * 100}%`;
+      o('h').textContent = `${d.h}h ahead`;
+      input.setAttribute('aria-valuetext', `${d.h} hours ahead`);
+      const diff = (1 - d.tft / d.per) * 100;
+      o('verdict').textContent = diff >= 0 ? `TFT ${diff.toFixed(1)}% lower error` : `Persistence ${((1 - d.per / d.tft) * 100).toFixed(1)}% lower error`;
+      const cx = String(x(d.h));
+      for (const k of ['line', 'dper', 'dtft']) { const el = o(k); k === 'line' ? (el.setAttribute('x1', cx), el.setAttribute('x2', cx)) : el.setAttribute('cx', cx); }
+      o('dper').setAttribute('cy', String(y(d.per)));
+      o('dtft').setAttribute('cy', String(y(d.tft)));
+    };
+    input.addEventListener('input', update);
+    const svg = root.querySelector('svg')!;
+    svg.addEventListener('pointermove', (e) => {
+      const r = svg.getBoundingClientRect();
+      const vx = ((e.clientX - r.left) / r.width) * 600;
+      const h = Math.min(24, Math.max(1, Math.round(1 + ((vx - X0) / (X1 - X0)) * 23)));
+      if (String(h) !== input.value) { input.value = String(h); update(); }
+    });
+  });
+</script>
