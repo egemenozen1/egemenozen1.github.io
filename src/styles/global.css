@@ -93,7 +93,7 @@ em { font-style: normal; color: var(--acc); }
 .intro-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px 24px; margin-bottom: auto; padding-top: clamp(8px, 3vh, 40px); }
 .kinetic { font-size: clamp(3.6rem, 15.2vw, 15.5rem); line-height: 0.82; letter-spacing: -0.055em; font-weight: 800; font-variation-settings: 'wdth' 100; margin: clamp(24px, 4vh, 48px) 0 0 -0.04em; user-select: none; }
 .kinetic .ln { display: block; white-space: nowrap; }
-.kinetic .ln + .ln { margin-top: 0.08em; }
+.kinetic .ln + .ln { margin-top: 0.2em; }
 .kinetic .ch { display: inline-block; font-variation-settings: 'wght' var(--w, 800), 'wdth' var(--wd, 100); transition: font-variation-settings 0.5s var(--ease), color 0.4s; }
 .kinetic .ln:last-child { color: var(--acc); }
 .js .kinetic .ch { opacity: 0; transform: translateY(0.4em); animation: chIn 1s var(--ease) forwards; animation-delay: calc(var(--i) * 45ms + 100ms); }
