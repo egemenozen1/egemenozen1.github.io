@@ -16,9 +16,14 @@ export function animateCards(section: Element) {
   });
 }
 
-export function animateMarquee(track: HTMLElement) {
+export function animateMarquee(track: HTMLElement, toggle: HTMLButtonElement) {
   const media = gsap.matchMedia();
+  let userPaused = false;
+  const updateLabel = () => { toggle.textContent = userPaused ? 'Resume toolkit' : 'Pause toolkit'; };
   media.add('(prefers-reduced-motion: no-preference)', () => {
+    track.dataset.marqueeActive = '';
+    updateLabel();
+    toggle.hidden = false;
     const tween = gsap.to(track, { xPercent: -50, ease: 'none', duration: 40, repeat: -1, paused: true });
     let active = false;
     let speed: gsap.core.Tween | undefined;
@@ -26,13 +31,18 @@ export function animateMarquee(track: HTMLElement) {
     const stopSpeedTweens = () => { speed?.kill(); settle?.kill(); };
     const sync = () => {
       stopSpeedTweens();
-      tween.paused(!active || document.hidden);
+      tween.paused(userPaused || !active || document.hidden);
+    };
+    const onClick = () => {
+      userPaused = !userPaused;
+      updateLabel();
+      sync();
     };
     const trigger = ScrollTrigger.create({
       trigger: track, start: 'top bottom', end: 'bottom top',
       onToggle: (state) => { active = state.isActive; sync(); },
       onUpdate: (state) => {
-        if (!active || document.hidden) return;
+        if (userPaused || !active || document.hidden) return;
         stopSpeedTweens();
         const direction = state.direction < 0 ? -1 : 1;
         const velocity = Math.min(4, 1 + Math.abs(state.getVelocity()) / 600);
@@ -42,9 +52,13 @@ export function animateMarquee(track: HTMLElement) {
     });
     active = trigger.isActive;
     sync();
+    toggle.addEventListener('click', onClick);
     document.addEventListener('visibilitychange', sync);
     return () => {
       stopSpeedTweens();
+      delete track.dataset.marqueeActive;
+      toggle.hidden = true;
+      toggle.removeEventListener('click', onClick);
       document.removeEventListener('visibilitychange', sync);
     };
   });

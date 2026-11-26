@@ -13,7 +13,7 @@ npm run build && npm run check:dist
 ## Where things live
 - `src/content/projects/*.md` — every project, with its evidence ledger (`verified`, `live`, `by-design`, `private`, `limit`). Schema in `src/content.config.ts`.
 - `src/pages/index.astro` — homepage sections; `src/pages/projects/[id].astro` — case-study template.
-- `src/components/` — `StoryCanvas` (helix → TFT forecast lines → agent office), `HorizonExplorer`, `MissionReplay`, `ProvenanceInspector`, `FutureMeStage`, `EvidenceLedger`.
+- `src/components/` — `StoryCanvas` (helix → TFT forecast lines → agent office), `HorizonExplorer`, `MissionReplay`, `EvidenceLedger`. The FutureMe case study uses project Markdown and screenshots in `src/assets/work/`.
 - `src/data/` — committed TFT metrics from `egemenozen1/pytorch-forecasting-tft@26ee667` used by the horizon chart.
 - `src/styles/global.css` — the "From DNA to Agents" theme (chapter colours via registered custom properties); `components.css` — shared component styles.
 - Motion: the story canvas follows scroll while visible. GSAP loads near the stacked cards or toolkit marquee, and Lenis loads for fine pointers. Reduced motion uses static story frames and disables continuous animation.
