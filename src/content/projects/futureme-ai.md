@@ -1,49 +1,55 @@
 ---
 title: "FutureMe AI"
-category: "Decision-support product"
-thesis: "A place to think a decision through — ranges instead of promises, and no hidden winner."
-summary: "A live public demo that compares a decision against the same fictional baseline, shows a modeled five-year range and suggests one small experiment. It accepts only built-in example IDs, never personal data."
+category: "Decision lab"
+thesis: "Decide today, find out who was right: a hard choice becomes a few dated predictions in your own numbers — and then it keeps score."
+summary: "A local-first decision lab. It frames a choice in your own words, asks you to set the probabilities, helps you commit, and later compares what you said with what actually happened. It never predicts outcomes."
 year: "2026"
-role: "Product, backend, interface and deployment"
+role: "Product direction, backend, interface and deployment, with AI-assisted development"
 status: "Live public demo"
 order: 3
 flagship: true
-disciplines: ["Product Development", "Data Analytics", "AI Engineering"]
-technologies: ["Python", "FastAPI", "JavaScript", "Docker", "Render", "GitHub Actions"]
+disciplines: ["Product Development", "AI Engineering", "Data Analytics"]
+technologies: ["Python", "FastAPI", "React", "TypeScript", "Vite", "Motion", "Claude API (off by default)", "Docker", "Render", "GitHub Actions"]
 liveUrl: "https://futureme-ai-6rgq.onrender.com/"
 evidence:
-  - state: live
-    text: "Public demo online with three fictional examples: a short career course, reduced working hours and a small side project."
-  - state: by-design
-    text: "The server accepts only a built-in example ID and rejects personal questions, custom profiles, notes and save requests."
-  - state: by-design
-    text: "The same seeded model runs both options; lines are medians and shading is the modeled P10–P90 range."
+  - state: verified
+    text: "135 Python tests, 10 web unit tests, the type check and 12 browser journeys on desktop and mobile pass (re-run on 26 November 2026)."
   - state: limit
-    text: "The engine is largely deterministic and assumption-based. It is not an LLM forecast, a personal prediction or financial advice."
+    text: "The live demo runs guided templates with AI switched off. The Claude path is tested against a recording fake; no live model call has been made."
+  - state: live
+    text: "The public demo runs the new version, with a fictional worked example that shows the full loop."
+  - state: by-design
+    text: "FutureMe never predicts outcomes or gives odds. You set every probability."
+  - state: by-design
+    text: "Decisions are saved only in your browser: no account, database, cookies or analytics. Framing sends the text to the server for that request; it is not logged or stored."
   - state: private
-    text: "Source repository is private; the live demo is public."
+    text: "Source repository is private. Screens show a fictional example."
 cover: "../../assets/work/futureme-home.png"
-coverAlt: "FutureMe public demo homepage: the headline 'Give a decision some room.' beside a dark green card comparing a course with a project."
-coverCaption: "Public demo homepage, captured November 2026."
+coverAlt: "FutureMe home: “Decide today. Find out who was right.” beside a fork diagram with three options and dated predictions, above the field “What are you deciding?”."
+coverCaption: "Live demo home, captured 26 November 2026."
 ---
 ## The problem
 
-Big decisions — a course, fewer working hours, a side project — involve trade-offs that are hard to compare honestly. Chat answers tend to pick a winner. FutureMe is designed to show the assumptions instead.
+People facing a job offer, a move or a course already have plenty of advice. What they lack is a record of what they expected at the time. Six months later hindsight rewrites the story, so nothing is learned about their own judgement.
 
-## What the public demo does
+## One loop, four stages
 
-Each example compares one change against the same fictional starting profile. The calculated view shows both paths over one, three or five years: medians as lines and the modeled P10–P90 range as shading, with a table alternative for the chart. A deterministic narrator turns the validated output into a briefing through four lenses — financial route, uncertainty boundary, whole-life trade-off and a possible next experiment — without changing a single calculation.
+**Frame** turns free text into the real options, what matters, what is still unknown and the assumptions underneath. **Forecast** asks for your own probability or number on dated predictions. **Decide** runs a pre-mortem and records a commitment, with calendar check-ins. **Keep score** compares predictions with what happened: a Brier score, an honesty curve of what you said against what came true, and how far time and cost estimates drift.
 
-No overall winner is calculated. A financial difference is presented as one lens, not a verdict.
+The fork is the product's signature: today branches into one road per option, and every dated prediction is a knot on its road.
 
-## Privacy by construction
+## AI, where it helps and no further
 
-The public version demonstrates the calculation with fixed fictional examples only. The server accepts a sample ID and nothing else; decisions saved in an earlier version stay in the visitor's browser through a device-recovery flow and are not sent to the server.
+Claude is used as a bounded drafting engine for frames, pre-mortems and reflections — behind consent, a daily budget, a safety screen and an output critic that rejects certainty language and invented numbers. When AI is off, unavailable or declined, guided templates do the job and say so. Money and time ranges come from a seeded, versioned simulation rather than from a language model.
 
-## My contribution
+## Safety and privacy
 
-I built the product end to end: the Python/FastAPI backend and simulation, the JavaScript interface and its accessibility, the Docker deployment on Render and the GitHub Actions test workflow, with AI-assisted development as part of the workflow.
+Crisis language is detected before any engine runs and is routed to human help; nothing is sent to AI. Regulated topics are framed but never judged. Decisions can be exported, imported or deleted at any time.
+
+## What changed
+
+The first version compared three fixed fictional scenarios and accepted no personal input. The rebuild lets people work on real decisions by keeping them in their own browser, and moves the simulation from being the product to one optional tool inside a decision.
 
 ## Limits
 
-The ranges cover only the modeled income and expense variability, not every real-world event. No usage, reliability or outcome metrics are claimed.
+The browser storage is unencrypted and lives on one device. A Brier score becomes meaningful only after roughly ten resolved predictions. No usage or outcome metrics are claimed, and nothing here is financial, medical, legal or psychological advice.
