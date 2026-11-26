@@ -56,6 +56,16 @@ const ogImage = new URL('/og.png', Astro.site);
     <main id="main" tabindex="-1"><slot /></main>
     <Footer />
     <script>
+      // Smooth wheel scrolling on desktop pointers only. Touch, keyboard and reduced-motion users keep native scrolling.
+      import Lenis from 'lenis';
+      const fine = matchMedia('(pointer: fine)').matches;
+      const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (fine && !calm) {
+        const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, anchors: { offset: -72 }, autoRaf: true });
+        (window as unknown as { lenis?: Lenis }).lenis = lenis;
+      }
+    </script>
+    <script>
       // Reveal-on-scroll. Content is visible without JavaScript; this only staggers its entrance.
       const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
       if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {

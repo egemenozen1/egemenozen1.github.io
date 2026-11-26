@@ -33,7 +33,7 @@ const laneTop = (i: number) => 24 + i * (62 / (lanes.length - 1));
     const G1 = 0.3, G2 = 0.56, G3 = 0.76;
     const LANES = 5;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let W = 0, H = 0, dpr = 1, laneY: number[] = [], P: Particle[] = [];
+    let W = 0, H = 0, dpr = 1, laneY: number[] = [], P: Particle[] = [], laneGrad: CanvasGradient | null = null;
     let px = -999, py = -999, running = false, visible = true, last = 0;
     const counts = { seen: 0, pass: 0, held: 0 };
     const out = Object.fromEntries([...root.querySelectorAll<HTMLElement>('[data-c]')].map((e) => [e.dataset.c, e]));
@@ -51,10 +51,12 @@ const laneTop = (i: number) => 24 + i * (62 / (lanes.length - 1));
 
     const resize = () => {
       const r = root.getBoundingClientRect();
-      W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, 1.5);
+      W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, W > 1000 ? 1.25 : 1.5);
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       laneY = Array.from({ length: LANES }, (_, i) => H * (0.24 + i * (0.62 / (LANES - 1))));
+      laneGrad = ctx.createLinearGradient(W * G2, 0, W, 0);
+      laneGrad.addColorStop(0, 'rgba(20,20,18,0)'); laneGrad.addColorStop(0.5, 'rgba(20,20,18,0.09)'); laneGrad.addColorStop(1, 'rgba(20,20,18,0.2)');
       const n = Math.max(170, Math.min(820, Math.round(W * 0.56)));
       P = Array.from({ length: n }, () => {
         const p = spawn({}, true);
@@ -102,11 +104,10 @@ const laneTop = (i: number) => 24 + i * (62 / (lanes.length - 1));
       ctx.clearRect(0, 0, W, H);
       // lanes
       ctx.lineWidth = 1;
-      for (const y of laneY) {
-        const g = ctx.createLinearGradient(W * G2, 0, W, 0);
-        g.addColorStop(0, 'rgba(20,20,18,0)'); g.addColorStop(0.5, 'rgba(20,20,18,0.09)'); g.addColorStop(1, 'rgba(20,20,18,0.2)');
-        ctx.strokeStyle = g; ctx.beginPath(); ctx.moveTo(W * G2, y + 0.5); ctx.lineTo(W, y + 0.5); ctx.stroke();
-      }
+      if (laneGrad) ctx.strokeStyle = laneGrad;
+      ctx.beginPath();
+      for (const y of laneY) { ctx.moveTo(W * G2, y + 0.5); ctx.lineTo(W, y + 0.5); }
+      ctx.stroke();
       // gates
       ctx.setLineDash([3, 5]);
       for (const [g, c] of [[G1, 'rgba(20,20,18,0.22)'], [G2, 'rgba(20,20,18,0.22)'], [G3, SIG]] as const) {
@@ -151,7 +152,7 @@ const laneTop = (i: number) => 24 + i * (62 / (lanes.length - 1));
     const pause = () => { running = false; };
 
     new ResizeObserver(() => { resize(); if (!reduce) draw(); }).observe(root);
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? play() : pause(); }).observe(root);
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting && e.intersectionRatio > 0.2; visible ? play() : pause(); }, { threshold: [0, 0.2, 0.5] }).observe(root);
     document.addEventListener('visibilitychange', () => (document.hidden ? pause() : play()));
     root.addEventListener('pointermove', (e) => { const r = root.getBoundingClientRect(); px = e.clientX - r.left; py = e.clientY - r.top; });
     root.addEventListener('pointerleave', () => { px = -999; py = -999; });
