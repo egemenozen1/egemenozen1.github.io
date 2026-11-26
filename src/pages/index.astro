@@ -29,7 +29,7 @@ const steps = [
 const cards = [
   { p: get('ego-ai-studio'), bg: '#111113', fg: '#f2f2f0', media: 'ego' },
   { p: get('ictavo'), bg: '#0b1630', fg: '#eaf0fa', media: 'mp' },
-  { p: get('futureme-ai'), bg: '#1e4d3a', fg: '#f3efe6', media: 'fm' },
+  { p: get('futureme-ai'), bg: '#ffb079', fg: '#0f0d1a', media: 'fm' },
 ];
 
 const tools = ['Python', 'Claude API', 'FastAPI', 'n8n', 'SQL', 'React', 'TypeScript', 'Gemini API', 'PyTorch Forecasting', 'Docker', 'pandas', 'GitHub Actions', 'R', 'SQLite', 'Claude Code agents'];
@@ -106,7 +106,7 @@ const rules = [
               </div>
             )}
             {media === 'mp' && <div class="media fit" style="--fit:#ffbea2"><Image src={mpShot} widths={[640, 1000]} sizes="(max-width: 1000px) 92vw, 50vw" quality={76} loading="lazy" alt="Ictavo: “A heavy week. 59 of 73 fell.” with an hourly market line. Sample portfolio." /></div>}
-            {media === 'fm' && <div class="media"><Image src={fmShot} widths={[640, 1000]} sizes="(max-width: 1000px) 92vw, 50vw" quality={76} loading="lazy" alt="FutureMe public demo homepage." /></div>}
+            {media === 'fm' && <div class="media fit" style="--fit:#0f0d1a"><Image src={fmShot} widths={[640, 1000]} sizes="(max-width: 1000px) 92vw, 50vw" quality={76} loading="lazy" alt="FutureMe: “Decide today. Find out who was right.” with a fork diagram of options and dated predictions." /></div>}
           </article>
         );
       })}

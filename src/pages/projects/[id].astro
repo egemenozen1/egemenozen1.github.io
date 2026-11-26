@@ -6,6 +6,8 @@ import EvidenceLedger from '../../components/EvidenceLedger.astro';
 import MissionReplay from '../../components/MissionReplay.astro';
 import HorizonExplorer from '../../components/HorizonExplorer.astro';
 import { forecast } from '../../data/forecast';
+import fmExample from '../../assets/work/futureme-example.png';
+import fmRecord from '../../assets/work/futureme-record.png';
 import mpWhy from '../../assets/work/ictavo-why.png';
 import mpInsights from '../../assets/work/ictavo-insights.png';
 
@@ -62,6 +64,18 @@ const long = d.title.length > 34;
       </aside>
       <div class="prose">
         <Content />
+        {project.id === 'futureme-ai' && (
+          <>
+            <figure class="case-cover">
+              <div class="frame"><Image src={fmExample} alt="The fictional worked example: a fork with the chosen road and scored predictions, the four stages ticked, and “What actually happened?”." widths={[720, 1080, 1440]} sizes="(max-width: 1080px) 100vw, 60vw" quality={78} loading="lazy" /></div>
+              <figcaption>The worked example after scoring. Fictional data.</figcaption>
+            </figure>
+            <figure class="case-cover">
+              <div class="frame"><Image src={fmRecord} alt="Track record of the fictional example: Brier score 0.30 marked as too early to read, said versus happened 70% against 67%, an honesty curve and estimates versus reality." widths={[720, 1080, 1440]} sizes="(max-width: 1080px) 100vw, 60vw" quality={78} loading="lazy" /></div>
+              <figcaption>Track record: the score says when it is too early to read. Fictional data.</figcaption>
+            </figure>
+          </>
+        )}
         {project.id === 'ictavo' && (
           <>
             <figure class="case-cover">
