@@ -21,11 +21,11 @@ const steps = [
   { who: 'gate', at: 'gate', tone: 'warn', text: 'irreversible step held → awaiting owner' },
 ];
 ---
-<div class="instrument mission" data-mission={JSON.stringify(steps)}>
+<div class="instrument mission" data-mission>
   <div class="instrument-bar">
     <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
     <span>mission replay · recorded coordination test</span>
-    <button class="mini-btn" type="button" data-replay>Replay ↻</button>
+    <button class="mini-btn" type="button" data-replay hidden>Replay ↻</button>
   </div>
   <div class="mission-board">
     <div class="mission-top">
@@ -39,42 +39,74 @@ const steps = [
     <div class="node node-gate" data-node="gate"><div><small>Human gate</small><b>Send · publish · buy · push</b></div><span class="gate-lock" aria-hidden="true">owner only</span></div>
   </div>
   <ol class="mission-log" role="list" aria-label="Mission log">
-    {steps.map((s, i) => <li class={s.tone}><span>{`step ${String(i + 1).padStart(2, '0')}`}</span><span>{s.who.padEnd(8, ' ')} {s.text}</span></li>)}
+    {steps.map((s, i) => <li class={s.tone} data-step={s.at}><span>{`step ${String(i + 1).padStart(2, '0')}`}</span><span>{s.who.padEnd(8, ' ')} {s.text}</span></li>)}
   </ol>
   <p class="instrument-note">Condensed replay of a recorded run. Specialists never call each other — every hand-off goes through the Director. Three of six specialists were needed for this objective.</p>
 </div>
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-mission]').forEach((root) => {
-    const steps: { who: string; at: string; tone: string; text: string }[] = JSON.parse(root.dataset.mission || '[]');
-    const log = root.querySelector('.mission-log')!;
-    const nodes = Object.fromEntries([...root.querySelectorAll<HTMLElement>('[data-node]')].map((n) => [n.dataset.node, n]));
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let timer = 0, played = false;
-    const reset = () => {
-      clearTimeout(timer); log.innerHTML = ''; root.dataset.phase = '';
-      Object.values(nodes).forEach((n) => n.classList.remove('is-active', 'is-done', 'is-held'));
+    const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
+    const nodes = new Map([...root.querySelectorAll<HTMLElement>('[data-node]')].map((node) => [node.dataset.node, node]));
+    const replay = root.querySelector<HTMLButtonElement>('[data-replay]');
+    const board = root.querySelector('.mission-board');
+    if (!replay || !board || !('IntersectionObserver' in window)) return;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    let timer = 0, next = steps.length, visible = false, played = false;
+    const pause = () => { clearTimeout(timer); timer = 0; };
+    const resetNodes = () => {
+      root.dataset.phase = '';
+      for (const node of nodes.values()) node.classList.remove('is-active', 'is-done', 'is-held');
     };
-    const show = (i: number) => {
-      const s = steps[i];
-      Object.values(nodes).forEach((n) => n.classList.remove('is-active'));
-      if (i > 0) { const prev = nodes[steps[i - 1].at]; if (prev && prev.dataset.node !== 'director' && prev.dataset.node !== 'owner') prev.classList.add('is-done'); }
-      const n = nodes[s.at];
-      if (s.at === 'gate') n?.classList.add('is-held'); else n?.classList.add('is-active');
-      if (i === 1) root.dataset.phase = 'brief';
-      const li = document.createElement('li');
-      li.className = s.tone;
-      li.innerHTML = `<span>step ${String(i + 1).padStart(2, '0')}</span><span></span>`;
-      (li.lastElementChild as HTMLElement).textContent = `${s.who.padEnd(8, ' ')} ${s.text}`;
-      log.appendChild(li);
-      if (i < steps.length - 1) timer = window.setTimeout(() => show(i + 1), 1150);
-      else nodes.director?.classList.add('is-done');
+    const schedule = () => {
+      if (!timer && visible && !document.hidden && !reduce.matches && next < steps.length) {
+        timer = window.setTimeout(show, 1150);
+      }
     };
-    const run = () => { reset(); show(0); };
-    root.querySelector('[data-replay]')?.addEventListener('click', () => { if (reduce) return; run(); });
-    if (reduce) { nodes.gate?.classList.add('is-held'); return; }
-    new IntersectionObserver(([e], io) => {
-      if (e.isIntersecting && !played) { played = true; run(); io.disconnect(); }
-    }, { threshold: 0.45 }).observe(root);
+    const show = () => {
+      timer = 0;
+      const step = steps[next];
+      const previous = steps[next - 1]?.dataset.step;
+      for (const node of nodes.values()) node.classList.remove('is-active');
+      if (previous !== 'director' && previous !== 'owner') nodes.get(previous)?.classList.add('is-done');
+      nodes.get(step.dataset.step)?.classList.add(step.dataset.step === 'gate' ? 'is-held' : 'is-active');
+      if (next === 1) root.dataset.phase = 'brief';
+      step.hidden = false;
+      next++;
+      if (next === steps.length) nodes.get('director')?.classList.add('is-done');
+      else schedule();
+    };
+    const run = () => {
+      if (reduce.matches) return;
+      played = true;
+      pause();
+      resetNodes();
+      root.dataset.replaying = '';
+      steps.forEach((step) => { step.hidden = true; });
+      next = 0;
+      show();
+    };
+    const sync = () => {
+      replay.hidden = reduce.matches;
+      root.toggleAttribute('data-replay-paused', !visible || document.hidden);
+      if (reduce.matches) {
+        pause();
+        resetNodes();
+        delete root.dataset.replaying;
+        steps.forEach((step) => { step.hidden = false; });
+        next = steps.length;
+        nodes.get('gate')?.classList.add('is-held');
+      } else if (document.hidden || !visible) pause();
+      else if (!played) run();
+      else schedule();
+    };
+    replay.addEventListener('click', run);
+    reduce.addEventListener('change', sync);
+    document.addEventListener('visibilitychange', sync);
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      sync();
+    }).observe(board);
+    sync();
   });
 </script>

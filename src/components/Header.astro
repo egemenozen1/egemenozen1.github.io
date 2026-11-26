@@ -1,26 +1,32 @@
 ---
 import { nav, site } from '../config/site';
+const links = [...nav, { href: '/#contact', label: 'Contact' }];
 ---
 <a href="#main" class="skip">Skip to content</a>
 <header class="site-header" style="view-transition-name: site-header">
   <span class="progress" aria-hidden="true"></span>
   <div class="wrap">
-    <a class="brand" href="/" aria-label="Egemen Özen, home"><span class="brand-mark" aria-hidden="true">EÖ</span><span class="brand-name">Egemen Özen</span></a>
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">EÖ</span><span class="brand-name">Egemen Özen</span></a>
     <nav class="nav-links" aria-label="Primary navigation">
       {nav.map((item) => <a href={item.href}>{item.label}</a>)}
       <a class="nav-cta" href="/#contact">Contact</a>
     </nav>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
+    <details class="menu-fallback">
+      <summary>Menu</summary>
+      <nav aria-label="Mobile navigation">
+        {links.map(({ href, label }) => <a href={href}>{label}</a>)}
+      </nav>
+    </details>
   </div>
 </header>
-<div class="mobile-menu" id="mobile-menu" data-open="false" role="dialog" aria-modal="true" aria-label="Site menu" hidden>
-  <button class="close" type="button">Close</button>
+<dialog class="mobile-menu" id="mobile-menu" aria-label="Site menu" data-lenis-prevent>
+  <button class="close" type="button" autofocus>Close</button>
   <nav aria-label="Mobile navigation">
-    {nav.map((item) => <a href={item.href}>{item.label}</a>)}
-    <a href="/#contact">Contact</a>
+    {links.map(({ href, label }) => <a href={href}>{label}</a>)}
   </nav>
   <p class="eyebrow"><a href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a> · <a href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a> · Berlin, Germany</p>
-</div>
+</dialog>
 <script>
   const header = document.querySelector<HTMLElement>('.site-header');
   // Scroll handler only reads scrollY (no layout). Tone comes from an IntersectionObserver
@@ -37,7 +43,8 @@ import { nav, site } from '../config/site';
   };
   addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(sync); } }, { passive: true });
   sync();
-  if (header) {
+  const nightSections = document.querySelectorAll('.night');
+  if (header && nightSections.length && 'IntersectionObserver' in window) {
     const under = new Set<Element>();
     let io: IntersectionObserver | undefined;
     const watch = () => {
@@ -47,36 +54,67 @@ import { nav, site } from '../config/site';
         for (const e of entries) e.isIntersecting ? under.add(e.target) : under.delete(e.target);
         header.dataset.tone = under.size ? 'night' : 'paper';
       }, { rootMargin: `-${h}px 0px -${Math.max(0, innerHeight - h - 1)}px 0px` });
-      document.querySelectorAll('.night').forEach((el) => io!.observe(el));
+      nightSections.forEach((el) => io!.observe(el));
     };
     watch();
     let rt = 0;
     addEventListener('resize', () => { clearTimeout(rt); rt = window.setTimeout(watch, 200); });
   }
   const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
-  const menu = document.getElementById('mobile-menu');
+  const menu = document.querySelector<HTMLDialogElement>('#mobile-menu');
   const close = menu?.querySelector<HTMLButtonElement>('.close');
-  const setOpen = (open: boolean) => {
-    if (!btn || !menu) return;
-    btn.setAttribute('aria-expanded', String(open));
-    if (open) { menu.hidden = false; requestAnimationFrame(() => { menu.dataset.open = 'true'; close?.focus(); }); }
-    else { menu.dataset.open = 'false'; setTimeout(() => { menu.hidden = true; }, 260); btn.focus(); }
-    document.body.style.overflow = open ? 'hidden' : '';
-    const lenis = (window as unknown as { lenis?: { stop(): void; start(): void } }).lenis;
-    open ? lenis?.stop() : lenis?.start();
-  };
-  btn?.addEventListener('click', () => setOpen(true));
-  close?.addEventListener('click', () => setOpen(false));
-  menu?.querySelectorAll('nav a').forEach((a) => a.addEventListener('click', () => {
-    if (!btn || !menu) return;
-    btn.setAttribute('aria-expanded', 'false'); menu.dataset.open = 'false'; menu.hidden = true; document.body.style.overflow = '';
-  }));
-  menu?.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') setOpen(false);
-    if (e.key !== 'Tab') return;
-    const f = [...menu.querySelectorAll<HTMLElement>('a, button')];
-    const first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  });
+  if (header && btn && menu && close && typeof menu.showModal === 'function') {
+    const mobile = matchMedia('(max-width: 720px)');
+    const fallback = header.querySelector<HTMLDetailsElement>('.menu-fallback');
+    const desktopLink = header.querySelector<HTMLAnchorElement>('.nav-links a');
+    const getLenis = () => (window as unknown as { lenis?: { stop(): void; start(): void } }).lenis;
+    const dismiss = () => {
+      if (!menu.open) return;
+      menu.close();
+      btn.setAttribute('aria-expanded', 'false');
+      getLenis()?.start();
+      (mobile.matches ? btn : desktopLink)?.focus({ preventScroll: true });
+    };
+    btn.addEventListener('click', () => {
+      menu.showModal();
+      menu.scrollTop = 0;
+      btn.setAttribute('aria-expanded', 'true');
+      getLenis()?.stop();
+      close.focus();
+    });
+    close.addEventListener('click', dismiss);
+    menu.addEventListener('cancel', (event) => { event.preventDefault(); dismiss(); });
+    mobile.addEventListener('change', () => { if (!mobile.matches) dismiss(); });
+
+    const links = [...menu.querySelectorAll<HTMLAnchorElement>('a[href]')];
+    const lastLink = links[links.length - 1];
+    menu.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab' || !lastLink) return;
+      if (event.shiftKey && document.activeElement === close) {
+        event.preventDefault();
+        lastLink.focus();
+      } else if (!event.shiftKey && document.activeElement === lastLink) {
+        event.preventDefault();
+        close.focus();
+      }
+    });
+    links.forEach((link) => link.addEventListener('click', (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target) return;
+      dismiss();
+      const url = new URL(link.href);
+      if (url.origin === location.origin && url.pathname === location.pathname && url.hash) {
+        const target = document.getElementById(url.hash.slice(1));
+        if (target) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (location.hash !== url.hash) history.pushState(null, '', url.hash);
+          target.tabIndex = -1;
+          target.focus({ preventScroll: true });
+          target.scrollIntoView();
+        }
+      }
+    }));
+    if (fallback) fallback.open = false;
+    header.dataset.menuReady = '';
+  }
 </script>

@@ -1,4 +1,5 @@
 ---
+import { createHash } from 'node:crypto';
 import '@fontsource-variable/bricolage-grotesque/wdth.css';
 import '@fontsource-variable/geist-mono';
 import '../styles/global.css';
@@ -10,6 +11,8 @@ interface Props { title?: string; description?: string; noindex?: boolean; canon
 const { title = site.title, description = site.description, noindex = false, canonicalPath, redirectTo } = Astro.props;
 const canonical = new URL(canonicalPath ?? Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.png', Astro.site);
+const motionBoot = "document.documentElement.classList.add('js');";
+Astro.csp?.insertScriptHash(`sha256-${createHash('sha256').update(motionBoot).digest('base64')}`);
 ---
 <!doctype html>
 <html lang="en">
@@ -39,38 +42,84 @@ const ogImage = new URL('/og.png', Astro.site);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <title>{title}</title>
-    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <script is:inline set:html={motionBoot}></script>
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org', '@type': 'Person', name: site.name, url: site.url,
       jobTitle: 'AI Engineer & Data Analyst', address: { '@type': 'PostalAddress', addressLocality: 'Berlin', addressCountry: 'DE' },
       sameAs: [site.github, site.linkedin], knowsLanguage: ['tr', 'en', 'de'],
       alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'Berlin School of Business and Innovation' }, { '@type': 'CollegeOrUniversity', name: 'Istanbul Bilgi University' }],
     })} />
-  </head>
-  <body>
     <Header />
     <main id="main" tabindex="-1"><slot /></main>
     <Footer />
     <script>
       // Smooth wheel scrolling on desktop pointers only. Touch, keyboard and reduced-motion users keep native scrolling.
-      import Lenis from 'lenis';
-      const fine = matchMedia('(pointer: fine)').matches;
-      const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (fine && !calm) {
-        const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, anchors: { offset: -72 }, autoRaf: true });
-        (window as unknown as { lenis?: Lenis }).lenis = lenis;
-      }
+      import type Lenis from 'lenis';
+      const smooth = matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)');
+      const host = window as Window & { lenis?: Lenis };
+      let dispose: (() => void) | undefined;
+      let loading = false;
+      const sync = async () => {
+        if (!smooth.matches) { dispose?.(); dispose = undefined; return; }
+        if (dispose || loading) return;
+        loading = true;
+        try {
+          const { default: Scroll } = await import('lenis');
+          if (!smooth.matches) return;
+          const lenis = new Scroll({ lerp: 0.1, wheelMultiplier: 1, anchors: { offset: -72 } });
+          host.lenis = lenis;
+          if (document.querySelector('#mobile-menu[open]')) lenis.stop();
+          let frame = 0, clock = 0, last = 0;
+          const tick = (now: number) => {
+            frame = 0;
+            if (lenis.isScrolling !== 'smooth' || document.hidden) { last = 0; return; }
+            clock += last ? Math.min(now - last, 50) : 16;
+            last = now;
+            lenis.raf(clock);
+            if (lenis.isScrolling === 'smooth') requestTick();
+            else last = 0;
+          };
+          const requestTick = () => { if (!frame && !document.hidden) frame = requestAnimationFrame(tick); };
+          lenis.on('virtual-scroll', requestTick);
+          window.addEventListener('click', requestTick);
+          document.addEventListener('visibilitychange', requestTick);
+          dispose = () => {
+            window.removeEventListener('click', requestTick);
+            document.removeEventListener('visibilitychange', requestTick);
+            cancelAnimationFrame(frame);
+            lenis.destroy();
+            delete host.lenis;
+          };
+        } catch { /* Native scrolling remains available if the optional enhancement fails. */ }
+        finally { loading = false; }
+      };
+      const ready = () => {
+        smooth.addEventListener('change', sync);
+        void sync();
+      };
+      if (document.readyState === 'complete') ready();
+      else window.addEventListener('load', ready, { once: true });
     </script>
     <script>
       // Reveal-on-scroll. Content is visible without JavaScript; this only staggers its entrance.
       const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
-      if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        items.forEach((el) => el.classList.add('in'));
-      } else {
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const reveal = (element: Element) => {
+          element.classList.add('in');
+          io.unobserve(element);
+        };
         const io = new IntersectionObserver((entries) => {
-          for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          for (const entry of entries) {
+            if (entry.isIntersecting) reveal(entry.target);
+            else entry.target.classList.add('reveal-pending');
+          }
         }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-        items.forEach((el) => io.observe(el));
+        items.forEach((el) => {
+          io.observe(el);
+          el.addEventListener('focusin', () => reveal(el), { once: true });
+        });
       }
     </script>
   </body>

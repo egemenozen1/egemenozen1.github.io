@@ -1,8 +1,11 @@
 name: Deploy portfolio to GitHub Pages
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      reviewed_sha:
+        description: Full SHA of the reviewed main commit
+        required: true
+        type: string
 permissions:
   contents: read
 concurrency:
@@ -10,12 +13,16 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - run: npm run check:source
-      # Keep the publication gate until legal pages and a reviewed approval file exist.
+      # Bind the owner's dispatch to the same checkout that produces the Pages artifact.
       - run: npm run check:release
+        env:
+          RELEASE_COMMIT: ${{ github.sha }}
+          REVIEWED_COMMIT: ${{ inputs.reviewed_sha }}
       - uses: withastro/action@a8b97df764791eb61fbf3338ef713b0e61ae05c5 # v6
       - run: npm run check:dist
   deploy:

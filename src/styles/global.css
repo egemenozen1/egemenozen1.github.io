@@ -81,8 +81,16 @@ em { font-style: normal; color: var(--acc); }
 .menu-btn { display: none; background: none; border: 2px solid currentColor; border-radius: 999px; padding: 5px 14px; font-weight: 650; cursor: pointer; }
 .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--acc); transform-origin: left; transform: scaleX(0); }
 @supports (animation-timeline: scroll()) { .progress { animation: progress linear both; animation-timeline: scroll(root block); } @keyframes progress { to { transform: scaleX(1); } } }
-.mobile-menu { position: fixed; inset: 0; z-index: 60; background: var(--fg); color: var(--bg); display: flex; flex-direction: column; justify-content: space-between; padding: calc(var(--header-h) + 24px) var(--pad) 32px; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0s 0.25s; }
-.mobile-menu[data-open='true'] { opacity: 1; visibility: visible; transition: opacity 0.25s; }
+.menu-fallback { display: none; }
+.menu-fallback summary { list-style: none; background: none; border: 2px solid currentColor; border-radius: 999px; padding: 5px 14px; font-weight: 650; cursor: pointer; }
+.menu-fallback summary::-webkit-details-marker { display: none; }
+.menu-fallback nav { position: absolute; inset: 100% 0 auto; display: grid; gap: 4px; max-height: calc(100dvh - var(--header-h)); overflow: auto; padding: 12px var(--pad); background: var(--bg); color: var(--fg); }
+.menu-fallback nav a { padding-block: 8px; }
+.mobile-menu { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: 100dvh; margin: 0; border: 0; overflow-y: auto; overscroll-behavior: contain; background: var(--fg); color: var(--bg); flex-direction: column; justify-content: space-between; gap: 12px; padding: calc(var(--header-h) + 24px) var(--pad) 32px; opacity: 0; transition: opacity 0.25s, display 0.25s allow-discrete, overlay 0.25s allow-discrete; }
+.mobile-menu[open] { display: flex; opacity: 1; }
+.mobile-menu::backdrop { background: transparent; }
+html:has(.mobile-menu[open]) { overflow: hidden; }
+@starting-style { .mobile-menu[open] { opacity: 0; } }
 .mobile-menu nav { display: flex; flex-direction: column; gap: 4px; }
 .mobile-menu nav a { font-size: clamp(2.6rem, 13vw, 4.4rem); font-weight: 800; letter-spacing: -0.04em; text-decoration: none; line-height: 1.05; }
 .mobile-menu .close { position: absolute; top: 14px; right: var(--pad); background: none; border: 2px solid currentColor; border-radius: 999px; padding: 5px 14px; color: inherit; cursor: pointer; }
@@ -223,8 +231,8 @@ em { font-style: normal; color: var(--acc); }
 .prose a { text-decoration-color: var(--acc); }
 
 /* ---------- Reveal ---------- */
-.js [data-reveal] { opacity: 0; transform: translateY(30px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); transition-delay: var(--d, 0ms); }
-.js [data-reveal].in { opacity: 1; transform: none; }
+[data-reveal].reveal-pending { opacity: 0; transform: translateY(30px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); transition-delay: var(--d, 0ms); }
+[data-reveal].in { opacity: 1; transform: none; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
@@ -243,7 +251,9 @@ em { font-style: normal; color: var(--acc); }
 }
 @media (max-width: 720px) {
   .nav-links { display: none; }
-  .menu-btn { display: inline-block; }
+  .menu-fallback { display: block; }
+  [data-menu-ready] .menu-fallback { display: none; }
+  [data-menu-ready] .menu-btn { display: inline-block; }
   .door { min-height: 0; }
   .facts-strip { grid-template-columns: 1fr; }
   .facts-strip div + div { padding-left: 0; border-left: 0; }
@@ -252,7 +262,7 @@ em { font-style: normal; color: var(--acc); }
 @media (prefers-reduced-motion: reduce) {
   html { transition: none; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; transition-delay: 0ms !important; }
-  .js [data-reveal], .js .kinetic .ch { opacity: 1; transform: none; }
+  [data-reveal].reveal-pending, .js .kinetic .ch { opacity: 1; transform: none; }
   .progress { display: none; }
   @view-transition { navigation: none; }
 }

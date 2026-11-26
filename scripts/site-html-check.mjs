@@ -31,9 +31,19 @@ function resolvedFile(from,href){
   return dest;
 }
 for(const file of pages){
+  const raw = fs.readFileSync(file, 'utf8');
   // Inline scripts are minified code, not markup: strip them before scanning tags.
-  const html=fs.readFileSync(file,'utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
+  const html=raw.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
   const rel=path.relative(root,file);
+  if (production) {
+    const policy = raw.match(/<meta\b[^>]*http-equiv="content-security-policy"[^>]*>/i);
+    const script = raw.search(/<script\b/i);
+    const scriptDirective = policy?.[0].match(/\bscript-src\s+([^;]+)/i)?.[1];
+    if (!policy || (script >= 0 && policy.index > script) ||
+        !scriptDirective?.includes("'self'") || /'unsafe-inline'|'unsafe-eval'/.test(scriptDirective)) {
+      fail(`${rel}: expected an early content security policy with restricted scripts`);
+    }
+  }
   if(!/<html\s+lang="en"/i.test(html))fail(`${rel}: missing HTML language`);
   if(!/<meta\s+name="viewport"/i.test(html))fail(`${rel}: missing responsive viewport`);
   if(production && !/<meta\s+name="description"\s+content="[^"]+"/i.test(html))fail(`${rel}: missing search description`);

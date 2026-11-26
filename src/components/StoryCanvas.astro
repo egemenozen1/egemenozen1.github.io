@@ -4,11 +4,9 @@
 //   1 · the two strands become the two forecast lines of the TFT experiment (real data)
 //   2 · the points regroup into the EGO AI Studio office: owner → director → six specialists → gate
 // Scroll position (from the story steps) decides the blend.
-import csv from '../data/metrics_by_horizon.csv?raw';
-import baseline from '../data/baseline.json';
-const rows = csv.trim().split(/\r?\n/).slice(1).map((l) => l.split(','));
-const tft = rows.map((r) => Number(r[1]));
-const per = baseline.map((b) => b.mae);
+import { forecast } from '../data/forecast';
+const tft = forecast.data.map((row) => row.tft);
+const per = forecast.data.map((row) => row.per);
 ---
 <div class="story-visual" aria-hidden="true">
   <canvas data-story data-series={JSON.stringify({ tft, per })}></canvas>
@@ -18,9 +16,10 @@ const per = baseline.map((b) => b.mae);
 <script>
   const canvas = document.querySelector<HTMLCanvasElement>('[data-story]');
   const ctx = canvas?.getContext('2d');
-  if (canvas && ctx) {
+  const steps = document.querySelector('[data-steps]');
+  if (canvas && ctx && steps && 'IntersectionObserver' in window && 'ResizeObserver' in window) {
     const { tft, per } = JSON.parse(canvas.dataset.series || '{}') as { tft: number[]; per: number[] };
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
     const PAIRS = 56, N = PAIRS * 2;
     const hubs = [
       { id: 'owner', label: 'owner', x: 0.5, y: 0.1 },
@@ -33,10 +32,26 @@ const per = baseline.map((b) => b.mae);
       { id: 'career', label: 'career', x: 0.1, y: 0.86 },
       { id: 'gate', label: 'human gate', x: 0.72, y: 0.9 },
     ];
-    let W = 0, H = 0, dpr = 1, t = 0, progress = 0, shown = 0, running = false, last = 0;
+    let W = 0, H = 0, t = 0, progress = 0, shown = 0, last = 0;
+    let visible = false, measure = true, dirty = true, frame = 0;
     const cap = document.querySelector('[data-cap]'), capr = document.querySelector('[data-capr]');
     const captions = ['DNA · two strands, paired', 'Two strands → two forecasts: TFT vs persistence', 'Points → people and agents: a governed office'];
-    const css = () => { const s = getComputedStyle(document.documentElement); return { fg: s.getPropertyValue('--fg').trim(), acc: s.getPropertyValue('--acc').trim(), sub: s.getPropertyValue('--sub').trim() }; };
+    const root = document.documentElement;
+    let theme: string | undefined;
+    let paletteUntil = 0;
+    let palette = { fg: '', acc: '', sub: '' };
+    const colors = (now: number) => {
+      if (!palette.fg || theme !== root.dataset.theme) {
+        theme = root.dataset.theme;
+        paletteUntil = now + 650;
+      }
+      if (paletteUntil) {
+        const style = getComputedStyle(root);
+        palette = { fg: style.getPropertyValue('--fg').trim(), acc: style.getPropertyValue('--acc').trim(), sub: style.getPropertyValue('--sub').trim() };
+        if (now >= paletteUntil) paletteUntil = 0;
+      }
+      return palette;
+    };
 
     // Interpolate a 24-point series to PAIRS points.
     const sample = (a: number[], k: number) => { const f = (k / (PAIRS - 1)) * (a.length - 1), i = Math.floor(f), r = f - i; return a[i] + ((a[Math.min(a.length - 1, i + 1)] - a[i]) * r); };
@@ -60,7 +75,7 @@ const per = baseline.map((b) => b.mae);
 
     const resize = () => {
       const r = canvas.getBoundingClientRect(); W = r.width; H = r.height;
-      dpr = Math.min(devicePixelRatio || 1, 1.75, Math.sqrt(1.2e6 / Math.max(1, W * H)));
+      const dpr = Math.min(devicePixelRatio || 1, 1.75, Math.sqrt(1.2e6 / Math.max(1, W * H)));
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     const smooth = (x: number) => x * x * (3 - 2 * x);
@@ -70,13 +85,13 @@ const per = baseline.map((b) => b.mae);
       return [1 - a, a * (1 - b), b];
     };
 
-    const draw = () => {
-      const { fg, acc, sub } = css();
+    const draw = (now: number) => {
+      const { fg, acc, sub } = colors(now);
       const [w0, w1, w2] = weights(shown);
       const l0 = w0 ** 3, l1 = w1 ** 4, l2 = w2 ** 3; // connecting lines fade fast mid-morph so the shapes stay legible
       ctx.clearRect(0, 0, W, H);
       const pts = Array.from({ length: N }, (_, i) => {
-        const h = helix(i), c = chart(i), o = office(i);
+        const h = w0 ? helix(i) : zero, c = w1 ? chart(i) : zero, o = w2 ? office(i) : zero;
         return { x: h.x * w0 + c.x * w1 + o.x * w2, y: h.y * w0 + c.y * w1 + o.y * w2, z: h.z * w0 + c.z * w1 + o.z * w2, s: i & 1 };
       });
       // helix rungs
@@ -123,16 +138,49 @@ const per = baseline.map((b) => b.mae);
       if (cap && cap.textContent !== captions[idx]) { cap.textContent = captions[idx]; capr!.textContent = `0${idx + 1} / 03`; }
     };
 
-    const loop = (now: number) => {
-      if (!running) return;
-      const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016; last = now;
-      if (!reduce) t += dt;
-      shown += (progress - shown) * Math.min(1, dt * 7);
-      draw();
-      requestAnimationFrame(loop);
+    const zero = { x: 0, y: 0, z: 0 };
+    const requestDraw = () => {
+      if (visible && !document.hidden && !frame) frame = requestAnimationFrame(loop);
+      else if (!visible || document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        last = 0;
+      }
     };
-    (window as unknown as { setStory: (p: number) => void }).setStory = (p) => { progress = p; if (reduce) { shown = p; draw(); } };
-    new ResizeObserver(() => { resize(); draw(); }).observe(canvas);
-    new IntersectionObserver(([e]) => { running = e.isIntersecting && !reduce; if (running) { last = 0; requestAnimationFrame(loop); } }).observe(canvas);
+    const loop = (now: number) => {
+      frame = 0;
+      if (measure) { resize(); measure = false; }
+      if (dirty) {
+        const rect = steps.getBoundingClientRect();
+        const fraction = (innerHeight / 2 - rect.top) / Math.max(1, rect.height);
+        progress = Math.min(2, Math.max(0, fraction * 3 - 0.5));
+        dirty = false;
+      }
+      if (reduce.matches) {
+        shown = Math.round(progress);
+        t = 0;
+        draw(now);
+        return;
+      }
+      const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
+      last = now;
+      t += dt;
+      shown = Math.abs(progress - shown) < 0.001 ? progress : shown + (progress - shown) * Math.min(1, dt * 7);
+      draw(now);
+      requestDraw();
+    };
+    const updateProgress = () => { dirty = true; requestDraw(); };
+    const observer = new ResizeObserver(() => { measure = true; updateProgress(); });
+    observer.observe(canvas);
+    observer.observe(steps);
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) addEventListener('scroll', updateProgress, { passive: true });
+      else removeEventListener('scroll', updateProgress);
+      updateProgress();
+    }).observe(canvas);
+    new MutationObserver(requestDraw).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    document.addEventListener('visibilitychange', updateProgress);
+    reduce.addEventListener('change', () => { last = 0; updateProgress(); });
   }
 </script>

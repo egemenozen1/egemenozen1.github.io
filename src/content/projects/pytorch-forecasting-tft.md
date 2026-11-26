@@ -16,8 +16,6 @@ evidence:
     text: "Across all 24 horizons TFT MAE is 1.109 mg/m³ versus 1.203 for persistence — 7.8% lower, from committed outputs at commit 26ee667."
   - state: limit
     text: "The nominal 80% interval covers only 43.3% of observations, falling from 48.3% at one hour to 42.0% at 24 hours."
-  - state: limit
-    text: "Persistence beats TFT at the 1-hour and 24-hour horizons. Single-site experiment; training was not re-run for this portfolio."
 cover: "../../assets/work/tft-forecast.png"
 coverAlt: "Line chart of actual carbon-monoxide measurements, the TFT median forecast and its P10–P90 interval over a week of the test period."
 coverCaption: "Committed 24-hour forecast versus observed CO, from the source repository."
@@ -36,7 +34,7 @@ Across all 24 horizons, MAE is 1.109 mg/m³ against 1.203 for persistence: a 7.8
 
 ## Where it fails
 
-The nominal 80% interval covers only 43.3% of observations overall. Persistence also wins at exactly the horizons a user might care about most — the next hour, and the same hour tomorrow, where a daily cycle plausibly makes "repeat the last value" a strong forecast. Lower point error does not establish reliable uncertainty. This is a single-site experiment, not an operational air-quality service.
+The nominal 80% interval covers only 43.3% of observations overall. Persistence wins at both ends of the forecast window, including the next hour and the same hour tomorrow. The evidence ledger and chart show the full winning ranges. Lower point error does not establish reliable uncertainty. This is a single-site experiment, not an operational air-quality service.
 
 ## Inspect the evidence
 
