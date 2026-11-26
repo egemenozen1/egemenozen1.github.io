@@ -95,7 +95,7 @@ try {
     await send('Input.dispatchKeyEvent', { ...event, type: 'keyUp' });
   };
 
-  const routes = ['/', '/projects/futureme-ai/', '/projects/pytorch-forecasting-tft/', '/projects/ego-ai-studio/', '/projects/marketpulse/'];
+  const routes = ['/', '/projects/futureme-ai/', '/projects/pytorch-forecasting-tft/', '/projects/ego-ai-studio/', '/projects/ictavo/'];
   const widths = [320, 360, 390, 768, 1280, 1440];
   for (const route of routes) {
     for (const width of widths) {
