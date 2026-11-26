@@ -228,7 +228,7 @@ em, .it { font-family: var(--serif); font-style: italic; font-weight: 400; }
 
 /* ---------- Section scaffolding ---------- */
 .section { padding-block: clamp(88px, 13vw, 176px); position: relative; }
-.night { background: var(--night); color: var(--moon); }
+.night { color: var(--moon); }
 .sec-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr); gap: clamp(24px, 5vw, 80px); align-items: end; margin-bottom: clamp(56px, 8vw, 120px); }
 .sec-head .eyebrow { margin-bottom: 22px; display: flex; gap: 14px; align-items: center; }
 .sec-head .eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; }
@@ -567,3 +567,84 @@ em, .it { font-family: var(--serif); font-style: italic; font-weight: 400; }
 @media (forced-colors: active) {
   .hotspot, .state::before { forced-color-adjust: auto; border: 1px solid CanvasText; }
 }
+
+/* ==========================================================================
+   Final polish: transitions, reveals, atmosphere
+   ========================================================================== */
+
+/* Page transitions: the project title travels from the homepage into the case study. */
+::view-transition-group(*) { animation-duration: 0.55s; animation-timing-function: cubic-bezier(0.65, 0, 0.2, 1); }
+::view-transition-old(root) { animation: 0.3s cubic-bezier(0.4, 0, 1, 1) both vt-out; }
+::view-transition-new(root) { animation: 0.45s cubic-bezier(0, 0, 0.2, 1) 0.08s both vt-in; }
+::view-transition-image-pair(site-header) { isolation: auto; }
+@keyframes vt-out { to { opacity: 0; transform: translateY(-14px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(18px); } }
+
+/* Scroll progress: a hairline of signal under the header, driven by the scroll timeline. */
+.progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--signal); transform-origin: left; transform: scaleX(0); pointer-events: none; }
+@supports (animation-timeline: scroll()) {
+  .progress { animation: progress linear both; animation-timeline: scroll(root block); }
+  @keyframes progress { to { transform: scaleX(1); } }
+}
+
+/* Hero load-in for the small meta lines. */
+.js .load { opacity: 0; animation: fadeIn 0.9s var(--ease) forwards; animation-delay: calc(var(--i, 0) * 90ms + 60ms); }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* Large titles open like a curtain instead of fading. */
+.js .wipe { clip-path: inset(0 0 100% 0); transform: translateY(0.18em); transition: clip-path 1.1s cubic-bezier(0.7, 0, 0.15, 1), transform 1.1s cubic-bezier(0.7, 0, 0.15, 1); }
+.js .in .wipe, .js .wipe.in { clip-path: inset(-0.2em -0.1em -0.3em -0.1em); transform: none; }
+.js .contact-title.wipe { opacity: 1; }
+
+/* Screens settle into place as they reveal. */
+.js [data-reveal] .instrument img, .js [data-reveal].card .horizon { transform: scale(1.035); transition: transform 1.4s var(--ease) 0.1s; }
+.js [data-reveal].in .instrument img, .js [data-reveal].card.in .horizon { transform: none; }
+.instrument { transition: border-color 0.4s, box-shadow 0.6s var(--ease); }
+.fs-stage:hover .instrument { border-color: var(--nline-2); box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 79, 18, 0.08); }
+
+/* Atmosphere: a quiet signal glow at the top of night sections (static, no repaint). */
+.night { background: radial-gradient(1100px 520px at 88% -8%, rgba(255, 79, 18, 0.075), transparent 62%), radial-gradient(900px 600px at -10% 110%, rgba(98, 214, 156, 0.035), transparent 60%), var(--night); }
+.site-footer { background: var(--night); }
+
+/* Hovers with intent. */
+.service { position: relative; }
+.service::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--signal); transform: scaleX(0); transform-origin: left; transition: transform 0.6s var(--ease); }
+.service:hover::after { transform: scaleX(1); }
+.service .n { transition: color 0.3s; }
+.service:hover .n { color: var(--signal-ink); }
+.principle::after { content: ''; position: absolute; left: 0; top: 0; height: 2px; width: 100%; background: var(--signal); transform: scaleX(0); transform-origin: left; transition: transform 0.7s var(--ease); }
+.principle:hover::after { transform: scaleX(1); }
+.principle h3 { transition: transform 0.5s var(--ease); }
+.principle:hover h3 { transform: translateX(6px); }
+.btn .ar, .btn span[aria-hidden] { display: inline-block; transition: transform 0.3s var(--ease); }
+.btn:hover span[aria-hidden] { transform: translateY(3px); }
+.btn:active { transform: scale(0.97); }
+.quad li strong { transition: color 0.3s; }
+.quad li:hover strong { color: var(--signal-ink); }
+.timeline li::before { transition: background 0.3s, transform 0.3s var(--ease); }
+.timeline li:hover::before { background: var(--signal); border-color: var(--signal); transform: scale(1.25); }
+.ledger li { transition: background 0.25s; }
+.ledger li:hover { background: rgba(20, 20, 18, 0.03); }
+.night .ledger li:hover { background: rgba(237, 234, 225, 0.03); }
+
+/* Footer signature. */
+.signature { display: flex; align-items: baseline; gap: 0.22em; flex-wrap: wrap; padding-top: clamp(56px, 8vw, 120px); padding-bottom: clamp(16px, 2vw, 28px); font-family: var(--serif); font-size: clamp(4rem, 17vw, 17.5rem); line-height: 0.82; letter-spacing: -0.035em; color: var(--moon); border-bottom: 1px solid var(--nline); }
+.signature em { color: var(--signal); }
+.signature i { width: 0.12em; height: 0.12em; border-radius: 50%; background: var(--signal); align-self: flex-end; margin: 0 0 0.12em -0.16em; }
+
+@media (prefers-reduced-motion: reduce) {
+  .progress { display: none; }
+  .js .load, .js .wipe { opacity: 1; clip-path: none; transform: none; }
+  .js [data-reveal] .instrument img, .js [data-reveal].card .horizon { transform: none; }
+}
+
+/* Section rhythm: paper for reading, night only for the project instruments and the finale.
+   Consecutive paper sections are separated by a hairline instead of a tone change. */
+.section.ruled > .wrap::before { content: ''; display: block; height: 1px; background: var(--line-2); margin-bottom: clamp(56px, 8vw, 110px); }
+.section.ruled { padding-top: 0; }
+.section:not(.night) .principle { border-color: var(--line-2); }
+.section:not(.night) .principle p { color: var(--ink-2); }
+.section:not(.night) .principle .proof { color: var(--ink); border-top-color: var(--line-2); }
+.section:not(.night) .principle .proof span { color: var(--mute); }
+.section:not(.night) .principle::before { color: var(--signal-ink); }
+.section:not(.night) .principles { border-color: var(--line-2); }

@@ -21,7 +21,7 @@ const long = d.title.length > 34;
     <header class="wrap case-hero">
       <a class="crumb eyebrow" href={d.flagship ? '/#work' : '/#lab'}>← {d.flagship ? 'Selected systems' : 'From the lab'}</a>
       <p class="eyebrow">{d.category} · {d.year}</p>
-      <h1 class={`case-title${long ? ' long' : ''}`}>{d.title}</h1>
+      <h1 class={`case-title${long ? ' long' : ''}`} style={`view-transition-name: t-${project.id}`}>{d.title}</h1>
       <p class="case-thesis">{d.thesis}</p>
       <dl class="case-facts">
         <div><dt>Role</dt><dd>{d.role}</dd></div>

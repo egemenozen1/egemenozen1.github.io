@@ -56,12 +56,12 @@ const toolkit = [
   <!-- ============ HERO ============ -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="wrap hero-meta">
-      <p class="eyebrow">Portfolio — edition 2026</p>
-      <p class="eyebrow loc">Berlin · 52.52° N 13.40° E · <time data-clock>CET</time></p>
-      <p class="eyebrow status"><span class="pulse" aria-hidden="true"></span>Open to Applied AI roles &amp; EU client projects</p>
+      <p class="eyebrow load" style="--i:0">Portfolio — edition 2026</p>
+      <p class="eyebrow loc load" style="--i:1">Berlin · 52.52° N 13.40° E · <time data-clock>CET</time></p>
+      <p class="eyebrow status load" style="--i:2"><span class="pulse" aria-hidden="true"></span>Open to Applied AI roles &amp; EU client projects</p>
     </div>
     <div class="wrap">
-      <p class="hero-name">Egemen Özen <span>AI Engineer &amp; Data Analyst</span></p>
+      <p class="hero-name load" style="--i:1">Egemen Özen <span>AI Engineer &amp; Data Analyst</span></p>
       <h1 class="display" id="hero-title">{headline.map((w, i) => w === '<br>' ? <span class="br" /> : <><span class="w" style={`--i:${i}`} set:html={w} />{' '}</>)}</h1>
     </div>
     <SignalField />
@@ -88,7 +88,7 @@ const toolkit = [
       <header class="sec-head">
         <div data-reveal>
           <p class="eyebrow">01 — Selected systems</p>
-          <h2 class="section-title" id="work-title">Three systems.<br /><em>Three kinds of proof.</em></h2>
+          <h2 class="section-title wipe" id="work-title">Three systems.<br /><em>Three kinds of proof.</em></h2>
         </div>
         <p class="lede" data-reveal style="--d:120ms">An agent office that records every hand-off, a market workspace where every number keeps its receipt, and a decision tool that refuses to pick a winner. Each comes with its evidence ledger: what is verified, what is by design, and where the limits are.</p>
       </header>
@@ -97,7 +97,7 @@ const toolkit = [
         <article class="flagship" aria-labelledby={`fs-${p.id}`}>
           <div class="fs-head" data-reveal>
             <div class="fs-index"><span class="fs-num">{String(i + 1).padStart(2, '0')} / {p.data.category}</span><span class="eyebrow">{p.data.year}</span></div>
-            <h3 class="fs-title" id={`fs-${p.id}`}><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
+            <h3 class="fs-title" id={`fs-${p.id}`} style={`view-transition-name: t-${p.id}`}><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
             <p class="fs-thesis">{p.data.thesis}</p>
           </div>
           <div class="fs-body" data-reveal>
@@ -128,7 +128,7 @@ const toolkit = [
       <header class="sec-head">
         <div data-reveal>
           <p class="eyebrow">02 — From the lab</p>
-          <h2 class="section-title" id="lab-title">Experiments, <em>including the parts that failed.</em></h2>
+          <h2 class="section-title wipe" id="lab-title">Experiments, <em>including the parts that failed.</em></h2>
         </div>
         <p class="lede" data-reveal style="--d:120ms">Forecasting evaluation, recommender research, and the computational biology where the habit of asking for a control group started.</p>
       </header>
@@ -150,7 +150,7 @@ const toolkit = [
             <article class="card card-link" data-reveal style={`--d:${(i + 1) * 110}ms`}>
               <div class="card-body">
                 <div class="card-kicker"><span class="eyebrow">{p.data.category}</span><span class="eyebrow">{p.data.year}</span></div>
-                <h3><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
+                <h3 style={`view-transition-name: t-${p.id}`}><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
                 <p>{p.data.thesis}</p>
                 <div class="card-foot"><span>{p.data.status}</span><span aria-hidden="true">→</span></div>
               </div>
@@ -166,12 +166,12 @@ const toolkit = [
   </section>
 
   <!-- ============ STUDIO ============ -->
-  <section class="section" id="studio" aria-labelledby="studio-title" style="background:var(--paper-2)">
+  <section class="section ruled" id="studio" aria-labelledby="studio-title">
     <div class="wrap">
       <header class="sec-head">
         <div data-reveal>
           <p class="eyebrow">03 — EGO AI Studio for clients</p>
-          <h2 class="section-title" id="studio-title">Automation that <em>shows its work.</em></h2>
+          <h2 class="section-title wipe" id="studio-title">Automation that <em>shows its work.</em></h2>
         </div>
         <p class="lede" data-reveal style="--d:120ms">I take on focused AI automation projects for businesses across the EU — scoped narrowly, documented properly and built so that your team can run them without me.</p>
       </header>
@@ -193,12 +193,12 @@ const toolkit = [
   </section>
 
   <!-- ============ APPROACH ============ -->
-  <section class="section night" id="approach" aria-labelledby="approach-title">
+  <section class="section ruled" id="approach" aria-labelledby="approach-title">
     <div class="wrap">
       <header class="sec-head">
         <div data-reveal>
           <p class="eyebrow">04 — Approach</p>
-          <h2 class="section-title" id="approach-title">Four rules I <em>don’t negotiate.</em></h2>
+          <h2 class="section-title wipe" id="approach-title">Four rules I <em>don’t negotiate.</em></h2>
         </div>
         <p class="lede" data-reveal style="--d:120ms">They are easy to write down. The proof is that each one already shows up in shipped work.</p>
       </header>
@@ -215,7 +215,7 @@ const toolkit = [
   </section>
 
   <!-- ============ ABOUT ============ -->
-  <section class="section" id="about" aria-labelledby="about-title">
+  <section class="section ruled" id="about" aria-labelledby="about-title">
     <div class="wrap">
       <div class="about-grid">
         <div class="about-story" data-reveal>
@@ -242,7 +242,7 @@ const toolkit = [
   <section class="night contact" id="contact" aria-labelledby="contact-title">
     <div class="wrap">
       <p class="eyebrow" data-reveal>06 — Contact</p>
-      <h2 class="contact-title" id="contact-title" data-reveal>Let’s build something that <em>can show its work.</em></h2>
+      <div data-reveal><h2 class="contact-title wipe" id="contact-title">Let’s build something that <em>can show its work.</em></h2></div>
       <div class="contact-row">
         <p class="lede" data-reveal>For Applied AI, automation or data roles — or a process in your business that should run itself. I reply in English, German or Turkish.</p>
         <div data-reveal style="--d:120ms">
