@@ -2,273 +2,246 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SignalField from '../components/SignalField.astro';
-import EvidenceLedger from '../components/EvidenceLedger.astro';
-import MissionReplay from '../components/MissionReplay.astro';
-import ProvenanceInspector from '../components/ProvenanceInspector.astro';
-import FutureMeStage from '../components/FutureMeStage.astro';
+import StoryCanvas from '../components/StoryCanvas.astro';
 import HorizonExplorer from '../components/HorizonExplorer.astro';
 import { site } from '../config/site';
+import mpShot from '../assets/work/marketpulse-portfolio.png';
+import fmShot from '../assets/work/futureme-home.png';
 
 const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const flagships = all.filter((p) => p.data.flagship);
-const tft = all.find((p) => p.id === 'pytorch-forecasting-tft')!;
-const smaller = all.filter((p) => !p.data.flagship && p.id !== 'pytorch-forecasting-tft');
+const get = (id: string) => all.find((p) => p.id === id)!;
+const tft = get('pytorch-forecasting-tft');
+const smalls = [get('recommendation-systems'), get('antidepressant-binding-mechanisms')];
 
-const headline = ['I', 'build', 'AI', 'systems', '<br>', 'that', '<em>show</em>', 'their', '<span class="mark">evidence.</span>'];
+const name = [['E', 'g', 'e', 'm', 'e', 'n'], ['Ö', 'z', 'e', 'n', '.']];
+let ci = 0;
 
-const quad = [
-  { t: 'AI Engineering', d: 'LLM APIs · agents · evaluation' },
-  { t: 'AI Automation', d: 'workflows · n8n · human gates' },
-  { t: 'Data Analytics', d: 'Python · SQL · forecasting' },
-  { t: 'Product Development', d: 'FastAPI · React · shipped demos' },
+const steps = [
+  { theme: 'lab', yr: '2017 — 2023 · Istanbul', h: 'It started in a genetics lab.', p: 'BSc Genetics & Bioengineering at Istanbul Bilgi University. Bioinformatics, statistics, genetic data in R — and one habit that stuck: before you believe a result, ask for the control group.',
+    proof: [['senior design', 'molecular docking of ten compounds against two transporter structures'], ['the lesson', 'a computational score is not a clinical result — so the numbers stay out of the portfolio']] },
+  { theme: 'data', yr: '2023 — 2024 · Berlin', h: 'Then the strands became data.', p: 'MSc Data Analytics at BSBI Berlin. Machine learning, deep learning, NLP — and the discipline of measuring a model against something simpler before trusting it.',
+    proof: [['tft experiment', '7.8% lower average error than persistence'], ['and the catch', 'its 80% interval covered only 43.3% — persistence wins at 1–3 h and 22–24 h'], ['thesis', 'recommendation systems with SQL & AI for smaller businesses']] },
+  { theme: 'agents', yr: '2026 · now', h: 'Now the data has agents.', p: 'I build AI systems end to end and run EGO AI Studio — an independent AI automation practice operated by a human-governed agent office I designed: one Director, six specialists, quality gates and an owner on everything irreversible.',
+    proof: [['recorded run', 'research → engineering → QA · 118 tests passed · push held for the owner'], ['rule', 'specialists never call each other; every hand-off goes through the Director']] },
 ];
 
-const services = [
-  { t: 'Document & invoice automation', d: 'Invoices and documents that arrive by email are read, checked and written to your accounting tool or a spreadsheet — with a review list for anything uncertain instead of a silent guess.', s: 'n8n · LLM extraction · review queue' },
-  { t: 'Website assistants that can say “I don’t know”', d: 'An assistant that answers from your own content, admits when it does not know, and captures the enquiry rather than inventing an answer.', s: 'Retrieval over your content · lead capture' },
-  { t: 'Data & reporting automation', d: 'Recurring reports and dashboards built from your data, with checks that catch a wrong number before your team sees it.', s: 'Python · SQL · scheduled pipelines' },
-  { t: 'Agent workflows for small teams', d: 'Narrow, tested agents for research, drafting and triage — with an approval gate on anything that leaves the building.', s: 'Agent roles · approval gates · audit trail' },
+const cards = [
+  { p: get('ego-ai-studio'), bg: '#111113', fg: '#f2f2f0', media: 'ego' },
+  { p: get('marketpulse'), bg: '#0b1630', fg: '#eaf0fa', media: 'mp' },
+  { p: get('futureme-ai'), bg: '#1e4d3a', fg: '#f3efe6', media: 'fm' },
 ];
 
-const principles = [
-  { t: 'Function before effect.', d: 'Every screen starts with who uses it and why. Animation, 3D and polish come after — and only where they make the product clearer.', p: 'This site: static pages, one canvas, no cookies, trackers or framework runtime.' },
-  { t: 'Beat a baseline first.', d: 'A model has to outperform the simplest honest alternative. Where it does not, that goes in the write-up too.', p: 'TFT vs persistence: −7.8% MAE overall — <span>but persistence wins at 1–3 h and 22–24 h.</span>' },
-  { t: 'Every number keeps its receipt.', d: 'Source, timestamp and a sample flag travel with the value. If the receipt is missing, the value stays empty.', p: 'MarketPulse: missing prices stay missing; <span>stale after three days.</span>' },
-  { t: 'People own the irreversible.', d: 'Agents can research, draft, build and test. Sending, publishing, spending and pushing stay with a human.', p: 'EGO AI Studio: every hand-off through the Director, <span>every irreversible step behind an owner gate.</span>' },
-];
-
-const timeline = [
-  { y: '2017 — 2023', t: 'BSc Genetics & Bioengineering — Istanbul Bilgi University', d: 'Bioinformatics, statistics and genetic data analysis in R. Senior design: a molecular docking study.' },
-  { y: '2023 — 2024', t: 'MSc Data Analytics — BSBI Berlin', d: 'Berlin School of Business and Innovation. Machine learning, deep learning, NLP and data engineering; thesis on recommendation systems with SQL & AI.' },
-  { y: '2026', t: 'From experiments to shipped products', d: 'Forecasting evaluation with a TFT, FutureMe AI as a live public demo, MarketPulse as a local-first data product.' },
-  { y: 'Now', t: 'EGO AI Studio', d: 'An independent AI automation practice, run by a human-governed agent office I designed and built.', now: true },
-];
-
-const toolkit = [
-  { t: 'AI Engineering', i: ['Claude & Gemini APIs', 'Claude Code subagents', 'Agent roles, gates & evaluation', 'PyTorch Forecasting'] },
-  { t: 'AI Automation', i: ['n8n workflows', 'Node.js tooling', 'Notion & Obsidian integration', 'Human-approval design'] },
-  { t: 'Data Analytics', i: ['Python · pandas', 'SQL · SQLite', 'R', 'Time-series evaluation'] },
-  { t: 'Product Development', i: ['FastAPI', 'React · TypeScript', 'Docker · Render', 'GitHub Actions · QA'] },
+const tools = ['Python', 'Claude API', 'FastAPI', 'n8n', 'SQL', 'React', 'TypeScript', 'Gemini API', 'PyTorch Forecasting', 'Docker', 'pandas', 'GitHub Actions', 'R', 'SQLite', 'Claude Code agents'];
+const rules = [
+  ['Function before effect.', 'Who uses it, and why — before any animation.', 'Like this page: static, no trackers, no cookies.'],
+  ['Beat a baseline first.', 'A model earns its complexity against something simple.', 'TFT vs persistence, losses included.'],
+  ['Every number keeps its receipt.', 'Source, time and sample flag — or the value stays empty.', 'MarketPulse: missing stays missing.'],
+  ['People own the irreversible.', 'Agents research, draft, build and test. Humans send, publish, buy and push.', 'EGO AI Studio’s owner gate.'],
 ];
 ---
 <BaseLayout>
-  <!-- ============ HERO ============ -->
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap hero-meta">
-      <p class="eyebrow">Portfolio — edition 2026</p>
-      <p class="eyebrow loc">Berlin · 52.52° N 13.40° E · <time data-clock>CET</time></p>
-      <p class="eyebrow status"><span class="pulse" aria-hidden="true"></span>Open to Applied AI roles &amp; EU client projects</p>
+  <section class="intro wrap" data-theme-section="bone" aria-labelledby="hero-title">
+    <div class="intro-top">
+      <p class="eyebrow">Portfolio · 2026 · Berlin</p>
+      <p class="eyebrow">AI Engineer &amp; Data Analyst</p>
+      <p class="eyebrow">Open to Applied AI roles &amp; EU projects</p>
     </div>
-    <div class="wrap">
-      <p class="hero-name">Egemen Özen <span>AI Engineer &amp; Data Analyst</span></p>
-      <h1 class="display" id="hero-title">{headline.map((w, i) => w === '<br>' ? <span class="br" /> : <><span class="w" style={`--i:${i}`} set:html={w} />{' '}</>)}</h1>
-    </div>
-    <SignalField />
-    <div class="wrap hero-foot">
-      <div>
-        <p class="lede">I design and build agent workflows, automations and data products end to end — and make every claim they produce traceable to a source, a test or a stated limit.</p>
-        <div class="hero-actions">
-          <a class="btn" href="#work">See the work <span aria-hidden="true">↓</span></a>
-          <a class="btn btn-ghost" href="#contact">Start a conversation</a>
-        </div>
-      </div>
-      <div class="quad-wrap">
-        <ul class="quad" role="list" aria-label="Where I work: four disciplines">
-          {quad.map((q) => <li><strong>{q.t}</strong><span>{q.d}</span></li>)}
-        </ul>
-        <span class="quad-center" aria-hidden="true"></span>
-      </div>
+    <h1 class="kinetic" id="hero-title" data-kinetic aria-label="Egemen Özen">
+      {name.map((ln) => <span class="ln" aria-hidden="true">{ln.map((c) => <span class="ch" style={`--i:${ci++}`}>{c}</span>)}</span>)}
+    </h1>
+    <div class="intro-foot">
+      <p class="lede">Bioengineer turned AI engineer. I build agent workflows, automations and data products — and I treat every model like an experiment: with a control, a baseline and a written limit.</p>
+      <div class="meta"><span><b>MSc</b> Data Analytics · Berlin</span><span><b>BSc</b> Genetics &amp; Bioengineering · Istanbul</span><span><b>TR · EN C1 · DE C1</b></span></div>
+      <a class="scroll-cue" href="#story"><i aria-hidden="true">↓</i>Follow the thread</a>
     </div>
   </section>
 
-  <!-- ============ SELECTED SYSTEMS ============ -->
-  <section class="section night" id="work" aria-labelledby="work-title">
-    <div class="wrap">
-      <header class="sec-head">
-        <div data-reveal>
-          <p class="eyebrow">01 — Selected systems</p>
-          <h2 class="section-title" id="work-title">Three systems.<br /><em>Three kinds of proof.</em></h2>
-        </div>
-        <p class="lede" data-reveal style="--d:120ms">An agent office that records every hand-off, a market workspace where every number keeps its receipt, and a decision tool that refuses to pick a winner. Each comes with its evidence ledger: what is verified, what is by design, and where the limits are.</p>
-      </header>
-
-      {flagships.map((p, i) => (
-        <article class="flagship" aria-labelledby={`fs-${p.id}`}>
-          <div class="fs-head" data-reveal>
-            <div class="fs-index"><span class="fs-num">{String(i + 1).padStart(2, '0')} / {p.data.category}</span><span class="eyebrow">{p.data.year}</span></div>
-            <h3 class="fs-title" id={`fs-${p.id}`}><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
-            <p class="fs-thesis">{p.data.thesis}</p>
-          </div>
-          <div class="fs-body" data-reveal>
-            <dl class="fs-meta">
-              <dt>Role</dt><dd>{p.data.role}</dd>
-              <dt>Status</dt><dd>{p.data.status}</dd>
-              <dt>Stack</dt><dd>{p.data.technologies.join(' · ')}</dd>
-            </dl>
-            <EvidenceLedger items={p.data.evidence} />
-            <div class="fs-links">
-              <a class="link-arrow" href={`/projects/${p.id}/`}>Read the case study <span class="ar" aria-hidden="true">→</span></a>
-              {p.data.liveUrl && <a class="link-arrow" href={p.data.liveUrl} target="_blank" rel="noopener noreferrer">Open the live demo <span class="ar" aria-hidden="true">↗</span></a>}
-            </div>
-          </div>
-          <div class="fs-stage" data-reveal style="--d:140ms">
-            {p.id === 'ego-ai-studio' && <MissionReplay />}
-            {p.id === 'marketpulse' && <ProvenanceInspector />}
-            {p.id === 'futureme-ai' && <FutureMeStage />}
-          </div>
+  <section class="wrap story" id="story" aria-label="From DNA to agents: my path in three chapters">
+    <div class="story-steps" data-steps>
+      {steps.map((s, i) => (
+        <article class="step" data-theme-section={s.theme} aria-labelledby={`step-${i}`}>
+          <p class="yr">{String(i + 1).padStart(2, '0')} · {s.yr}</p>
+          <h2 id={`step-${i}`}>{s.h}</h2>
+          <p>{s.p}</p>
+          <ul class="proof" role="list">{s.proof.map(([k, v]) => <li><b>{k}</b> — {v}</li>)}</ul>
         </article>
       ))}
     </div>
+    <StoryCanvas />
   </section>
 
-  <!-- ============ LAB ============ -->
-  <section class="section" id="lab" aria-labelledby="lab-title">
-    <div class="wrap">
-      <header class="sec-head">
-        <div data-reveal>
-          <p class="eyebrow">02 — From the lab</p>
-          <h2 class="section-title" id="lab-title">Experiments, <em>including the parts that failed.</em></h2>
-        </div>
-        <p class="lede" data-reveal style="--d:120ms">Forecasting evaluation, recommender research, and the computational biology where the habit of asking for a control group started.</p>
-      </header>
-      <div class="lab-grid">
-        <article class="card" data-reveal aria-labelledby="lab-tft">
-          <HorizonExplorer />
-          <div class="card-body">
-            <div class="card-kicker"><span class="eyebrow">{tft.data.category}</span><span class="eyebrow">{tft.data.year}</span></div>
-            <h3 id="lab-tft">{tft.data.thesis}</h3>
-            <p>Drag across the chart. A PyTorch Forecasting TFT cuts average error by 7.8% against same-origin persistence — yet its nominal 80% interval covers only 43.3% of observations, and the naive baseline wins at the shortest and the daily horizons.</p>
-            <div class="card-foot">
-              <a class="link-arrow" href={`/projects/${tft.id}/`}>Read the experiment <span class="ar" aria-hidden="true">→</span></a>
-              <a class="link-arrow" href={tft.data.sourceUrl} target="_blank" rel="noopener noreferrer">Source <span class="ar" aria-hidden="true">↗</span></a>
-            </div>
-          </div>
-        </article>
-        <div class="lab-side">
-          {smaller.map((p, i) => (
-            <article class="card card-link" data-reveal style={`--d:${(i + 1) * 110}ms`}>
-              <div class="card-body">
-                <div class="card-kicker"><span class="eyebrow">{p.data.category}</span><span class="eyebrow">{p.data.year}</span></div>
-                <h3><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
-                <p>{p.data.thesis}</p>
-                <div class="card-foot"><span>{p.data.status}</span><span aria-hidden="true">→</span></div>
+  <section class="section wrap" id="work" data-theme-section="bone" aria-labelledby="work-title">
+    <h2 class="sec-title" id="work-title" data-reveal><small>What I’ve built</small>Three systems, <em>three proofs.</em></h2>
+    <div class="stack">
+      {cards.map(({ p, bg, fg, media }, i) => {
+        const v = p.data.evidence.find((e) => e.state === 'verified' || e.state === 'live');
+        const lim = p.data.evidence.find((e) => e.state === 'limit' || e.state === 'private');
+        return (
+          <article class="pcard" style={`--i:${i};--c-bg:${bg};--c-fg:${fg}`} data-pcard aria-labelledby={`card-${p.id}`}>
+            <span class="dim" aria-hidden="true"></span>
+            <div>
+              <p class="num">0{i + 1} / {p.data.category} · {p.data.year}</p>
+              <h3 id={`card-${p.id}`} style={`view-transition-name: t-${p.id}`}><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
+              <p class="thesis">{p.data.thesis}</p>
+              <ul class="facts" role="list">
+                <li><span>Role</span>{p.data.role}</li>
+                <li><span>Stack</span>{p.data.technologies.slice(0, 5).join(' · ')}</li>
+                {v && <li><span>Proof</span>{v.text}</li>}
+                {lim && <li><span>Limit</span>{lim.text}</li>}
+              </ul>
+              <div class="acts">
+                <a href={`/projects/${p.id}/`}>Case study →</a>
+                {p.data.liveUrl && <a href={p.data.liveUrl} target="_blank" rel="noopener noreferrer">Live demo ↗</a>}
               </div>
-            </article>
-          ))}
-        </div>
-      </div>
-      <div class="lab-more" data-reveal>
-        <p class="eyebrow">Earlier notebooks, scrapers and API exercises live on GitHub.</p>
-        <a class="link-arrow" href={site.github} target="_blank" rel="noopener noreferrer">github.com/egemenozen1 <span class="ar" aria-hidden="true">↗</span></a>
-      </div>
+            </div>
+            {media === 'ego' && (
+              <div class="media ego" aria-label="EGO AI Studio office structure">
+                <div class="ego-net">
+                  <span class="wide">owner <b>Egemen</b></span>
+                  <span class="wide">director <b>Main session</b></span>
+                  {['Research', 'Engineering', 'Product & UX', 'QA & Security', 'Data & Automation', 'Career'].map((r) => <span>specialist<b>{r}</b></span>)}
+                  <span class="wide gate">human gate <b>send · publish · buy · push</b></span>
+                </div>
+              </div>
+            )}
+            {media === 'mp' && <div class="media"><Image src={mpShot} widths={[640, 1000]} sizes="(max-width: 1000px) 92vw, 50vw" quality={76} loading="lazy" alt="MarketPulse portfolio workspace, fictional fixture data." /></div>}
+            {media === 'fm' && <div class="media"><Image src={fmShot} widths={[640, 1000]} sizes="(max-width: 1000px) 92vw, 50vw" quality={76} loading="lazy" alt="FutureMe public demo homepage." /></div>}
+          </article>
+        );
+      })}
     </div>
   </section>
 
-  <!-- ============ STUDIO ============ -->
-  <section class="section" id="studio" aria-labelledby="studio-title" style="background:var(--paper-2)">
-    <div class="wrap">
-      <header class="sec-head">
-        <div data-reveal>
-          <p class="eyebrow">03 — EGO AI Studio for clients</p>
-          <h2 class="section-title" id="studio-title">Automation that <em>shows its work.</em></h2>
+  <section class="section wrap" id="lab" data-theme-section="bone" aria-labelledby="lab-title">
+    <h2 class="sec-title" id="lab-title" data-reveal><small>From the lab</small>Experiments, <em>failures included.</em></h2>
+    <div class="lab-row">
+      <article class="lab-card big" data-reveal>
+        <HorizonExplorer />
+        <div class="in">
+          <p class="eyebrow">{tft.data.category} · {tft.data.year}</p>
+          <h3 style="view-transition-name: t-pytorch-forecasting-tft"><a href={`/projects/${tft.id}/`}>{tft.data.thesis}</a></h3>
         </div>
-        <p class="lede" data-reveal style="--d:120ms">I take on focused AI automation projects for businesses across the EU — scoped narrowly, documented properly and built so that your team can run them without me.</p>
-      </header>
-      <ol class="services" role="list">
-        {services.map((s, i) => (
-          <li class="service" data-reveal>
-            <span class="n">{String(i + 1).padStart(2, '0')}</span>
-            <h3>{s.t}</h3>
-            <p>{s.d}<small>{s.s}</small></p>
-          </li>
+      </article>
+      <div class="lab-side">
+        {smalls.map((p, i) => (
+          <article class="lab-card" data-reveal style={`--d:${(i + 1) * 100}ms`}>
+            <p class="eyebrow">{p.data.category} · {p.data.year}</p>
+            <h3 style={`view-transition-name: t-${p.id}`}><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
+            <p>{p.data.thesis}</p>
+          </article>
         ))}
-      </ol>
-      <div class="studio-terms">
-        <div data-reveal><h4>Done means you can run it</h4><p>A delivery is finished when you get the same result with your own file a week later — without me.</p></div>
-        <div data-reveal style="--d:100ms"><h4>Across the EU, in three languages</h4><p>English, German and Turkish. Remote-first from Berlin.</p></div>
-        <div data-reveal style="--d:200ms"><h4>Private by default</h4><p>Self-hostable tools where it matters, minimal data leaving your systems, and a human approval on anything irreversible.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ APPROACH ============ -->
-  <section class="section night" id="approach" aria-labelledby="approach-title">
-    <div class="wrap">
-      <header class="sec-head">
-        <div data-reveal>
-          <p class="eyebrow">04 — Approach</p>
-          <h2 class="section-title" id="approach-title">Four rules I <em>don’t negotiate.</em></h2>
-        </div>
-        <p class="lede" data-reveal style="--d:120ms">They are easy to write down. The proof is that each one already shows up in shipped work.</p>
-      </header>
-      <ol class="principles" role="list">
-        {principles.map((p, i) => (
-          <li class="principle" data-reveal style={`--d:${(i % 2) * 120}ms`}>
-            <h3>{p.t}</h3>
-            <p>{p.d}</p>
-            <p class="proof" set:html={`→ ${p.p}`} />
-          </li>
-        ))}
-      </ol>
-    </div>
+  <div class="marquee" aria-label={`Toolkit: ${tools.join(', ')}`} role="img">
+    <div class="marquee-track" data-marquee aria-hidden="true">{[...tools, ...tools].map((t) => <span>{t}</span>)}</div>
+  </div>
+
+  <section class="section wrap" id="approach" data-theme-section="bone" aria-labelledby="rules-title">
+    <h2 class="sec-title" id="rules-title" data-reveal><small>How I work</small>Four rules, <em>no exceptions.</em></h2>
+    <ol class="rules" role="list">
+      {rules.map(([h, p, proof]) => <li class="rule" data-reveal><h3>{h}</h3><p>{p} <b>{proof}</b></p></li>)}
+    </ol>
   </section>
 
-  <!-- ============ ABOUT ============ -->
-  <section class="section" id="about" aria-labelledby="about-title">
-    <div class="wrap">
-      <div class="about-grid">
-        <div class="about-story" data-reveal>
-          <p class="eyebrow">05 — About</p>
-          <h2 class="big" id="about-title">Genetics taught me to ask for the <em>control group.</em> I still do — now for models, agents and dashboards.</h2>
-          <p>I studied Genetics &amp; Bioengineering in Istanbul and Data Analytics in Berlin. Today I build AI systems end to end — data model, backend, interface and the agent workflows around them — and run EGO AI Studio, my independent practice for AI automation.</p>
-          <p>I am looking for roles where AI has to be dependable — Applied AI, AI automation and AI solutions engineering, with data analytics close by — and for client work where a process should run itself without losing its paper trail.</p>
-          <div class="langs" aria-label="Languages"><span>Turkish <b>native</b></span><span>English <b>C1</b></span><span>German <b>C1</b></span></div>
-        </div>
-        <div data-reveal style="--d:140ms">
-          <p class="eyebrow" style="margin-bottom:24px">Education &amp; path</p>
-          <ol class="timeline" role="list">
-            {timeline.map((t) => <li class={t.now ? 'now' : ''}><span class="yr">{t.y}</span><h3>{t.t}</h3><p>{t.d}</p></li>)}
-          </ol>
-        </div>
-      </div>
-      <div class="toolkit" data-reveal>
-        {toolkit.map((g) => <div><h3>{g.t}</h3><ul role="list">{g.i.map((i) => <li>{i}</li>)}</ul></div>)}
-      </div>
+  <section class="section wrap" id="studio" data-theme-section="bone" aria-labelledby="doors-title">
+    <h2 class="sec-title" id="doors-title" data-reveal><small>Two doors</small>Hire me, <em>or hand me a process.</em></h2>
+    <div class="doors" id="about">
+      <article class="door hire" data-reveal>
+        <p class="eyebrow">For teams hiring</p>
+        <h3>An AI engineer with a scientist’s habits.</h3>
+        <ul role="list">
+          <li>Applied AI &amp; automation — agent roles, quality gates, Claude &amp; Gemini integrations, n8n</li>
+          <li>Data depth — MSc Data Analytics, forecasting evaluated against honest baselines</li>
+          <li>Product end to end — a live public demo and a full local product, UI to database</li>
+          <li>Berlin-based · German &amp; English C1 · Turkish native</li>
+        </ul>
+        <a class="btn" href={`mailto:${site.email}?subject=Role%20at%20your%20team`}>Talk about a role →</a>
+      </article>
+      <article class="door biz" data-reveal style="--d:100ms">
+        <p class="eyebrow">For businesses · EGO AI Studio</p>
+        <h3>Automation that keeps working after I leave.</h3>
+        <ul role="list">
+          <li>Document &amp; invoice automation — uncertain items go to a review list, not a guess</li>
+          <li>Website assistants that answer from your content and can say “I don’t know”</li>
+          <li>Data &amp; reporting automation with checks before numbers reach your team</li>
+          <li>Agent workflows with an approval gate on anything that leaves the building</li>
+        </ul>
+        <a class="btn btn-ghost" href={`mailto:${site.email}?subject=Automation%20project`}>Describe your process →</a>
+      </article>
     </div>
+    <dl class="facts-strip" data-reveal>
+      <div><dt>Education</dt><dd>MSc Data Analytics — BSBI Berlin<small>2023 — 2024</small></dd></div>
+      <div><dt>&nbsp;</dt><dd>BSc Genetics & Bioengineering — Istanbul Bilgi University<small>2017 — 2023</small></dd></div>
+      <div><dt>Languages</dt><dd>Turkish · English C1 · German C1</dd></div>
+      <div><dt>Based in</dt><dd>Berlin, Germany<small>remote across the EU</small></dd></div>
+    </dl>
   </section>
 
-  <!-- ============ CONTACT ============ -->
-  <section class="night contact" id="contact" aria-labelledby="contact-title">
-    <div class="wrap">
-      <p class="eyebrow" data-reveal>06 — Contact</p>
-      <h2 class="contact-title" id="contact-title" data-reveal>Let’s build something that <em>can show its work.</em></h2>
-      <div class="contact-row">
-        <p class="lede" data-reveal>For Applied AI, automation or data roles — or a process in your business that should run itself. I reply in English, German or Turkish.</p>
-        <div data-reveal style="--d:120ms">
-          <div class="contact-actions">
-            <a class="btn" href={`mailto:${site.email}`}>{site.email}</a>
-            <button class="btn btn-ghost" type="button" data-copy={site.email}>Copy address</button>
-            <a class="btn btn-ghost" href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          </div>
-          <p class="copy-state" role="status" data-copy-state></p>
+  <section class="contact wrap" id="contact" data-theme-section="cobalt" aria-labelledby="contact-title">
+    <p class="eyebrow">Contact</p>
+    <h2 class="talk" id="contact-title" data-kinetic aria-label="Let’s talk."><span aria-hidden="true">{[...'Let’s talk.'].map((c) => c === ' ' ? ' ' : <span class="ch">{c}</span>)}</span></h2>
+    <div class="contact-row">
+      <p>For Applied AI, automation or data roles — or a process in your business that should run itself. I reply in English, German or Turkish.</p>
+      <div>
+        <div class="contact-actions">
+          <a class="btn" href={`mailto:${site.email}`}>{site.email}</a>
+          <button class="btn btn-ghost" type="button" data-copy={site.email}>Copy</button>
+          <a class="btn btn-ghost" href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
         </div>
+        <p class="copy-state" role="status" data-copy-state></p>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <script>
-  const clock = document.querySelector<HTMLTimeElement>('[data-clock]');
-  if (clock) {
-    const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' });
-    const tick = () => { clock.textContent = `${fmt.format(new Date())} local`; };
-    tick(); setInterval(tick, 30_000);
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const root = document.documentElement;
+
+  // Chapter colours: whichever section crosses the middle of the viewport sets the theme.
+  const sections = document.querySelectorAll<HTMLElement>('[data-theme-section]');
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) root.dataset.theme = (e.target as HTMLElement).dataset.themeSection; }), { rootMargin: '-50% 0px -50% 0px' });
+  sections.forEach((s) => io.observe(s));
+  root.dataset.theme = 'bone';
+
+  // Story: scroll position across the three steps drives the morph (0 helix → 1 chart → 2 office).
+  const setStory = (p: number) => (window as unknown as { setStory?: (p: number) => void }).setStory?.(p);
+  ScrollTrigger.create({ trigger: '[data-steps]', start: 'top center', end: 'bottom center', onUpdate: (st) => setStory(Math.min(2, Math.max(0, st.progress * 3 - 0.5))) });
+
+  if (!reduce) {
+    // Stacked project cards: the one underneath settles back as the next slides over it.
+    const cards = gsap.utils.toArray<HTMLElement>('[data-pcard]');
+    if (matchMedia('(min-width: 1001px)').matches) cards.forEach((c, i) => {
+      const next = cards[i + 1]; if (!next) return;
+      const dim = c.querySelector('.dim');
+      if (dim) gsap.to(dim, { opacity: 0.45, ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true } });
+      gsap.to(c, { scale: 0.93, ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true } });
+    });
+    // Toolkit marquee, nudged by scroll velocity.
+    const track = document.querySelector<HTMLElement>('[data-marquee]');
+    if (track) {
+      const tween = gsap.to(track, { xPercent: -50, ease: 'none', duration: 40, repeat: -1 });
+      ScrollTrigger.create({ trigger: track, start: 'top bottom', end: 'bottom top', onUpdate: (st) => {
+        const v = Math.min(4, 1 + Math.abs(st.getVelocity()) / 600);
+        gsap.to(tween, { timeScale: st.direction < 0 ? -v : v, duration: 0.3, overwrite: true });
+        gsap.to(tween, { timeScale: st.direction < 0 ? -1 : 1, duration: 1.2, delay: 0.3, overwrite: false });
+      } });
+    }
+    // Kinetic letters: weight and width follow the pointer.
+    if (matchMedia('(pointer: fine)').matches) document.querySelectorAll<HTMLElement>('[data-kinetic]').forEach((el) => {
+      const chars = [...el.querySelectorAll<HTMLElement>('.ch')];
+      let q = false, mx = 0, my = 0;
+      const apply = () => { q = false; for (const c of chars) { const r = c.getBoundingClientRect(), d = Math.hypot(mx - (r.left + r.width / 2), my - (r.top + r.height / 2)), k = Math.max(0, 1 - d / 420); c.style.setProperty('--w', String(Math.round(300 + 500 * (1 - k) + 0 * k))); c.style.setProperty('--wd', String(Math.round(100 - 25 * k))); } };
+      el.addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; if (!q) { q = true; requestAnimationFrame(apply); } });
+      el.addEventListener('pointerleave', () => chars.forEach((c) => { c.style.removeProperty('--w'); c.style.removeProperty('--wd'); }));
+    });
   }
-  const copy = document.querySelector<HTMLButtonElement>('[data-copy]');
-  const state = document.querySelector<HTMLElement>('[data-copy-state]');
-  copy?.addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(copy.dataset.copy || ''); if (state) state.textContent = 'Address copied to clipboard.'; }
-    catch { if (state) state.textContent = 'Copy failed — the address is on the button to the left.'; }
-  });
+
+  const copy = document.querySelector<HTMLButtonElement>('[data-copy]'), state = document.querySelector('[data-copy-state]');
+  copy?.addEventListener('click', async () => { try { await navigator.clipboard.writeText(copy.dataset.copy || ''); state!.textContent = 'Address copied.'; } catch { state!.textContent = 'Copy failed — use the email button.'; } });
 </script>

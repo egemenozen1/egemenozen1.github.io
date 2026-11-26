@@ -2,9 +2,10 @@
 import { nav, site } from '../config/site';
 ---
 <a href="#main" class="skip">Skip to content</a>
-<header class="site-header">
+<header class="site-header" style="view-transition-name: site-header">
+  <span class="progress" aria-hidden="true"></span>
   <div class="wrap">
-    <a class="brand" href="/" aria-label="Egemen Özen, home"><span class="brand-mark" aria-hidden="true">eö</span><span class="brand-name">Egemen Özen</span></a>
+    <a class="brand" href="/" aria-label="Egemen Özen, home"><span class="brand-mark" aria-hidden="true">EÖ</span><span class="brand-name">Egemen Özen</span></a>
     <nav class="nav-links" aria-label="Primary navigation">
       {nav.map((item) => <a href={item.href}>{item.label}</a>)}
       <a class="nav-cta" href="/#contact">Contact</a>
@@ -22,20 +23,36 @@ import { nav, site } from '../config/site';
 </div>
 <script>
   const header = document.querySelector<HTMLElement>('.site-header');
+  // Scroll handler only reads scrollY (no layout). Tone comes from an IntersectionObserver
+  // watching a 1px band just under the header.
   let lastY = scrollY, queued = false;
   const sync = () => {
     queued = false;
     if (!header) return;
     const y = scrollY;
     header.dataset.scrolled = String(y > 8);
-    header.dataset.hidden = String(y > lastY + 2 && y > 640);
-    if (y < lastY - 2 || y <= 640) header.dataset.hidden = 'false';
+    if (y > lastY + 2 && y > 640) header.dataset.hidden = 'true';
+    else if (y < lastY - 2 || y <= 640) header.dataset.hidden = 'false';
     lastY = y;
-    const probe = document.elementsFromPoint(innerWidth / 2, header.offsetHeight + 2).find((el) => !header.contains(el));
-    header.dataset.tone = probe?.closest('.night') ? 'night' : 'paper';
   };
   addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(sync); } }, { passive: true });
   sync();
+  if (header) {
+    const under = new Set<Element>();
+    let io: IntersectionObserver | undefined;
+    const watch = () => {
+      io?.disconnect(); under.clear();
+      const h = header.offsetHeight;
+      io = new IntersectionObserver((entries) => {
+        for (const e of entries) e.isIntersecting ? under.add(e.target) : under.delete(e.target);
+        header.dataset.tone = under.size ? 'night' : 'paper';
+      }, { rootMargin: `-${h}px 0px -${Math.max(0, innerHeight - h - 1)}px 0px` });
+      document.querySelectorAll('.night').forEach((el) => io!.observe(el));
+    };
+    watch();
+    let rt = 0;
+    addEventListener('resize', () => { clearTimeout(rt); rt = window.setTimeout(watch, 200); });
+  }
   const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
   const menu = document.getElementById('mobile-menu');
   const close = menu?.querySelector<HTMLButtonElement>('.close');
@@ -45,6 +62,8 @@ import { nav, site } from '../config/site';
     if (open) { menu.hidden = false; requestAnimationFrame(() => { menu.dataset.open = 'true'; close?.focus(); }); }
     else { menu.dataset.open = 'false'; setTimeout(() => { menu.hidden = true; }, 260); btn.focus(); }
     document.body.style.overflow = open ? 'hidden' : '';
+    const lenis = (window as unknown as { lenis?: { stop(): void; start(): void } }).lenis;
+    open ? lenis?.stop() : lenis?.start();
   };
   btn?.addEventListener('click', () => setOpen(true));
   close?.addEventListener('click', () => setOpen(false));
