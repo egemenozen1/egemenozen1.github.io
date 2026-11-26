@@ -1,7 +1,7 @@
 {
-  "contentReviewed": false,
+  "contentReviewed": true,
   "legalReviewed": true,
   "liveLinksVerified": true,
-  "reviewedOn": "2026-10-27",
-  "notes": "November 2026 rebuild: new copy and project pages need the owner's content review before publication. Legal page texts are unchanged from the 2026-10-27 review; only their styling changed. Live links checked 2026-11-26: FutureMe demo and public GitHub repositories reachable."
+  "reviewedOn": "2026-11-26",
+  "notes": "November 2026 rebuild approved for publication by the owner on 2026-11-26. Legal page texts are unchanged from the 2026-10-27 review; only their styling changed. Live links checked 2026-11-26: FutureMe demo and public GitHub repositories reachable."
 }
