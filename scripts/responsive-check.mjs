@@ -13,6 +13,8 @@ const base = process.argv[2] ?? 'http://127.0.0.1:4321';
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'portfolio-qa-'));
 const browser = spawn(executable, [
   '--headless=new', '--no-first-run', '--no-default-browser-check', '--disable-background-networking',
+  // Headless Linux may have no pointing device. Give the desktop profile a mouse.
+  '--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4',
   '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank',
 ], { stdio: 'ignore', windowsHide: true });
 let launchError;
@@ -72,9 +74,10 @@ try {
     assert(!res.exceptionDetails, res.exceptionDetails?.exception?.description);
     return res.result.value;
   };
-  const viewport = (width, height = 900, mobile = width < 768) => send('Emulation.setDeviceMetricsOverride', {
-    width, height, deviceScaleFactor: 1, mobile,
-  });
+  const viewport = async (width, height = 900, mobile = width < 768) => {
+    await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile });
+    await send('Emulation.setTouchEmulationEnabled', { enabled: mobile });
+  };
   let navigation = 0;
   const visit = async (route, width, height, mobile) => {
     await viewport(width, height, mobile);
@@ -160,6 +163,7 @@ try {
   assert.equal(await evaluate(still), transform, 'Marquee should pause offscreen');
   await csp();
   await visit('/', 1440);
+  assert(await evaluate("matchMedia('(pointer: fine)').matches"), 'Desktop browser profile must expose a fine pointer');
   await until(() => evaluate('Boolean(window.lenis)'), 'desktop smooth scrolling');
   await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: 400, y: 380, deltaX: 0, deltaY: 480 });
   await until(() => evaluate("scrollY > 300 && !window.lenis.isScrolling"), 'desktop wheel settles');
