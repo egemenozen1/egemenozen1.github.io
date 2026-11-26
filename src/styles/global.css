@@ -27,7 +27,7 @@
   --nline: rgba(242, 242, 240, 0.12); --nline-2: rgba(242, 242, 240, 0.22);
   --signal: var(--acc); --signal-ink: var(--acc); --ok: #1f8a55; --ok-n: #7ee2a8; --warn: #a86a00; --warn-n: #f2b544;
 }
-html { transition: --bg 0.9s var(--ease), --fg 0.9s var(--ease), --acc 0.9s var(--ease), --sub 0.9s var(--ease); }
+html { transition: --bg 0.6s var(--ease), --fg 0.6s var(--ease), --acc 0.6s var(--ease), --sub 0.6s var(--ease); }
 html[data-theme='bone'] { --bg: #f2efe8; --fg: #111113; --acc: #2b36ff; --sub: #55534c; }
 html[data-theme='lab'] { --bg: #0e3b2c; --fg: #eaf4ee; --acc: #9be7b8; --sub: #a9c9b8; }
 html[data-theme='data'] { --bg: #1e29d6; --fg: #eef0ff; --acc: #ffd84d; --sub: #b9bff7; }
@@ -229,10 +229,10 @@ em { font-style: normal; color: var(--acc); }
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
   .story { grid-template-columns: 1fr; }
-  .story-visual { position: sticky; top: var(--header-h); height: 46vh; z-index: 0; background: var(--bg); }
-  .story-visual canvas { height: 38vh; }
-  .step { min-height: 80vh; padding-block: 8vh; position: relative; z-index: 1; }
-  .step > * { background: color-mix(in srgb, var(--bg) 88%, transparent); }
+  .story-visual { order: -1; position: sticky; top: var(--header-h); height: 44vh; z-index: 2; background: var(--bg); justify-content: flex-end; padding-bottom: 8px; }
+  .story-visual canvas { height: 36vh; }
+  .story-caption { margin-top: 4px; }
+  .step { min-height: 75vh; padding-block: 6vh 10vh; position: relative; z-index: 1; justify-content: flex-start; }
   .pcard { grid-template-columns: 1fr; position: relative; top: auto; min-height: 0; }
   .lab-row, .doors { grid-template-columns: 1fr; }
   .intro-foot { grid-template-columns: 1fr; }
@@ -260,3 +260,4 @@ em { font-style: normal; color: var(--acc); }
 .horizon .win { fill: color-mix(in srgb, var(--acc) 14%, transparent); }
 .horizon .l-per { stroke: var(--acc); }
 .horizon .cursor-dot-per { fill: var(--acc); }
+.pcard .dim { position: absolute; inset: 0; border-radius: inherit; background: #000; opacity: 0; pointer-events: none; z-index: 2; }

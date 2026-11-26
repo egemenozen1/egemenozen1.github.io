@@ -78,6 +78,7 @@ const rules = [
         const lim = p.data.evidence.find((e) => e.state === 'limit' || e.state === 'private');
         return (
           <article class="pcard" style={`--i:${i};--c-bg:${bg};--c-fg:${fg}`} data-pcard aria-labelledby={`card-${p.id}`}>
+            <span class="dim" aria-hidden="true"></span>
             <div>
               <p class="num">0{i + 1} / {p.data.category} · {p.data.year}</p>
               <h3 id={`card-${p.id}`} style={`view-transition-name: t-${p.id}`}><a href={`/projects/${p.id}/`}>{p.data.title}</a></h3>
@@ -217,7 +218,9 @@ const rules = [
     const cards = gsap.utils.toArray<HTMLElement>('[data-pcard]');
     if (matchMedia('(min-width: 1001px)').matches) cards.forEach((c, i) => {
       const next = cards[i + 1]; if (!next) return;
-      gsap.to(c, { scale: 0.93, filter: 'brightness(0.7)', ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true } });
+      const dim = c.querySelector('.dim');
+      if (dim) gsap.to(dim, { opacity: 0.45, ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true } });
+      gsap.to(c, { scale: 0.93, ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true } });
     });
     // Toolkit marquee, nudged by scroll velocity.
     const track = document.querySelector<HTMLElement>('[data-marquee]');
