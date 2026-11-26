@@ -43,7 +43,7 @@ const ogImage = new URL('/og.png', Astro.site);
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org', '@type': 'Person', name: site.name, url: site.url,
       jobTitle: 'AI Engineer & Data Analyst', address: { '@type': 'PostalAddress', addressLocality: 'Berlin', addressCountry: 'DE' },
-      sameAs: [site.github], knowsLanguage: ['tr', 'en', 'de'],
+      sameAs: [site.github, site.linkedin], knowsLanguage: ['tr', 'en', 'de'],
       alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'Berlin School of Business and Innovation' }, { '@type': 'CollegeOrUniversity', name: 'Istanbul Bilgi University' }],
     })} />
   </head>
