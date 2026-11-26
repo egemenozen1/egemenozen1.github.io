@@ -16,13 +16,17 @@ const browser = spawn(executable, [
   // Headless Linux may have no pointing device. Give the desktop profile a mouse.
   '--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4',
   '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank',
-], { stdio: 'ignore', windowsHide: true });
+], { stdio: ['ignore', 'ignore', 'pipe'], windowsHide: true });
 let launchError;
 browser.on('error', (error) => { launchError = error; });
+let browserLog = '';
+browser.stderr.setEncoding('utf8').on('data', (chunk) => {
+  browserLog = (browserLog + chunk).slice(-4096);
+});
 let socket;
 
-async function until(probe, label) {
-  for (let attempt = 0; attempt < 60; attempt++) {
+async function until(probe, label, attempts = 60) {
+  for (let attempt = 0; attempt < attempts; attempt++) {
     if (await probe()) return;
     await wait(80);
   }
@@ -30,13 +34,23 @@ async function until(probe, label) {
 }
 try {
   const portFile = path.join(profile, 'DevToolsActivePort');
-  await until(() => {
-    if (launchError) throw launchError;
-    assert.equal(browser.exitCode, null, 'Chromium exited before debugging was ready');
-    return fs.existsSync(portFile);
-  }, 'Chromium debugging endpoint');
-  const [port, browserId] = fs.readFileSync(portFile, 'utf8').trim().split(/\r?\n/);
-  socket = new WebSocket('ws://127.0.0.1:' + port + browserId);
+  let endpoint;
+  try {
+    await until(() => {
+      if (launchError) throw launchError;
+      assert.equal(browser.exitCode, null, 'Chromium exited before debugging was ready');
+      if (fs.existsSync(portFile)) {
+        const [port, browserId] = fs.readFileSync(portFile, 'utf8').trim().split(/\r?\n/);
+        if (port && browserId) endpoint = 'ws://127.0.0.1:' + port + browserId;
+      }
+      endpoint ??= browserLog.match(/DevTools listening on (ws:\/\/127\.0\.0\.1:\d+\/devtools\/browser\/[\w-]+)/)?.[1];
+      return endpoint !== undefined;
+    }, 'Chromium debugging endpoint', 250);
+  } catch (error) {
+    if (browserLog.trim()) console.error(browserLog.trim());
+    throw error;
+  }
+  socket = new WebSocket(endpoint);
   await new Promise((resolve, reject) => { socket.onopen = resolve; socket.onerror = reject; });
   let id = 0;
   let sessionId;
