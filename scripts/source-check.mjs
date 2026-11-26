@@ -1,84 +1,58 @@
+// Source-level guardrails for content and accessibility decisions. Dependency-free.
 import fs from 'node:fs';
-const required = [
-  'astro.config.mjs','src/config/site.ts','src/content.config.ts','src/pages/index.astro',
-  'src/pages/projects/[id].astro','src/components/Hero.astro','src/layouts/BaseLayout.astro',
-  'src/components/ProjectCard.astro','src/components/ProjectVisual.astro','src/components/ProjectInteraction.astro',
-  'src/styles/global.css','src/content/projects/futureme-ai.md',
-  'src/content/projects/pytorch-forecasting-tft.md',
-  'src/content/projects/recommendation-systems.md',
-  'src/content/projects/antidepressant-binding-mechanisms.md', 'public/favicon.svg',
-  'src/pages/404.astro', 'src/pages/robots.txt.ts', 'src/pages/sitemap.xml.ts',
-  'src/pages/impressum.astro', 'src/pages/privacy.astro',
-  'src/config/legal.ts',
-  'scripts/site-html-check.mjs', 'scripts/preview-check.mjs', 'scripts/dist-check.mjs'
-];
+
+const read = (f) => fs.readFileSync(f, 'utf8');
 let failures = 0;
-for(const file of required){if(!fs.existsSync(file)){console.error(`MISSING: ${file}`); failures++;}}
-const mdFiles = fs.readdirSync('src/content/projects').filter(f=>f.endsWith('.md'));
-const expectedOrder = [
-  'futureme-ai.md',
-  'pytorch-forecasting-tft.md',
-  'recommendation-systems.md',
-  'antidepressant-binding-mechanisms.md',
+const fail = (msg) => { console.error(`FAIL ${msg}`); failures++; };
+
+const required = [
+  'astro.config.mjs', 'src/config/site.ts', 'src/config/legal.ts', 'src/content.config.ts',
+  'src/layouts/BaseLayout.astro', 'src/components/Header.astro', 'src/components/Footer.astro',
+  'src/components/SignalField.astro', 'src/components/EvidenceLedger.astro', 'src/components/MissionReplay.astro',
+  'src/components/ProvenanceInspector.astro', 'src/components/FutureMeStage.astro', 'src/components/HorizonExplorer.astro',
+  'src/pages/index.astro', 'src/pages/projects/[id].astro', 'src/pages/404.astro', 'src/pages/impressum.astro',
+  'src/pages/privacy.astro', 'src/pages/robots.txt.ts', 'src/pages/sitemap.xml.ts', 'src/styles/global.css',
+  'src/data/metrics_by_horizon.csv', 'src/data/baseline.json', 'src/data/provenance.json',
+  'public/favicon.svg', 'public/og.png', 'scripts/site-html-check.mjs', 'scripts/dist-check.mjs',
 ];
-if(JSON.stringify(mdFiles.sort((a,b)=>{
-  const getOrder=(file)=>Number(fs.readFileSync(`src/content/projects/${file}`,'utf8').match(/^order:\s*(\d+)/m)?.[1] ?? 0);
-  return getOrder(a)-getOrder(b);
-}))!==JSON.stringify(expectedOrder)){
-  console.error('Project collection does not match the approved four-project order');
-  failures++;
-}
-if(fs.existsSync('src/content/projects/walmart-forecasting.md')){
-  console.error('Walmart project content must be removed');
-  failures++;
-}
-for(const file of mdFiles){
-  const content = fs.readFileSync(`src/content/projects/${file}`,'utf8');
-  for(const key of ['title','category','summary','problem','approach','verifiedOutput','order','featured','technologies','scope']){
-    if(!new RegExp(`^${key}:`, 'm').test(content)){console.error(`${file} missing field ${key}`);failures++;}
+for (const file of required) if (!fs.existsSync(file)) fail(`missing ${file}`);
+
+// Approved project set and order: three flagships, then the lab.
+const expected = ['ego-ai-studio', 'marketpulse', 'futureme-ai', 'pytorch-forecasting-tft', 'recommendation-systems', 'antidepressant-binding-mechanisms'];
+const md = fs.readdirSync('src/content/projects').filter((f) => f.endsWith('.md'));
+const order = (f) => Number(read(`src/content/projects/${f}`).match(/^order:\s*(\d+)/m)?.[1] ?? 0);
+const actual = md.sort((a, b) => order(a) - order(b)).map((f) => f.replace(/\.md$/, ''));
+if (JSON.stringify(actual) !== JSON.stringify(expected)) fail(`project order ${actual.join(', ')} does not match the approved set`);
+for (const f of md) {
+  const c = read(`src/content/projects/${f}`);
+  for (const key of ['title', 'category', 'thesis', 'summary', 'year', 'role', 'status', 'order', 'flagship', 'disciplines', 'technologies', 'evidence']) {
+    if (!new RegExp(`^${key}:`, 'm').test(c)) fail(`${f} missing field ${key}`);
   }
+  if (!/state:\s*limit|state:\s*private/.test(c)) fail(`${f} must state at least one limit or privacy boundary in its evidence ledger`);
 }
-const source = fs.readFileSync('src/pages/index.astro','utf8');
-const impressum = fs.readFileSync('src/pages/impressum.astro','utf8');
-const legalAddress = fs.readFileSync('src/config/legal.ts','utf8');
-const footer = fs.readFileSync('src/components/Footer.astro','utf8');
-if(!impressum.includes('providerAddress') || !/straße\s+\d+/i.test(legalAddress) || !/\d{5}\s+Berlin/i.test(legalAddress) || /(?:Apt\.?|Apartment|Suite|Room|Door)\s*\d/i.test(legalAddress) || /straße|\d{5}\s+Berlin/i.test(source)){
-  console.error('The owner-provided postal address must appear only on the Impressum page');
-  failures++;
-}
-if(!footer.includes('/impressum/') || !footer.includes('/privacy/')){
-  console.error('Footer must expose the Impressum and privacy pages');
-  failures++;
-}
-if(/10\+ projects|90% skills|example\.com/i.test(source)){console.error('Unverified claim or placeholder detected');failures++;}
-if(/walmart/i.test(source)){console.error('Removed project is still referenced by the homepage');failures++;}
-if(!source.includes('MSc Data Analytics — BSBI Berlin') || !source.includes('BSc Genetics & Bioengineering — Istanbul Bilgi University') || /<span>Studies<\/span>/.test(source)){
-  console.error('Education entries must appear under one Education heading with the approved degree names');
-  failures++;
-}
-const card=fs.readFileSync('src/components/ProjectCard.astro','utf8');
-const styles=fs.readFileSync('src/styles/global.css','utf8');
-const layout=fs.readFileSync('src/layouts/BaseLayout.astro','utf8');
-if(!layout.includes('<main id="main" tabindex="-1">')){
-  console.error('The skip link target must accept programmatic keyboard focus');
-  failures++;
-}
-if(!card.includes('project-title-link') || !card.includes('project-open-label') || !styles.includes('.project:focus-within')){
-  console.error('Project cards must expose a keyboard-focusable case-study link and focus state');
-  failures++;
-}
-if(!styles.includes('@media (prefers-reduced-motion:reduce)') || !styles.includes('.project:hover,.btn:hover { transform:none; }')){
-  console.error('Interactive movement must respect reduced-motion preferences');
-  failures++;
-}
-const interactions=fs.readFileSync('src/components/ProjectInteraction.astro','utf8');
-for(const slug of ['futureme-ai','pytorch-forecasting-tft','recommendation-systems']){
-  if(!interactions.includes(`id === '${slug}'`)){console.error(`Missing project interaction for ${slug}`);failures++;}
-}
-const visibleCopy=[card,interactions,fs.readFileSync('src/components/Header.astro','utf8'),fs.readFileSync('src/pages/404.astro','utf8'),...mdFiles.map(file=>fs.readFileSync(`src/content/projects/${file}`,'utf8'))].join('\n');
-if(/Case study’y|Case study’y|Projeler|Eğitim|İletişim|Türkçe/.test(visibleCopy)){
-  console.error('Turkish UI copy remains; the public interface must be English');
-  failures++;
-}
-console.log(`Source audit: ${required.length} required paths and ${mdFiles.length} content entries checked. Failures: ${failures}`);
-if(failures) process.exit(1);
+
+const index = read('src/pages/index.astro');
+const visible = [index, ...md.map((f) => read(`src/content/projects/${f}`)), ...fs.readdirSync('src/components').map((f) => read(`src/components/${f}`))].join('\n');
+
+// Owner decisions carried over from the previous release.
+if (/walmart/i.test(visible)) fail('the removed Walmart project is referenced');
+if (/contract[- ]scanner/i.test(visible)) fail('Contract Scanner is not publicly reachable and must not be linked');
+if (!index.includes('MSc Data Analytics — BSBI Berlin') || !index.includes('BSc Genetics & Bioengineering — Istanbul Bilgi University')) fail('approved degree names are missing');
+const legal = read('src/config/legal.ts');
+if (!read('src/pages/impressum.astro').includes('providerAddress') || /straße|\d{5}\s+Berlin/i.test(visible) || !/\d{5}\s+Berlin/.test(legal)) fail('the postal address must appear only on the Impressum page');
+const footer = read('src/components/Footer.astro');
+if (!footer.includes('/impressum/') || !footer.includes('/privacy/')) fail('footer must link the Impressum and privacy pages');
+if (/10\+ projects|lorem ipsum|example\.com|salary|€\s?\d{2}K|Madrid/i.test(visible)) fail('placeholder, unverified or private claim detected');
+if (/Projeler|Eğitim|İletişim|Türkçe|Hakkında/.test(visible)) fail('Turkish UI copy remains; the public interface is English');
+
+// Accessibility and motion.
+const layout = read('src/layouts/BaseLayout.astro');
+if (!layout.includes('<main id="main" tabindex="-1">')) fail('skip-link target must accept programmatic focus');
+const css = read('src/styles/global.css');
+if (!css.includes('@media (prefers-reduced-motion: reduce)')) fail('styles must respect reduced motion');
+for (const c of ['SignalField', 'MissionReplay']) if (!read(`src/components/${c}.astro`).includes('prefers-reduced-motion')) fail(`${c} must respect reduced motion in script`);
+if (!read('src/components/SignalField.astro').includes('aria-label=')) fail('hero canvas needs a text alternative');
+if (/fonts\.googleapis|fonts\.gstatic|googletagmanager|plausible|analytics\.js/i.test(layout + visible)) fail('no third-party fonts or analytics: privacy page promises none');
+
+console.log(`Source audit: ${required.length} required paths, ${md.length} projects. Failures: ${failures}`);
+if (failures) process.exit(1);

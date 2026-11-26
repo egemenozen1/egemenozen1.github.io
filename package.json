@@ -9,10 +9,12 @@
     "preview": "astro preview",
     "check:source": "node scripts/source-check.mjs",
     "check:release": "node scripts/release-check.mjs",
-    "check:preview": "node scripts/preview-check.mjs",
     "check:dist": "node scripts/dist-check.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
     "astro": "~7.4.13"
   },
   "engines": {

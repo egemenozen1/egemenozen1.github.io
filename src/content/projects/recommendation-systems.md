@@ -1,32 +1,34 @@
 ---
-title: "Personalized Content Recommendation System — SQL & AI"
-category: "Research / SQL and AI"
-summary: "Master's thesis research on recommendation approaches, SQL data management and applications for streaming services and smaller businesses."
-problem: "Examine how content-recommendation approaches discussed for streaming services might apply to smaller organizations with limited data and infrastructure."
-approach: "The thesis describes literature review, comparative discussion of recommendation algorithms, case studies, SQL data management and ethical considerations."
-verifiedOutput: "A documented master's thesis and public repository; no deployed recommendation engine or measured performance result is verified."
-order: 3
-featured: false
-technologies: ["SQL", "Recommender systems", "Research"]
+title: "Personalized content recommendation with SQL & AI"
+category: "MSc thesis / recommender systems"
+thesis: "What can a small business borrow from streaming-scale recommendation — with a fraction of the data?"
+summary: "Master's thesis research on recommendation approaches, SQL data management and their responsible use by smaller organizations."
+year: "2024"
+role: "Author · MSc Data Analytics thesis"
+status: "Public repository · research"
+order: 5
+flagship: false
+disciplines: ["Data Analytics"]
+technologies: ["SQL", "Recommender systems", "Collaborative filtering", "Research"]
 sourceUrl: "https://github.com/egemenozen1/Personalized-Content-Recommendation-Systems-with-SQL-AI"
-scope: "Academic research"
+evidence:
+  - state: verified
+    text: "The public repository contains the dissertation and describes the literature review, algorithm comparison, case studies and SQL data management."
+  - state: limit
+    text: "Research, not a deployed engine. No model-performance or business-impact figure is claimed."
 ---
-## Overview and research question
+## Research question
 
-How can approaches used in large-scale content recommendation systems inform smaller organizations with more limited data and infrastructure?
+How can approaches used in large-scale content recommendation inform smaller organizations with more limited data and infrastructure?
 
-## My contribution and methodology
+## Method
 
-I authored a master's thesis examining recommendation approaches for streaming services and smaller businesses. The public repository describes a literature review, comparative discussion of algorithms and SQL-based data management, case studies, and ethical questions involving bias, transparency and privacy. The work is presented as research rather than a deployed engine.
+The thesis combines a literature review, a comparative discussion of recommendation algorithms, case studies, SQL-based data management and the ethical questions of bias, transparency and privacy. It is presented as research rather than a deployed engine.
 
-## Evidence and result
+## Result
 
-The public repository includes the dissertation PDF. Its result is a documented analysis of ways recommendation methods may be adapted to smaller organizations. The repository README describes findings, but this page makes no quantitative business-impact or model-performance claim.
+A documented analysis of how recommendation methods may be adapted to smaller organizations. The repository README describes the findings; this page makes no quantitative claim beyond them.
 
-## Limitations
+## What I took from it
 
-The portfolio does not claim a deployed service or independently validated commercial outcome. Specific empirical findings require a close review of the dissertation's methods and data.
-
-## What I learned
-
-A recommendation system is not just a modeling exercise: data organization, explainability and responsible use shape whether it can be valuable in practice.
+A recommendation system is not just a modeling exercise. Data organization, explainability and responsible use decide whether it is valuable in practice.

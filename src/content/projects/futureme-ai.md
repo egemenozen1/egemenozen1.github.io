@@ -1,32 +1,49 @@
 ---
 title: "FutureMe AI"
-category: "Decision-support web application"
-summary: "A public demo for comparing assumption-based outcomes through fixed fictional decision scenarios."
-problem: "Compare consequential trade-offs without presenting uncertain outcomes as forecasts."
-approach: "The public interface uses three fixed fictional examples and one shared fictional starting profile; it does not accept personal questions or custom profiles."
-verifiedOutput: "A live demo with a five-year modeled range and a small-experiment prompt for the selected fictional scenario; no user or outcome metrics have been verified."
-order: 1
-featured: true
-technologies: ["Python", "FastAPI", "JavaScript", "Docker"]
+category: "Decision-support product"
+thesis: "A place to think a decision through — ranges instead of promises, and no hidden winner."
+summary: "A live public demo that compares a decision against the same fictional baseline, shows a modeled five-year range and suggests one small experiment. It accepts only built-in example IDs, never personal data."
+year: "2026"
+role: "Product, backend, interface and deployment"
+status: "Live public demo"
+order: 3
+flagship: true
+disciplines: ["Product Development", "Data Analytics", "AI Engineering"]
+technologies: ["Python", "FastAPI", "JavaScript", "Docker", "Render", "GitHub Actions"]
 liveUrl: "https://futureme-ai-6rgq.onrender.com/"
-scope: "Product and engineering"
+evidence:
+  - state: live
+    text: "Public demo online with three fictional examples: a short career course, reduced working hours and a small side project."
+  - state: by-design
+    text: "The server accepts only a built-in example ID and rejects personal questions, custom profiles, notes and save requests."
+  - state: by-design
+    text: "The same seeded model runs both options; lines are medians and shading is the modeled P10–P90 range."
+  - state: limit
+    text: "The engine is largely deterministic and assumption-based. It is not an LLM forecast, a personal prediction or financial advice."
+  - state: private
+    text: "Source repository is private; the live demo is public."
+cover: "../../assets/work/futureme-home.png"
+coverAlt: "FutureMe public demo homepage: the headline 'Give a decision some room.' beside a dark green card comparing a course with a project."
+coverCaption: "Public demo homepage, captured November 2026."
 ---
-## Overview and objective
+## The problem
 
-Important decisions involve trade-offs that are difficult to compare clearly. FutureMe AI is a decision-support application for exploring scenarios and possible outcomes. Its current public demo uses three fixed fictional examples and one shared fictional starting profile. The objective is to make assumptions and alternatives easier to examine, without presenting an uncertain outcome as a forecast.
+Big decisions — a course, fewer working hours, a side project — involve trade-offs that are hard to compare honestly. Chat answers tend to pick a winner. FutureMe is designed to show the assumptions instead.
 
-## My contribution and approach
+## What the public demo does
 
-I developed the product across its Python backend, JavaScript interface and user experience, with AI-assisted development as part of the workflow. The public experience focuses on comparing fixed scenarios and making the assumptions behind them clear.
+Each example compares one change against the same fictional starting profile. The calculated view shows both paths over one, three or five years: medians as lines and the modeled P10–P90 range as shading, with a table alternative for the chart. A deterministic narrator turns the validated output into a briefing through four lenses — financial route, uncertainty boundary, whole-life trade-off and a possible next experiment — without changing a single calculation.
 
-## Validation and result
+No overall winner is calculated. A financial difference is presented as one lens, not a verdict.
 
-The [public demo](https://futureme-ai-6rgq.onrender.com/) offers three fixed fictional examples: a short career course, reduced working hours and a side project. For each scenario, it shows an assumption-based range over a five-year horizon and suggests a small experiment to consider. No reliability, usage or outcome metrics are claimed.
+## Privacy by construction
 
-## Limitations
+The public version demonstrates the calculation with fixed fictional examples only. The server accepts a sample ID and nothing else; decisions saved in an earlier version stay in the visitor's browser through a device-recovery flow and are not sent to the server.
 
-This is an evolving independent product. The public demo accepts built-in sample IDs, not personal questions or custom profiles. Its scenarios are exploratory decision support, not guaranteed forecasts or individualized advice.
+## My contribution
 
-## What I learned
+I built the product end to end: the Python/FastAPI backend and simulation, the JavaScript interface and its accessibility, the Docker deployment on Render and the GitHub Actions test workflow, with AI-assisted development as part of the workflow.
 
-Building a usable product requires both technical correctness and clear communication of uncertainty. Features need to justify their complexity through the problem they solve.
+## Limits
+
+The ranges cover only the modeled income and expense variability, not every real-world event. No usage, reliability or outcome metrics are claimed.

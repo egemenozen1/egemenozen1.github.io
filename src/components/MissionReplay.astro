@@ -1,0 +1,80 @@
+---
+// Condensed replay of a recorded EGO AI Studio coordination test (November 2026).
+// Roles and outcomes come from the office's own status log; timing is compressed.
+const crew = [
+  { id: 'research', role: 'Research', name: 'Market intelligence' },
+  { id: 'engineer', role: 'Engineering', name: 'Software engineer' },
+  { id: 'ux', role: 'Product & UX', name: 'Design review' },
+  { id: 'qa', role: 'QA & Security', name: 'Read-only reviewer' },
+  { id: 'data', role: 'Data & Automation', name: 'Pipelines, n8n' },
+  { id: 'career', role: 'Career', name: 'Jobs & skills' },
+];
+const steps = [
+  { who: 'owner', at: 'owner', tone: 'sig', text: '/office "integrity check for the status command"' },
+  { who: 'director', at: 'director', tone: '', text: 'plan: research → engineering → QA · gate: all suites pass' },
+  { who: 'research', at: 'research', tone: '', text: 'sourced answer + "verify first" list' },
+  { who: 'director', at: 'director', tone: 'ok', text: 'key claim checked against official docs ✓' },
+  { who: 'engineer', at: 'engineer', tone: '', text: 'implements roster-vs-definitions check' },
+  { who: 'director', at: 'director', tone: 'ok', text: '7 suites run → 118 tests passed' },
+  { who: 'qa', at: 'qa', tone: 'warn', text: 'read-only review: 0 blockers, 3 minor findings' },
+  { who: 'engineer', at: 'engineer', tone: 'ok', text: '3 findings fixed + new regression test' },
+  { who: 'gate', at: 'gate', tone: 'warn', text: 'irreversible step held → awaiting owner' },
+];
+---
+<div class="instrument mission" data-mission={JSON.stringify(steps)}>
+  <div class="instrument-bar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span>mission replay · recorded coordination test</span>
+    <button class="mini-btn" type="button" data-replay>Replay ↻</button>
+  </div>
+  <div class="mission-board">
+    <div class="mission-top">
+      <div class="node node-owner" data-node="owner"><small>Owner</small><b>Egemen</b></div>
+      <div class="mission-wire" aria-hidden="true"></div>
+      <div class="node node-director" data-node="director"><small>Director</small><b>Main session</b></div>
+    </div>
+    <ul class="crew" role="list" aria-label="Six specialist agents">
+      {crew.map((c) => <li class="node" data-node={c.id}><small>{c.role}</small><b>{c.name}</b></li>)}
+    </ul>
+    <div class="node node-gate" data-node="gate"><div><small>Human gate</small><b>Send · publish · buy · push</b></div><span class="gate-lock" aria-hidden="true">owner only</span></div>
+  </div>
+  <ol class="mission-log" role="list" aria-label="Mission log">
+    {steps.map((s, i) => <li class={s.tone}><span>{`step ${String(i + 1).padStart(2, '0')}`}</span><span>{s.who.padEnd(8, ' ')} {s.text}</span></li>)}
+  </ol>
+  <p class="instrument-note">Condensed replay of a recorded run. Specialists never call each other — every hand-off goes through the Director. Three of six specialists were needed for this objective.</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mission]').forEach((root) => {
+    const steps: { who: string; at: string; tone: string; text: string }[] = JSON.parse(root.dataset.mission || '[]');
+    const log = root.querySelector('.mission-log')!;
+    const nodes = Object.fromEntries([...root.querySelectorAll<HTMLElement>('[data-node]')].map((n) => [n.dataset.node, n]));
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timer = 0, played = false;
+    const reset = () => {
+      clearTimeout(timer); log.innerHTML = ''; root.dataset.phase = '';
+      Object.values(nodes).forEach((n) => n.classList.remove('is-active', 'is-done', 'is-held'));
+    };
+    const show = (i: number) => {
+      const s = steps[i];
+      Object.values(nodes).forEach((n) => n.classList.remove('is-active'));
+      if (i > 0) { const prev = nodes[steps[i - 1].at]; if (prev && prev.dataset.node !== 'director' && prev.dataset.node !== 'owner') prev.classList.add('is-done'); }
+      const n = nodes[s.at];
+      if (s.at === 'gate') n?.classList.add('is-held'); else n?.classList.add('is-active');
+      if (i === 1) root.dataset.phase = 'brief';
+      const li = document.createElement('li');
+      li.className = s.tone;
+      li.innerHTML = `<span>step ${String(i + 1).padStart(2, '0')}</span><span></span>`;
+      (li.lastElementChild as HTMLElement).textContent = `${s.who.padEnd(8, ' ')} ${s.text}`;
+      log.appendChild(li);
+      if (i < steps.length - 1) timer = window.setTimeout(() => show(i + 1), 1150);
+      else nodes.director?.classList.add('is-done');
+    };
+    const run = () => { reset(); show(0); };
+    root.querySelector('[data-replay]')?.addEventListener('click', () => { if (reduce) return; run(); });
+    if (reduce) { nodes.gate?.classList.add('is-held'); return; }
+    new IntersectionObserver(([e], io) => {
+      if (e.isIntersecting && !played) { played = true; run(); io.disconnect(); }
+    }, { threshold: 0.45 }).observe(root);
+  });
+</script>

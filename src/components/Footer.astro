@@ -1,5 +1,11 @@
 ---
-import {site} from '../config/site';
+import { site } from '../config/site';
 const year = new Date().getFullYear();
 ---
-<footer class="site-footer"><div class="container footer-row"><span>© {year} {site.name}. All rights reserved.</span><span>Built with intention · Berlin, Germany</span><nav aria-label="Legal information"><a href="/impressum/">Impressum</a><a href="/privacy/">Privacy</a></nav></div></footer>
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <span>© {year} {site.name} · Berlin</span>
+    <span>Static site · no cookies, trackers or analytics</span>
+    <nav aria-label="Legal information"><a href="/impressum/">Impressum</a><a href="/privacy/">Privacy</a><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
+  </div>
+</footer>

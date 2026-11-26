@@ -31,13 +31,14 @@ function resolvedFile(from,href){
   return dest;
 }
 for(const file of pages){
-  const html=fs.readFileSync(file,'utf8');
+  // Inline scripts are minified code, not markup: strip them before scanning tags.
+  const html=fs.readFileSync(file,'utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
   const rel=path.relative(root,file);
   if(!/<html\s+lang="en"/i.test(html))fail(`${rel}: missing HTML language`);
   if(!/<meta\s+name="viewport"/i.test(html))fail(`${rel}: missing responsive viewport`);
   if(production && !/<meta\s+name="description"\s+content="[^"]+"/i.test(html))fail(`${rel}: missing search description`);
   if(production && !/<meta\s+property="og:title"\s+content="[^"]+"/i.test(html))fail(`${rel}: missing social title`);
-  if(production && !/<meta\s+name="twitter:card"\s+content="summary"/i.test(html))fail(`${rel}: missing social card metadata`);
+  if(production && !/<meta\s+name="twitter:card"\s+content="summary(?:_large_image)?"/i.test(html))fail(`${rel}: missing social card metadata`);
   if(production && rel!=='404.html' && !/<link\s+rel="canonical"\s+href="https:\/\/egemenozen1\.github\.io\//i.test(html))fail(`${rel}: missing canonical URL`);
   const nH1=(html.match(/<h1(?:\s|>)/gi)||[]).length;
   if(nH1!==1)fail(`${rel}: expected exactly one H1, found ${nH1}`);
