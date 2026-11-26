@@ -8,7 +8,7 @@ const fail = (msg) => { console.error(`FAIL ${msg}`); failures++; };
 const required = [
   'astro.config.mjs', 'src/config/site.ts', 'src/config/legal.ts', 'src/content.config.ts',
   'src/layouts/BaseLayout.astro', 'src/components/Header.astro', 'src/components/Footer.astro',
-  'src/components/SignalField.astro', 'src/components/EvidenceLedger.astro', 'src/components/MissionReplay.astro',
+  'src/components/StoryCanvas.astro', 'src/components/EvidenceLedger.astro', 'src/components/MissionReplay.astro',
   'src/components/ProvenanceInspector.astro', 'src/components/FutureMeStage.astro', 'src/components/HorizonExplorer.astro',
   'src/pages/index.astro', 'src/pages/projects/[id].astro', 'src/pages/404.astro', 'src/pages/impressum.astro',
   'src/pages/privacy.astro', 'src/pages/robots.txt.ts', 'src/pages/sitemap.xml.ts', 'src/styles/global.css',
@@ -50,8 +50,8 @@ const layout = read('src/layouts/BaseLayout.astro');
 if (!layout.includes('<main id="main" tabindex="-1">')) fail('skip-link target must accept programmatic focus');
 const css = read('src/styles/global.css');
 if (!css.includes('@media (prefers-reduced-motion: reduce)')) fail('styles must respect reduced motion');
-for (const c of ['SignalField', 'MissionReplay']) if (!read(`src/components/${c}.astro`).includes('prefers-reduced-motion')) fail(`${c} must respect reduced motion in script`);
-if (!read('src/components/SignalField.astro').includes('aria-label=')) fail('hero canvas needs a text alternative');
+for (const c of ['StoryCanvas', 'MissionReplay']) if (!read(`src/components/${c}.astro`).includes('prefers-reduced-motion')) fail(`${c} must respect reduced motion in script`);
+if (!read('src/pages/index.astro').includes('aria-label="From DNA to agents')) fail('story section needs a text label');
 if (/fonts\.googleapis|fonts\.gstatic|googletagmanager|plausible|analytics\.js/i.test(layout + visible)) fail('no third-party fonts or analytics: privacy page promises none');
 
 console.log(`Source audit: ${required.length} required paths, ${md.length} projects. Failures: ${failures}`);

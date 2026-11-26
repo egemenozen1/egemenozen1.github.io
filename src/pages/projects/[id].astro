@@ -19,7 +19,7 @@ const long = d.title.length > 34;
 <BaseLayout title={`${d.title} — Egemen Özen`} description={d.summary}>
   <article>
     <header class="wrap case-hero">
-      <a class="crumb eyebrow" href={d.flagship ? '/#work' : '/#lab'}>← {d.flagship ? 'Selected systems' : 'From the lab'}</a>
+      <a class="crumb eyebrow" href={d.flagship ? '/#work' : '/#lab'}>← {d.flagship ? 'What I’ve built' : 'From the lab'}</a>
       <p class="eyebrow">{d.category} · {d.year}</p>
       <h1 class={`case-title${long ? ' long' : ''}`} style={`view-transition-name: t-${project.id}`}>{d.title}</h1>
       <p class="case-thesis">{d.thesis}</p>

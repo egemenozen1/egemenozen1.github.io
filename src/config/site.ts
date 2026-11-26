@@ -8,8 +8,8 @@ export const site = {
 };
 
 export const nav = [
+  { href: '/#story', label: 'Story' },
   { href: '/#work', label: 'Work' },
-  { href: '/#studio', label: 'Studio' },
-  { href: '/#approach', label: 'Approach' },
-  { href: '/#about', label: 'About' },
+  { href: '/#lab', label: 'Lab' },
+  { href: '/#studio', label: 'Hire / Automate' },
 ] as const;
